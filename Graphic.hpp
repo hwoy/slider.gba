@@ -1,6 +1,8 @@
 
 #include "arm7type.hpp"
 
+#define RGB16(r,g,b)  ((r)+(g<<5)+(b<<10))
+
 #define VIDMEM ((volatile u16arm_t *)0x6000000)
 #define CONMEM ((volatile u32arm_t *)0x4000000)
 
