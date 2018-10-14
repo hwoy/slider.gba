@@ -18,7 +18,7 @@ all: $(BIN).gba
 
 
 $(BIN).elf: main.o noreturn.o
-	$(LD)  -N -e main main.o noreturn.o -o $(BIN).elf
+	$(LD)  -N -e main -Ttext 0x8000000 main.o noreturn.o -o $(BIN).elf
 
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba

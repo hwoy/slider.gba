@@ -4,7 +4,7 @@
 #define RGB16(r,g,b)  ((r)+(g<<5)+(b<<10))
 
 #define VIDMEM ((volatile u16arm_t *)0x6000000)
-#define CONMEM ((volatile u32arm_t *)0x4000000)
+#define IOMEM ((volatile u32arm_t *)0x4000000)
 
 struct GraphicDevice
 {
@@ -12,16 +12,16 @@ struct GraphicDevice
 	static constexpr const u8arm_t ROW=160;
 
 	volatile u16arm_t *vidmem;
-	volatile u32arm_t *conmem;
+	volatile u32arm_t *iomem;
 
 	inline void setmode(u32arm_t mode)
 	{
-		*conmem=mode;
+		*iomem=mode;
 	}
 
 	inline u32arm_t getmode(void) const
 	{
-		return *conmem;
+		return *iomem;
 	}
 
 	inline void setvidmem(volatile u16arm_t *vd)
@@ -35,10 +35,10 @@ struct GraphicDevice
 	}
 
 
-	explicit inline GraphicDevice(volatile u16arm_t *vidmem=VIDMEM ,volatile u32arm_t *conmem=CONMEM,u32arm_t mode=0x403)
-	:vidmem(vidmem),conmem(conmem)
+	explicit inline GraphicDevice(volatile u16arm_t *vidmem=VIDMEM ,volatile u32arm_t *iomem=IOMEM,u32arm_t mode=0x403)
+	:vidmem(vidmem),iomem(iomem)
 	{
-		*conmem=mode;
+		*iomem=mode;
 	}
 
 	inline u16arm_t read(u16arm_t index) const
