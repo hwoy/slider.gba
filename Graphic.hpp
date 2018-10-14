@@ -4,7 +4,7 @@
 #define VIDMEM ((volatile u16arm_t *)0x6000000)
 #define CONMEM ((volatile u32arm_t *)0x4000000)
 
-struct GraphicDrvice
+struct GraphicDevice
 {
 	static constexpr const u8arm_t COL=240;
 	static constexpr const u8arm_t ROW=160;
@@ -33,7 +33,7 @@ struct GraphicDrvice
 	}
 
 
-	explicit inline GraphicDrvice(volatile u16arm_t *vidmem=VIDMEM ,volatile u32arm_t *conmem=CONMEM,u32arm_t mode=0x403)
+	explicit inline GraphicDevice(volatile u16arm_t *vidmem=VIDMEM ,volatile u32arm_t *conmem=CONMEM,u32arm_t mode=0x403)
 	:vidmem(vidmem),conmem(conmem)
 	{
 		*conmem=mode;
@@ -94,9 +94,9 @@ struct Graphic: public Graphic_Type
 {
 	using Color = typename Graphic_Type::Color;
 
-	GraphicDrvice gd;
+	GraphicDevice gd;
 
-	Graphic(const GraphicDrvice &gd):gd(gd) {}
+	Graphic(const GraphicDevice &gd):gd(gd) {}
 
 
 	inline void pixel(u16arm_t color,u8arm_t x,u8arm_t y)
@@ -116,8 +116,9 @@ struct Graphic: public Graphic_Type
 
 	void rectangle(u16arm_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
-		for(u16arm_t i=(x1+y1*GraphicDrvice::COL);i<=(x2+y2*GraphicDrvice::COL);++i)
-			gd.write(i,color);
+		for(u8arm_t y=y1;y<=y2;++y)
+			for(u8arm_t x=x1;x<=x2;++x)
+				gd.write(x,y,color);
 	}
 
 	void rectangle(const Color &color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
@@ -127,7 +128,7 @@ struct Graphic: public Graphic_Type
 
 	void setbgcolor(u16arm_t color)
 	{
-		rectangle(color,0,0,GraphicDrvice::ROW-1,GraphicDrvice::COL-1);
+		rectangle(color,0,0,GraphicDevice::COL-1,GraphicDevice::ROW-1);
 	}
 
 	void setbgcolor(const Color &color)

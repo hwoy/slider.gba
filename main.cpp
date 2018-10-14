@@ -6,7 +6,7 @@
 extern "C"
 int main()
 {
-	Graphic g(GraphicDrvice{});
+	Graphic g(GraphicDevice{});
 
 	g.setbgcolor({0,0,31});
 
