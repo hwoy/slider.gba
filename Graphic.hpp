@@ -94,9 +94,9 @@ struct Graphic: public Graphic_Type
 {
 	using Color = typename Graphic_Type::Color;
 
-	GraphicDrvice &gd;
+	GraphicDrvice gd;
 
-	Graphic(GraphicDrvice &gd):gd(gd) {}
+	Graphic(const GraphicDrvice &gd):gd(gd) {}
 
 
 	inline void pixel(u16arm_t color,u8arm_t x,u8arm_t y)

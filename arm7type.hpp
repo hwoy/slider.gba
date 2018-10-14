@@ -10,4 +10,7 @@ using i16arm_t = short;
 using u32arm_t = unsigned int;
 using i32arm_t = int;
 
+using usize_t = u32arm_t;
+using isize_t = i32arm_t;
+
 #endif
