@@ -20,10 +20,6 @@ struct KeypadDevice
 
 struct Keypad
 {
-    KeypadDevice kd;
-
-    explicit inline Keypad(const KeypadDevice &kd):kd(kd){ reset(); }
-
     enum KEY:u16arm_t
     {
         KEY_A = 1,
@@ -35,10 +31,20 @@ struct Keypad
         KEY_UP = 64,
         KEY_DOWN = 128,
         KEY_R = 256,
-        KEY_L = 512
+        KEY_L = 512,
+        KEY_INVALID = 0xffff
     };
-    inline bool iskey(u16arm_t key) const { return !(*kd & key); }
-    inline void reset() {*kd=-1;}
+
+    KeypadDevice kd;
+
+    explicit inline Keypad(const KeypadDevice &kd):kd(kd){ reset(); }
+
+    inline bool iskey(u16arm_t key) 
+    {
+         return !((*kd) & key); 
+    }
+
+    inline void reset() { *kd=KEY_INVALID;}
 
 
 };
