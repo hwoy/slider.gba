@@ -1,17 +1,17 @@
-#define  KEYS  ((volatile u32arm_t *)0x04000130)
+#define  KEYS  ((volatile u16arm_t *)0x04000130)
 
 struct KeypadDevice
 {
-    volatile u32arm_t *keys;
+    volatile u16arm_t *keys;
 
-    inline constexpr KeypadDevice(volatile u32arm_t *keys=KEYS):keys(keys){}
+    inline constexpr KeypadDevice(volatile u16arm_t *keys=KEYS):keys(keys){}
 
-    inline volatile u32arm_t &operator *()
+    inline volatile u16arm_t &operator *()
     {
         return *keys;
     }
 
-    inline const volatile u32arm_t &operator *() const
+    inline const volatile u16arm_t &operator *() const
     {
         return *keys;
     }
@@ -24,7 +24,7 @@ struct Keypad
 
     explicit inline constexpr Keypad(const KeypadDevice &kd):kd(kd){}
 
-    enum KEY:u32arm_t
+    enum KEY:u16arm_t
     {
         KEY_A = 1,
         KEY_B = 2,
@@ -37,9 +37,8 @@ struct Keypad
         KEY_R = 256,
         KEY_L = 512
     };
-    inline bool iskey(u32arm_t key) const { return !(*kd & key); }
+    inline bool iskey(u16arm_t key) const { return !(*kd & key); }
     inline void reset() {*kd=-1;}
-    inline bool iskeypress() {return iskey(KEY_A & KEY_B & KEY_SELECT & KEY_START & KEY_RIGHT & KEY_LEFT & KEY_UP & KEY_DOWN & KEY_R & KEY_L);}
 
 
 };

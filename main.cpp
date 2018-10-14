@@ -26,9 +26,6 @@ int main()
 
 	while(true)
 	{
-		updategraphic(g,point,color);
-		
-		while(!keypad.iskeypress());
 
 		if(keypad.iskey(Keypad::KEY_RIGHT))
 		{
@@ -64,6 +61,7 @@ int main()
 		}
 
 		keypad.reset();
+		updategraphic(g,point,color);
 	}
 
 	return 0;
