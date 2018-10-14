@@ -21,7 +21,7 @@ int main()
 	Graphic g(GraphicDevice{});
 	g.setbgcolor(Color::rgb(0,0,31));
 
-	Keypad keypad;
+	Keypad keypad(KeypadDevice{});
 	Point point{0,0};
 	Color color{31,0,0};
 

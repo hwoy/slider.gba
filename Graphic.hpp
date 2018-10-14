@@ -100,7 +100,7 @@ struct Graphic: public Graphic_Type
 
 	GraphicDevice gd;
 
-	Graphic(const GraphicDevice &gd):gd(gd) {}
+	explicit inline constexpr Graphic(const GraphicDevice &gd):gd(gd) {}
 
 
 	inline void pixel(u16arm_t color,u8arm_t x,u8arm_t y)
