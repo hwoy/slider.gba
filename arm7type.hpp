@@ -13,4 +13,7 @@ using i32arm_t = int;
 using usize_t = u32arm_t;
 using isize_t = i32arm_t;
 
+using f32arm_t = float;
+using f64arm_t = double;
+
 #endif
