@@ -1,58 +1,60 @@
 
-#define VIDMEM ((volatile unsigned short *)0x6000000)
-#define CONMEM ((volatile unsigned long *)0x4000000)
+#include "arm7type.hpp"
+
+#define VIDMEM ((volatile u16arm_t *)0x6000000)
+#define CONMEM ((volatile u32arm_t *)0x4000000)
 
 struct GraphicDrvice
 {
-	static constexpr const unsigned char COL=240;
-	static constexpr const unsigned char ROW=160;
+	static constexpr const u8arm_t COL=240;
+	static constexpr const u8arm_t ROW=160;
 
-	volatile unsigned short *vidmem;
-	volatile unsigned long *conmem;
+	volatile u16arm_t *vidmem;
+	volatile u32arm_t *conmem;
 
-	inline void setmode(unsigned long mode)
+	inline void setmode(u32arm_t mode)
 	{
 		*conmem=mode;
 	}
 
-	inline unsigned long getmode(void) const
+	inline u32arm_t getmode(void) const
 	{
 		return *conmem;
 	}
 
-	inline void setvidmem(volatile unsigned short *vd)
+	inline void setvidmem(volatile u16arm_t *vd)
 	{
 		vidmem=vd;
 	}
 
-	inline volatile unsigned short *getvidmem(void)
+	inline volatile u16arm_t *getvidmem(void)
 	{
 		return vidmem;
 	}
 
 
-	explicit inline GraphicDrvice(volatile unsigned short *vidmem=VIDMEM ,volatile unsigned long *conmem=CONMEM,unsigned long mode=0x403)
+	explicit inline GraphicDrvice(volatile u16arm_t *vidmem=VIDMEM ,volatile u32arm_t *conmem=CONMEM,u32arm_t mode=0x403)
 	:vidmem(vidmem),conmem(conmem)
 	{
 		*conmem=mode;
 	}
 
-	inline unsigned short read(unsigned short index) const
+	inline u16arm_t read(u16arm_t index) const
 	{
 		return vidmem[index];
 	}
 
-	inline void write(unsigned short index,unsigned short value)
+	inline void write(u16arm_t index,u16arm_t value)
 	{
 		vidmem[index]=value;
 	}
 
-	inline unsigned short read(unsigned char x,unsigned char y) const
+	inline u16arm_t read(u8arm_t x,u8arm_t y) const
 	{
 		return read(x+y*COL);
 	}
 
-	inline void write(unsigned char x,unsigned char y,unsigned short value)
+	inline void write(u8arm_t x,u8arm_t y,u16arm_t value)
 	{
 		write(x+y*COL,value);
 	}
@@ -64,19 +66,19 @@ struct Graphic_Type
 	union Color
 	{
 		
-		unsigned short color;
+		u16arm_t color;
 		struct Rgb
 		{
-				unsigned short r:5;
-				unsigned short g:5;
-				unsigned short b:5;
+				u16arm_t r:5;
+				u16arm_t g:5;
+				u16arm_t b:5;
 		}rgb;
 		
-		inline constexpr Color(unsigned short r,unsigned short g,unsigned short b):rgb{r,g,b} {}
+		inline constexpr Color(u16arm_t r,u16arm_t g,u16arm_t b):rgb{r,g,b} {}
 
-		inline constexpr Color(unsigned short color):color(color) {}
+		inline constexpr Color(u16arm_t color):color(color) {}
 
-		inline constexpr unsigned short get(void) const
+		inline constexpr u16arm_t get(void) const
 		{
 			return color;
 		}
@@ -97,33 +99,33 @@ struct Graphic: public Graphic_Type
 	Graphic(GraphicDrvice &gd):gd(gd) {}
 
 
-	inline void pixel(unsigned short color,unsigned char x,unsigned char y)
+	inline void pixel(u16arm_t color,u8arm_t x,u8arm_t y)
 	{
 		gd.write(x,y,color);
 	}
 
-	inline void pixel(const Color &color,unsigned char x,unsigned char y)
+	inline void pixel(const Color &color,u8arm_t x,u8arm_t y)
 	{
 		pixel(color.get(),x,y);
 	}
 
-	inline Color::Rgb pixel(unsigned char x,unsigned char y)
+	inline Color::Rgb pixel(u8arm_t x,u8arm_t y)
 	{
 		return Color(gd.read(x,y)).getrgb();
 	}
 
-	void rectangle(unsigned short color,unsigned char x1,unsigned char y1,unsigned char x2,unsigned char y2)
+	void rectangle(u16arm_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
-		for(unsigned short i=(x1+y1*GraphicDrvice::COL);i<=(x2+y2*GraphicDrvice::COL);++i)
+		for(u16arm_t i=(x1+y1*GraphicDrvice::COL);i<=(x2+y2*GraphicDrvice::COL);++i)
 			gd.write(i,color);
 	}
 
-	void rectangle(const Color &color,unsigned char x1,unsigned char y1,unsigned char x2,unsigned char y2)
+	void rectangle(const Color &color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
 		rectangle(color.get(),x1,y1,x2,y2);
 	}
 
-	void setbgcolor(unsigned short color)
+	void setbgcolor(u16arm_t color)
 	{
 		rectangle(color,0,0,GraphicDrvice::ROW-1,GraphicDrvice::COL-1);
 	}

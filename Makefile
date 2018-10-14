@@ -29,5 +29,5 @@ clean:
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
 
-main.o: main.cpp noreturn.hpp Graphic.hpp
+main.o: main.cpp noreturn.hpp Graphic.hpp arm7type.hpp
 noreturn.o: noreturn.cpp noreturn.hpp
