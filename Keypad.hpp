@@ -44,7 +44,7 @@ struct Keypad
          return !((*kd) & key); 
     }
 
-    inline void reset() { *kd=KEY_INVALID;}
+    inline void reset() { *kd |= KEY_INVALID;}
 
 
 };
