@@ -1,6 +1,5 @@
-#include "noreturn.hpp"
 
 void noreturn()
 {
-	while(true);
+	asm("swi 02");
 }

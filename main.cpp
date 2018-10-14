@@ -53,6 +53,10 @@ int main()
 		{
 			g.setbgcolor(Color::rgb(0,0,31));
 		}
+		else if(keypad.iskey(Keypad::KEY_SELECT))
+		{
+			break;
+		}
 		else 
 		{
 			continue;
