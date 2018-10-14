@@ -2,5 +2,5 @@
 
 void noreturn()
 {
-	while(1);
+	while(true);
 }
