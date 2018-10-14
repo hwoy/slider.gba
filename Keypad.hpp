@@ -22,7 +22,7 @@ struct Keypad
 {
     KeypadDevice kd;
 
-    explicit inline constexpr Keypad(const KeypadDevice &kd):kd(kd){}
+    explicit inline Keypad(const KeypadDevice &kd):kd(kd){ reset(); }
 
     enum KEY:u16arm_t
     {
