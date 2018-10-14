@@ -4,11 +4,13 @@ BIN=hi
 OBJCOPY = objcopy
 LD = ld
 
+FLAGS = -pedantic -Wall -O2 -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -ffast-math
+
 CXX = g++
-CXXFLAGS=-std=c++11 -pedantic -Wall -O2 -mtune=arm7tdmi -mcpu=arm7tdmi -fno-exceptions -fno-rtti -fno-asynchronous-unwind-tables -nostdinc -nostdinc++ -ffreestanding
+CXXFLAGS=-std=c++11  -fno-exceptions -fno-rtti -fno-asynchronous-unwind-tables -nostdinc -nostdinc++ $(FLAGS)
 
 CC = gcc
-CFLAGS=-std=c99 -pedantic -Wall -O2 -mtune=arm7tdmi -mcpu=arm7tdmi -fno-asynchronous-unwind-tables -nostdinc -ffreestanding
+CFLAGS=-std=c99 -fno-asynchronous-unwind-tables -nostdinc $(FLAGS)
 
 GBA = VisualBoyAdvance.exe
 
