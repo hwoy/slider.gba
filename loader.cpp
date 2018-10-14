@@ -1,7 +1,7 @@
 extern "C"  int main();
 
 extern "C"
-void start()
+void _start()
 {
 	main();
 	asm("swi 03");
