@@ -20,13 +20,13 @@ all: $(BIN).gba
 
 
 $(BIN).elf: loader.o main.o
-	$(LD)  -N -e start -Ttext 0x8000000 loader.o main.o -o $(BIN).elf
+	$(LD)  -Map=$BIN).map -N -e start -Ttext 0x8000000 loader.o main.o -o $(BIN).elf
 
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
  
 clean:
-	del *.gba *.o *.elf
+	del *.gba *.o *.elf *.map
 
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
