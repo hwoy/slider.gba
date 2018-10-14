@@ -39,6 +39,7 @@ struct Keypad
     };
     inline bool iskey(u32arm_t key) const { return !(*kd & key); }
     inline void reset() {*kd=-1;}
+    inline bool iskeypress() {return iskey(KEY_A & KEY_B & KEY_SELECT & KEY_START & KEY_RIGHT & KEY_LEFT & KEY_UP & KEY_DOWN & KEY_R & KEY_L);}
 
 
 };

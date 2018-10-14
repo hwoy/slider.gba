@@ -28,6 +28,8 @@ int main()
 	while(true)
 	{
 		updategraphic(g,point,color);
+		
+		while(!keypad.iskeypress());
 
 		if(keypad.iskey(Keypad::KEY_RIGHT))
 		{
