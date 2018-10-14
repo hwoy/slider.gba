@@ -19,8 +19,8 @@ GBA = VisualBoyAdvance.exe
 all: $(BIN).gba
 
 
-$(BIN).elf: main.o noreturn.o
-	$(LD)  -N -e main -Ttext 0x8000000 main.o noreturn.o -o $(BIN).elf
+$(BIN).elf: loader.o main.o
+	$(LD)  -N -e start -Ttext 0x8000000 loader.o main.o -o $(BIN).elf
 
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
@@ -31,5 +31,5 @@ clean:
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
 
-main.o: main.cpp noreturn.hpp Graphic.hpp arm7type.hpp
-noreturn.o: noreturn.cpp noreturn.hpp
+loader.o: loader.cpp
+main.o: main.cpp arm7type.hpp Graphic.hpp Keypad.hpp

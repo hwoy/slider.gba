@@ -1,7 +1,6 @@
 #include "arm7type.hpp"
 #include "Graphic.hpp"
 #include "Keypad.hpp"
-#include "noreturn.hpp"
 
 using Color = Graphic_Type::Color;
 
@@ -67,5 +66,5 @@ int main()
 		keypad.reset();
 	}
 
-	noreturn();
+	return 0;
 }
