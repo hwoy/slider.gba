@@ -15,11 +15,10 @@ struct Number
 	template <usize_t N>
 	static void print(Graphic &g,const Point &point,const Color &color,const u8arm_t number[][N][N],const u8arm_t num)
 	{
-		if(num<NUM)
-			for(u8arm_t y=0;y<N;++y)
-				for(u8arm_t x=0;x<N;++x)
-					if(number[num][y][x])
-						g.pixel(color,x+point.x,y+point.y);
+		for(u8arm_t y=0;y<N;++y)
+			for(u8arm_t x=0;x<N;++x)
+				if(number[num][y][x])
+					g.pixel(color,x+point.x,y+point.y);
 	}
 
 	inline static void print(Graphic &g,const Point &point,const Color &color,const u8arm_t num)
