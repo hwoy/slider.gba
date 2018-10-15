@@ -1,17 +1,19 @@
 #include "slider.h"
 #include "minstd.h"
 
-void swap(unsigned int* const a, unsigned int* const b)
+#include "arm7type.hpp"
+
+void swap(u32arm_t* const a, u32arm_t* const b)
 {
-    unsigned int tmp;
+    u32arm_t tmp;
     tmp = *a;
     *a = *b;
     *b = tmp;
 }
 
-unsigned int getindex(const unsigned int* const sq, unsigned int blank, unsigned int hw)
+u32arm_t getindex(const u32arm_t* const sq, u32arm_t blank, u32arm_t hw)
 {
-    unsigned int i;
+    u32arm_t i;
 
     for (i = 0; i < hw * hw; ++i) {
         if (sq[i] == blank)
@@ -21,16 +23,16 @@ unsigned int getindex(const unsigned int* const sq, unsigned int blank, unsigned
     return -1u;
 }
 
-void getxy(unsigned int index, struct point* const p, unsigned int hw)
+void getxy(u32arm_t index, struct point* const p, u32arm_t hw)
 {
     p->y = index / hw;
     p->x = index % hw;
 }
 
-unsigned int slide(unsigned int* const sq, unsigned int kid, unsigned int _index, unsigned int hw)
+u32arm_t slide(u32arm_t* const sq, u32arm_t kid, u32arm_t _index, u32arm_t hw)
 {
     struct point p;
-    unsigned int index, ret = -1U;
+    u32arm_t index, ret = -1U;
 
     getxy(index = getindex(sq, _index, hw), &p, hw);
 
@@ -57,16 +59,16 @@ unsigned int slide(unsigned int* const sq, unsigned int kid, unsigned int _index
     return ret;
 }
 
-void slidesq(unsigned int* const sq, const unsigned int* const cmdsq, unsigned int n, unsigned int index, unsigned int hw)
+void slidesq(u32arm_t* const sq, const u32arm_t* const cmdsq, u32arm_t n, u32arm_t index, u32arm_t hw)
 {
-    unsigned int i;
+    u32arm_t i;
     for (i = 0; i < n; ++i)
         slide(sq, cmdsq[i], index, hw);
 }
 
-unsigned int initsq(unsigned int* const sq, unsigned int hw)
+u32arm_t initsq(u32arm_t* const sq, u32arm_t hw)
 {
-    unsigned int i;
+    u32arm_t i;
 
     for (i = 0; i < hw * hw; ++i)
         sq[i] = i;
@@ -74,10 +76,10 @@ unsigned int initsq(unsigned int* const sq, unsigned int hw)
     return hw;
 }
 
-unsigned int canmovesq(const unsigned int* const sq, unsigned int index, unsigned int hw)
+u32arm_t canmovesq(const u32arm_t* const sq, u32arm_t index, u32arm_t hw)
 {
     struct point p;
-    unsigned int i = 0xf;
+    u32arm_t i = 0xf;
 
     getxy(index = getindex(sq, index, hw), &p, hw);
 
@@ -94,9 +96,9 @@ unsigned int canmovesq(const unsigned int* const sq, unsigned int index, unsigne
     return i;
 }
 
-unsigned int extractcanmovesq(unsigned int* const d, unsigned int value)
+u32arm_t extractcanmovesq(u32arm_t* const d, u32arm_t value)
 {
-    unsigned int i, j;
+    u32arm_t i, j;
 
     for (i = 0, j = 0; i < 4; ++i) {
         if (value & (1 << i))
@@ -106,9 +108,9 @@ unsigned int extractcanmovesq(unsigned int* const d, unsigned int value)
     return j;
 }
 
-unsigned int randomsq(unsigned int* const sq, unsigned int index, unsigned int hw, unsigned int* seed)
+u32arm_t randomsq(u32arm_t* const sq, u32arm_t index, u32arm_t hw, u32arm_t* seed)
 {
-    unsigned int i, d[4], j;
+    u32arm_t i, d[4], j;
 
     do {
         for (i = 0; i < RANDLOOP; ++i) {
@@ -120,9 +122,9 @@ unsigned int randomsq(unsigned int* const sq, unsigned int index, unsigned int h
     return RANDLOOP;
 }
 
-unsigned int gameid(const unsigned int* const sq, unsigned int hw)
+u32arm_t gameid(const u32arm_t* const sq, u32arm_t hw)
 {
-    unsigned int i;
+    u32arm_t i;
 
     for (i = 0; i < hw * hw; ++i)
         if (sq[i] != i)

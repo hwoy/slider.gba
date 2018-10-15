@@ -6,6 +6,7 @@
 #include "Number.hpp"
 #include "Square.hpp"
 
+//******************** Board *************************//
 
 #define SQUARE 5
 
@@ -19,7 +20,7 @@
 #endif
 
 
-//*********************************************//
+//********************** Graphic ***********************//
 
 #define WIDTH 50
 #define IWIDTH 20
@@ -36,7 +37,10 @@ static constexpr const Color NUMCOLOR  {0,0,31};
 
 static constexpr const Color BGCOLOR   {0,0,0};
 
-static void initgame(unsigned int* const sq, unsigned int* seed, unsigned int index, unsigned int hw)
+
+//********************** Game function ***********************//
+
+static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_t hw)
 {
     initsq(sq, hw);
     randomsq(sq, index, hw, seed);
@@ -44,14 +48,14 @@ static void initgame(unsigned int* const sq, unsigned int* seed, unsigned int in
 
 
 template <usize_t N>
-static constexpr unsigned int slen(const char (&)[N])
+static constexpr u32arm_t slen(const i8arm_t (&)[N])
 {
 	return N ? N-1:0;
 }
 
 
 template <usize_t N>
-void drawboard(Graphic &g,const Square &square,const unsigned int (&sq)[N],const char *sqstr,unsigned int index)
+void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const i8arm_t *sqstr,u32arm_t index)
 {
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<3;++i,rgap+=(RGAP+square.width))
 		for(u8arm_t j=0,cgap=FCGAP;j<3;++j,cgap+=(CGAP+square.width),++k)
@@ -64,14 +68,14 @@ void drawboard(Graphic &g,const Square &square,const unsigned int (&sq)[N],const
 extern "C"
 int main()
 {
-    static const char sqstr[] = SQSTR;
+    static const i8arm_t sqstr[] = SQSTR;
 
-    unsigned int sq[WxH * WxH];
-    unsigned int seed, origseed;
+    u32arm_t sq[WxH * WxH];
+    u32arm_t seed, origseed;
 
     origseed = seed = INITSEED;
 
-    constexpr const unsigned int index = slen(sqstr) - 1;
+    constexpr const u32arm_t index = slen(sqstr) - 1;
 
     initgame(sq, &seed, index, WxH);
 
