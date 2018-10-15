@@ -29,7 +29,7 @@ int main()
 
 	for(u8arm_t i=0,rgap=FRGAP,num=1;i<3;++i,rgap+=(RGAP+square.width))
 		for(u8arm_t j=0,cgap=FCGAP;j<3;++j,cgap+=(CGAP+square.width),++num)
-			square.print(g,{cgap,rgap},num);
+			square.draw(g,{cgap,rgap},num);
 
 	return 0;
 }

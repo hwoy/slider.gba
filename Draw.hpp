@@ -1,13 +1,13 @@
-#ifndef __PRINT_HPP__
-#define __PRINT_HPP__
+#ifndef __DRAW_HPP__
+#define __DRAW_HPP__
 
 #include "arm7type.hpp"
 #include "Graphic.hpp"
 
-struct Print 
+struct Draw 
 {
 	template <usize_t M,usize_t N>
-	static void print(Graphic &g,const Point &point,const Color &color,const u8arm_t (&number)[M][N][N],const u8arm_t num)
+	static void draw(Graphic &g,const Point &point,const Color &color,const u8arm_t (&number)[M][N][N],const u8arm_t num)
 	{
 		for(u8arm_t y=0;y<N;++y)
 			for(u8arm_t x=0;x<N;++x)

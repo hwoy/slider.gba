@@ -11,7 +11,7 @@ struct Square
 	u8arm_t width,iwidth;
 	Color color,icolor,ncolor;
 
-	void print(Graphic &g,const Point &point,u8arm_t num) const
+	void draw(Graphic &g,const Point &point,u8arm_t num) const
 	{
 		g.rectangle(color,point.x,point.y,point.x+width-1,point.y+width-1);
 
@@ -23,7 +23,7 @@ struct Square
 		u8arm_t nx=ix+(iwidth-Number::SIZE)/2;
 		u8arm_t ny=iy+(iwidth-Number::SIZE)/2;
 
-		Number::print(g,{nx,ny},ncolor,num);
+		Number::draw(g,{nx,ny},ncolor,num);
 	}
 };
 

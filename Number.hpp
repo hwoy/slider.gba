@@ -3,7 +3,7 @@
 
 #include "arm7type.hpp"
 #include "Graphic.hpp"
-#include "Print.hpp"
+#include "Draw.hpp"
 
 
 struct Number
@@ -13,9 +13,9 @@ struct Number
 
 	static const u8arm_t NUMBER[NUM][SIZE][SIZE];
 
-	static inline void print(Graphic &g,const Point &point,const Color &color,const u8arm_t num)
+	static inline void draw(Graphic &g,const Point &point,const Color &color,const u8arm_t num)
 	{
-		Print::print(g,point,color,NUMBER,num);
+		Draw::draw(g,point,color,NUMBER,num);
 	}
 };
 
