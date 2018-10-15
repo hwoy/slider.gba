@@ -1,3 +1,6 @@
+#ifndef __GRAPHIC_HPP__
+#define __GRAPHIC_HPP__
+
 
 #include "arm7type.hpp"
 
@@ -5,6 +8,11 @@
 
 #define VIDMEM ((volatile u16arm_t *)0x6000000)
 #define IOMEM ((volatile u32arm_t *)0x4000000)
+
+struct Point
+{
+	u8arm_t x,y;
+};
 
 struct GraphicDevice
 {
@@ -141,3 +149,7 @@ struct Graphic: public Graphic_Type
 	}
 };
 
+using Color = Graphic_Type::Color;
+
+
+#endif
