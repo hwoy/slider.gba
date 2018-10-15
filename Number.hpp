@@ -3,27 +3,19 @@
 
 #include "arm7type.hpp"
 #include "Graphic.hpp"
+#include "Print.hpp"
 
 
-struct Number
+struct Number : public Print
 {
 	static constexpr const u8arm_t SIZE=7;
 	static constexpr const u8arm_t NUM=10;
 
 	static const u8arm_t NUMBER[NUM][SIZE][SIZE];
 
-	template <usize_t M,usize_t N>
-	static void print(Graphic &g,const Point &point,const Color &color,const u8arm_t (&number)[M][N][N],const u8arm_t num)
+	static inline void print(Graphic &g,const Point &point,const Color &color,const u8arm_t num)
 	{
-		for(u8arm_t y=0;y<N;++y)
-			for(u8arm_t x=0;x<N;++x)
-				if(number[num][y][x])
-					g.pixel(color,x+point.x,y+point.y);
-	}
-
-	inline static void print(Graphic &g,const Point &point,const Color &color,const u8arm_t num)
-	{
-		print(g,point,color,NUMBER,num);
+		Print::print(g,point,color,NUMBER,num);
 	}
 };
 

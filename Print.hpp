@@ -14,8 +14,6 @@ struct Print
 				if(number[num][y][x])
 					g.pixel(color,x+point.x,y+point.y);
 	}
-
-    virtual inline void print(Graphic &g,const Point &point,const Color &color,const u8arm_t num) = 0;
 };
 
 #endif

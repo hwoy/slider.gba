@@ -6,5 +6,6 @@ extern "C"
 void _start()
 {
 	main();
-	asm("swi 03");
+	
+	while(true);
 }
