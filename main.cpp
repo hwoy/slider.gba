@@ -55,7 +55,7 @@ static constexpr u32arm_t slen(const i8arm_t (&)[N])
 
 
 template <usize_t N>
-void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const i8arm_t *sqstr,u32arm_t index)
+static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const i8arm_t *sqstr,u32arm_t index)
 {
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<3;++i,rgap+=(RGAP+square.width))
 		for(u8arm_t j=0,cgap=FCGAP;j<3;++j,cgap+=(CGAP+square.width),++k)
