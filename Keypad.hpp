@@ -36,12 +36,26 @@ struct Keypad
     };
 
     KeypadDevice kd;
+    u16arm_t lastkey;
 
-    explicit inline Keypad(const KeypadDevice &kd):kd(kd){ }
+    explicit inline Keypad(const KeypadDevice &kd):kd(kd),lastkey(KEY_INVALID){ }
 
-    inline bool iskey(u16arm_t key) 
+    inline bool iskeypress()
     {
-        return (!((*kd) & key)) ? ( *kd=KEY_INVALID ,true ) : false;
+        volatile const u16arm_t tmp=*kd;
+        if(tmp !=KEY_INVALID)
+		{
+            lastkey=tmp;
+			*kd=KEY_INVALID;
+			return true;
+		}
+        
+        return false;
     }
+	
+	inline bool ispress(u16arm_t key)
+	{
+		return !(lastkey & key);
+	}
 
 };
