@@ -1,5 +1,5 @@
 NAME=main
-BIN=hi
+BIN=slider
 
 OBJCOPY = objcopy
 LD = ld
