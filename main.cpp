@@ -14,8 +14,6 @@ int main()
 	for(u8arm_t i=0;i<10;++i)
 		Number::print(g,{0,static_cast<u8arm_t>(i*8)},color,i);
 
-
-
 	while(true);
 
 
