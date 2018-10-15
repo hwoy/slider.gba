@@ -6,7 +6,7 @@
 #include "Print.hpp"
 
 
-struct Number : public Print
+struct Number
 {
 	static constexpr const u8arm_t SIZE=7;
 	static constexpr const u8arm_t NUM=10;
