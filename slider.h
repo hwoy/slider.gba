@@ -2,7 +2,7 @@
 #define _SLIDER_H_
 
 #ifndef RANDLOOP
-#define RANDLOOP 200
+#define RANDLOOP 1024
 #endif
 
 struct point {

@@ -1,7 +1,3 @@
-#ifndef RANDLOOP
-#define RANDLOOP 1000
-#endif
-
 #include "slider.h"
 
 #include "arm7type.hpp"
@@ -10,24 +6,18 @@
 #include "Number.hpp"
 #include "Square.hpp"
 
-#ifndef SQUARE
+
 #define SQUARE 5
-#endif
 
-#ifndef SQSTR
 #define SQSTR "123456789"
-#endif
 
-
-#ifndef WxH
 #define WxH 3
-#endif
+
 
 #ifndef INITSEED
 #define INITSEED (1)
 #endif
 
-#define BSIZE 125
 
 //*********************************************//
 
@@ -77,7 +67,6 @@ int main()
     static const char sqstr[] = SQSTR;
 
     unsigned int sq[WxH * WxH];
-    unsigned int gid = gid_normal;
     unsigned int seed, origseed;
 
     origseed = seed = INITSEED;
@@ -118,16 +107,22 @@ int main()
         }
         else if(keypad==Keypad::KEY_SELECT)
         {
-            randomsq(sq, index, WxH, &seed);
-            drawboard(g,square,sq,sqstr,index);
-            continue;
-        }   
+            kid=4;
+            seed=++origseed;
+            initgame(sq, &seed, index, WxH);
+        }
+        else if(keypad==Keypad::KEY_START)
+        {
+            kid=5;
+            seed=origseed;
+            initgame(sq, &seed, index, WxH);
+        } 
         else
         {
             continue;
         }
 
-        if(slide(sq, kid, index, WxH)!=-1UL) drawboard(g,square,sq,sqstr,index);        
+        if(kid==4 || kid==5 || (slide(sq, kid, index, WxH)!=-1UL)) drawboard(g,square,sq,sqstr,index);        
         
     }
 
