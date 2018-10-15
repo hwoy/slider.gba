@@ -4,7 +4,7 @@ BIN=hi
 OBJCOPY = objcopy
 LD = ld
 
-FLAGS = -pedantic -Wall -O2 -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -ffast-math
+FLAGS = -pedantic -Wall -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O3 -ffast-math -mlong-calls -faggressive-loop-optimizations
 
 CXX = g++
 CXXFLAGS=-std=c++11  -fno-exceptions -fno-rtti -fno-asynchronous-unwind-tables -nostdinc -nostdinc++ $(FLAGS)
