@@ -12,7 +12,7 @@ int main()
 	Color color{31,0,0};
 
 	for(u8arm_t i=0;i<10;++i)
-		Number::print(g,{0,i*8},color,i);
+		Number::print(g,{0,static_cast<u8arm_t>(i*8)},color,i);
 
 
 
