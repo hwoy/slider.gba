@@ -31,5 +31,7 @@ clean:
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
 
+
 loader.o: loader.cpp
-main.o: main.cpp arm7type.hpp Graphic.hpp Keypad.hpp
+main.o: main.cpp arm7type.hpp Graphic.hpp Keypad.hpp Number.hpp Print.hpp \
+ Square.hpp
