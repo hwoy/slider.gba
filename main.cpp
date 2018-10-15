@@ -76,8 +76,6 @@ int main()
 {
     static const char sqstr[] = SQSTR;
 
-    char ch;
-    unsigned int key, move = 0;
     unsigned int sq[WxH * WxH];
     unsigned int gid = gid_normal;
     unsigned int seed, origseed;
@@ -100,21 +98,38 @@ int main()
 
     while(keypad)
     {
-        if(keypad==Keypad::KEY_SELECT)
+        u32arm_t kid;
+
+        if(keypad==Keypad::KEY_UP)
+        {
+            kid=0;
+        }
+        else if(keypad==Keypad::KEY_DOWN)
+        {
+            kid=1;
+        }
+        else if(keypad==Keypad::KEY_LEFT)
+        {
+            kid=2;
+        }
+        else if(keypad==Keypad::KEY_RIGHT)
+        {
+            kid=3;
+        }
+        else if(keypad==Keypad::KEY_SELECT)
         {
             randomsq(sq, index, WxH, &seed);
-        }
-        
+            drawboard(g,square,sq,sqstr,index);
+            continue;
+        }   
         else
         {
             continue;
         }
 
-        drawboard(g,square,sq,sqstr,index);        
+        if(slide(sq, kid, index, WxH)!=-1UL) drawboard(g,square,sq,sqstr,index);        
         
     }
-
-
 
 	return 0;
 }
