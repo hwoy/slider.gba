@@ -32,19 +32,16 @@ struct Keypad
         KEY_DOWN = 128,
         KEY_R = 256,
         KEY_L = 512,
-        KEY_INVALID = 0xffff
+        KEY_INVALID = 0x3ff
     };
 
     KeypadDevice kd;
 
-    explicit inline Keypad(const KeypadDevice &kd):kd(kd){ reset(); }
+    explicit inline Keypad(const KeypadDevice &kd):kd(kd){ }
 
     inline bool iskey(u16arm_t key) 
     {
-         return !((*kd) & key); 
+        return (!((*kd) & key)) ? ( *kd=KEY_INVALID ,true ) : false;
     }
-
-    inline void reset() { *kd |= KEY_INVALID;}
-
 
 };

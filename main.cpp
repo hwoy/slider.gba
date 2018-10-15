@@ -23,7 +23,7 @@ int main()
 	Keypad keypad(KeypadDevice{});
 	
 	Point point{0,0};
-	Color color{31,0,0};
+	Color color{0,0,0};
 
 	while(true)
 	{
@@ -48,6 +48,18 @@ int main()
 			if(point.y<GraphicDevice::ROW-1) ++point.y;
 			else point.y=0;
 		}
+		else if(keypad.iskey(Keypad::KEY_A))
+		{
+			++color.__rgb__.r;
+		}
+		else if(keypad.iskey(Keypad::KEY_B))
+		{
+			++color.__rgb__.g;
+		}
+		else if(keypad.iskey(Keypad::KEY_R))
+		{
+			++color.__rgb__.b;
+		}
 		else if(keypad.iskey(Keypad::KEY_START))
 		{
 			g.setbgcolor(Color::rgb(0,0,31));
@@ -60,8 +72,6 @@ int main()
 		{
 			continue;
 		}
-
-		keypad.reset();
 		updategraphic(g,point,color);
 	}
 
