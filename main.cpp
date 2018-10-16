@@ -11,7 +11,7 @@
 #define SQLIST {1,2,3,4,5,6,7,8,9,0xA,0xB,0xC,0xD,0xE,0xF,0}
 
 template <typename T,usize_t N>
-static constexpr usize_t square(const T (&a)[N],usize_t n=0)
+static constexpr usize_t square(const T (&a)[N],usize_t n=2)
 {
     return n*n>=N ? n : square(a,n+1);
 }
