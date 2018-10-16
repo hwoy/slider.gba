@@ -19,7 +19,7 @@ struct Font
 	}
 };
 
-const u8arm_t Font::FONT[Font::NUM][Font::SIZE][Font::SIZE]
+const u8arm_t Font::FONT[Font::NUM][Font::SIZE][Font::SIZE] =
 {
 
 		{ // 0
