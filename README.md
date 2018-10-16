@@ -2,7 +2,7 @@
 
 Port [Slider game](https://github.com/hwoy/slider) to Gameboy Advance on VisualBoy Advance
 
-[Download](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) slider.gba for [visualboy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
+Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) for [visualboy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 
 # What is a slider.gba
 - slider.gba is a very simple 3x3 board game that run on Gameboy Advance. 
@@ -37,7 +37,7 @@ $ make
 
 ```
 
-- If it success , you will see slider.gba
+- If it success , you will see [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba)
 
 
 ### Contact me. 
