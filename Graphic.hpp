@@ -19,8 +19,8 @@ struct GraphicDevice
 	static constexpr const u8arm_t COL=240;
 	static constexpr const u8arm_t ROW=160;
 
-	volatile u16arm_t *vidmem;
 	volatile u32arm_t *iomem;
+	volatile u16arm_t *vidmem;
 
 	inline void setmode(u32arm_t mode)
 	{
@@ -43,8 +43,8 @@ struct GraphicDevice
 	}
 
 
-	explicit inline GraphicDevice(volatile u16arm_t *vidmem=VIDMEM ,volatile u32arm_t *iomem=IOMEM,u32arm_t mode=0x403)
-	:vidmem(vidmem),iomem(iomem)
+	explicit inline GraphicDevice(u32arm_t mode=0x403,volatile u32arm_t *iomem=IOMEM,volatile u16arm_t *vidmem=VIDMEM)
+	:iomem(iomem),vidmem(vidmem)
 	{
 		*iomem=mode;
 	}
@@ -146,6 +146,14 @@ struct Graphic: public Graphic_Type
 	void setbgcolor(const Color &color)
 	{
 		setbgcolor(color.get());
+	}
+
+	void drawbuffer(const u16arm_t *buffer,u16arm_t x=0,u16arm_t  y=0,u16arm_t w=GraphicDevice::COL,u16arm_t h=GraphicDevice::ROW)
+	{
+		for(u16arm_t i=y;i<y+h;++i)
+			for(u16arm_t j=x;j<x+w;++j)
+				pixel(buffer[i*w+j],j,i);
+
 	}
 };
 
