@@ -8,7 +8,7 @@
 
 //******************** Board *************************//
 
-#define SQSTR "123456789"
+#define SQLIST {1,2,3,4,5,6,7,8,9}
 
 #define WxH 3
 
@@ -50,20 +50,20 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 template <usize_t N>
 static constexpr u32arm_t slen(const i8arm_t (&)[N])
 {
-	return N ? N-1:0;
+	return N ? N:0;
 }
 
 
 
 template <usize_t N>
-static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const i8arm_t *sqstr,u32arm_t index)
+static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const i8arm_t *sqlist,u32arm_t index)
 {
     static_assert(WxH*WxH==N,"WxH*WxH !=N => It's not square!!");
 
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
 		for(u8arm_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
 			if(sq[k]!=index)
-                square.draw(g,{cgap,rgap},sqstr[sq[k]]-'0');
+                square.draw(g,{cgap,rgap},sqlist[sq[k]]);
             else
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width-1,rgap+square.width-1);
 }
@@ -71,16 +71,16 @@ static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],co
 extern "C"
 int main()
 {
-    static const i8arm_t sqstr[] = SQSTR;
+    static const i8arm_t sqlist[] = SQLIST;
 
-    static_assert(WxH*WxH==slen(sqstr),"WxH*WxH !=slen(sqstr) => It's not square!!");
+    static_assert(WxH*WxH==slen(sqlist),"WxH*WxH !=slen(sqlist) => It's not square!!");
 
     u32arm_t sq[WxH * WxH];
     u32arm_t seed, origseed;
 
     origseed = seed = INITSEED;
 
-    constexpr const u32arm_t index = slen(sqstr) - 1;
+    constexpr const u32arm_t index = slen(sqlist)-1;
 
     initgame(sq, &seed, index, WxH);
 
@@ -92,7 +92,7 @@ int main()
 
     const Square square{WIDTH,IWIDTH,BOXCOLOR,IBOXCOLOR,NUMCOLOR};
 
-    drawboard(g,square,sq,sqstr,index);
+    drawboard(g,square,sq,sqlist,index);
 
     for(u32arm_t kid=0;keypad.untilkeypressDown();keypad.untilkeypressUp())
     {
@@ -130,7 +130,7 @@ int main()
             continue;
         }
 
-        if(kid==4 || kid==5 || (slide(sq, kid, index, WxH)!=-1UL)) drawboard(g,square,sq,sqstr,index);
+        if(kid==4 || kid==5 || (slide(sq, kid, index, WxH)!=-1UL)) drawboard(g,square,sq,sqlist,index);
 
         
     }
