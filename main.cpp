@@ -8,8 +8,6 @@
 
 //******************** Board *************************//
 
-#define SQUARE 5
-
 #define SQSTR "123456789"
 
 #define WxH 3
