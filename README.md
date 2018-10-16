@@ -1,11 +1,11 @@
 ![](https://raw.githubusercontent.com/hwoy/slider.gba/master/res/slider.png?raw=true)
 
-Port [Slider game](https://github.com/hwoy/slider) to Gameboy advance on visualboy advance
+Port [Slider game](https://github.com/hwoy/slider) to Gameboy Advance on VisualBoy Advance
 
-[Download](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) slider.gba for [visualboy advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
+[Download](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) slider.gba for [visualboy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 
 # What is a slider.gba
-- slider.gba is a very simple 3x3 board game that run on Gameboy advance. 
+- slider.gba is a very simple 3x3 board game that run on Gameboy Advance. 
 - It has been written in ISO C++11 abstraction.
  
 ### Keypad
@@ -23,7 +23,7 @@ Port [Slider game](https://github.com/hwoy/slider) to Gameboy advance on visualb
 ### Tools for slider.gba
 
 - **Toolchain:** [Mingw toolchains for ARM-eabi](http://sysprogs.com/files/gnutoolchains/arm-eabi/arm-eabi-gcc7.2.0-r3.exe)
-- **Gameboy advance enulator:** [visualboy advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
+- **Gameboy Advance enulator:** [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 - **Builder:** GNU make for Windows that comes with Native Compiler Mingw-w64
 
 ### How to make
