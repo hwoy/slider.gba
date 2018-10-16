@@ -4,7 +4,7 @@ BIN=slider
 OBJCOPY = arm-eabi-objcopy
 LD = arm-eabi-ld
 
-FLAGS = -pedantic -Wall -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O3 -ffast-math -mlong-calls -faggressive-loop-optimizations
+FLAGS = -pedantic -Wall -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations
 
 CXX = arm-eabi-g++
 CXXFLAGS=-std=c++11  -fno-exceptions -fno-rtti -fno-asynchronous-unwind-tables -nostdinc -nostdinc++ $(FLAGS)
