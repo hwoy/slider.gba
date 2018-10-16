@@ -7,6 +7,8 @@ Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/r
 # What is a slider.gba
 - slider.gba is a very simple 3x3 board game that run on Gameboy Advance. 
 - It has been written in ISO C++11 abstraction.
+- No special library(libheart) or even libc, except libgcc for basic software math function.
+- Work great on [visualboy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
  
 ### Keypad
 - UP     == moves block down
