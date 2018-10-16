@@ -65,9 +65,13 @@ struct Keypad
 		return lastkey;
     }
 
-    inline void untilkeypressUp()
+    u16arm_t untilkeypressUp()
     {
+        volatile u16arm_t tmp=*kd;
+
         while( ((*kd) &KEY_ALL ) != KEY_ALL){} //Press Up
+
+        return tmp;
     }
 	
 	inline bool ispress(u16arm_t key) const
