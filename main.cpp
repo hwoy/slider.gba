@@ -126,7 +126,7 @@ int main()
 
         struct point p;
         u32arm_t _index;
-        u8arm_t indexfrom=0,indexto=0;
+        u8arm_t indexfrom,indexto;
         u8arm_t num;
 
         getxy(_index = getindex(sq, index, WxH), &p, WxH);
@@ -172,28 +172,44 @@ int main()
                 kid=3;
             }
         }
-        else if(keypad==Keypad::KEY_SELECT)
+        else if(keypad==Keypad::KEY_A)
         {
             kid=4;
+            seed=--origseed;
+            initgame(sq, &seed, index, WxH);
+        }
+        else if(keypad==Keypad::KEY_B)
+        {
+            kid=5;
             seed=++origseed;
             initgame(sq, &seed, index, WxH);
         }
         else if(keypad==Keypad::KEY_START)
         {
-            kid=5;
+            kid=6;
             seed=origseed;
             initgame(sq, &seed, index, WxH);
         } 
-        else
+
+        switch(kid)
         {
-            continue;
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+                    num=sqlist[sq[indexfrom]];
+                    if(slide(sq, kid, index, WxH)!=-1UL)
+                        swapbuff(g,square,indexfrom,indexto,num);
+                    break;
+            case 4:
+            case 5:
+            case 6:
+                    drawboard(g,square,sq,sqlist,index);
+                    break;
+
+            default: break;
+
         }
-
-        if(kid==4 || kid==5)
-            drawboard(g,square,sq,sqlist,index);
-        else if(num=sqlist[sq[indexfrom]],(slide(sq, kid, index, WxH)!=-1UL))
-            swapbuff(g,square,indexfrom,indexto,num);
-
         
     }
 
