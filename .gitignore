@@ -1,6 +1,5 @@
 *.o
 *~
-*.gba
 *.exe
 *.elf
 *.ini

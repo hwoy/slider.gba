@@ -1,8 +1,8 @@
-![](https://raw.githubusercontent.com/hwoy/Ostoy32/master/res/Ostoy32.png?raw=true)
+![](https://raw.githubusercontent.com/hwoy/slider.gba/master/res/slider.png?raw=true)
 
 Port [Slider game](https://github.com/hwoy/slider) to Gameboy advance on visualboy advance
 
-[Download](https://raw.githubusercontent.com/hwoy/Ostoy32/master/img/Ostoy32.img) slider.gba for [visualboy advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
+[Download](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) slider.gba for [visualboy advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 
 # What is a slider.gba
 - slider.gba is a very simple 3x3 board game that run on Gameboy advance. 
