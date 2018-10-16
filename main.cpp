@@ -89,9 +89,8 @@ int main()
 
     drawboard(g,square,sq,sqstr,index);
 
-    while(keypad.untilkeypressDownUp())
+    for(u32arm_t kid=0;keypad.untilkeypressDown();keypad.untilkeypressUp())
     {
-        u32arm_t kid;
 
         if(keypad==Keypad::KEY_UP)
         {
@@ -126,7 +125,8 @@ int main()
             continue;
         }
 
-        if(kid==4 || kid==5 || (slide(sq, kid, index, WxH)!=-1UL)) drawboard(g,square,sq,sqstr,index);        
+        if(kid==4 || kid==5 || (slide(sq, kid, index, WxH)!=-1UL)) drawboard(g,square,sq,sqstr,index);
+
         
     }
 
