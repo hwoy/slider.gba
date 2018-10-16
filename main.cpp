@@ -78,7 +78,7 @@ static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],co
 }
 
 
-static void swapbuff(Graphic &g,const Square &square,u8arm_t from,u8arm_t to,u8arm_t num)
+static void swapsquare(Graphic &g,const Square &square,u8arm_t from,u8arm_t to,u8arm_t num)
 {
     u8arm_t jfrom=from%WxH;
     u8arm_t ifrom=from/WxH;
@@ -199,7 +199,7 @@ int main()
             case 3:
                     num=sqlist[sq[indexfrom]];
                     if(slide(sq, kid, index, WxH)!=-1UL)
-                        swapbuff(g,square,indexfrom,indexto,num);
+                        swapsquare(g,square,indexfrom,indexto,num);
                     break;
             case 4:
             case 5:
