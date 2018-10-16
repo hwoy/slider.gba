@@ -176,19 +176,16 @@ int main()
         {
             kid=4;
             seed=--origseed;
-            initgame(sq, &seed, index, WxH);
         }
         else if(keypad==Keypad::KEY_B)
         {
             kid=5;
             seed=++origseed;
-            initgame(sq, &seed, index, WxH);
         }
         else if(keypad==Keypad::KEY_START)
         {
             kid=6;
             seed=origseed;
-            initgame(sq, &seed, index, WxH);
         } 
 
         switch(kid)
@@ -204,6 +201,7 @@ int main()
             case 4:
             case 5:
             case 6:
+                    initgame(sq, &seed, index, WxH);
                     drawboard(g,square,sq,sqlist,index);
                     break;
 
