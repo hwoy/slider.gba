@@ -21,15 +21,17 @@
 
 
 //********************** Graphic ***********************//
+#define FRGAP 2
 
-#define WIDTH 50
-#define IWIDTH 20
-
-#define RGAP ((GraphicDevice::ROW-(WIDTH*3))/4)
+#define RGAP (FRGAP*GraphicDevice::COL/GraphicDevice::ROW)
 #define CGAP RGAP
 
-#define FCGAP  ((GraphicDevice::COL-(CGAP*2)-(WIDTH*3))/2)
-#define FRGAP  ((GraphicDevice::ROW-(RGAP*2)-(WIDTH*3))/2)
+
+#define WIDTH ((GraphicDevice::ROW-RGAP*(WxH-1)-FRGAP*2)/WxH)
+#define IWIDTH (WIDTH*2/5)
+
+#define FCGAP ((GraphicDevice::COL-CGAP*(WxH-1)-WIDTH*WxH)/2)
+
 
 static constexpr const Color BOXCOLOR  {31,0,0};
 static constexpr const Color IBOXCOLOR {0,31,0};
