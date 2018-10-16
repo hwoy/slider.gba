@@ -3,7 +3,7 @@
 
 #include "arm7type.hpp"
 #include "Graphic.hpp"
-#include "Number.hpp"
+#include "Font.hpp"
 
 
 struct Square
@@ -20,10 +20,10 @@ struct Square
 
 		g.rectangle(icolor,ix,iy,ix+iwidth-1,iy+iwidth-1);
 
-		u8arm_t nx=ix+(iwidth-Number::SIZE)/2;
-		u8arm_t ny=iy+(iwidth-Number::SIZE)/2;
+		u8arm_t nx=ix+(iwidth-Font::SIZE)/2;
+		u8arm_t ny=iy+(iwidth-Font::SIZE)/2;
 
-		Number::draw(g,{nx,ny},ncolor,num);
+		Font::draw(g,{nx,ny},ncolor,num);
 	}
 };
 

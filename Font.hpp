@@ -1,25 +1,25 @@
-#ifndef __NUMBER_HPP__
-#define __NUMBER_HPP__
+#ifndef __FONT_HPP__
+#define __FONT_HPP__
 
 #include "arm7type.hpp"
 #include "Graphic.hpp"
 #include "Draw.hpp"
 
 
-struct Number
+struct Font
 {
 	static constexpr const u8arm_t SIZE=7;
 	static constexpr const u8arm_t NUM=16;
 
-	static const u8arm_t NUMBER[NUM][SIZE][SIZE];
+	static const u8arm_t FONT[NUM][SIZE][SIZE];
 
 	static inline void draw(Graphic &g,const Point &point,const Color &color,const u8arm_t num)
 	{
-		Draw::draw(g,point,color,NUMBER,num);
+		Draw::draw(g,point,color,FONT,num);
 	}
 };
 
-const u8arm_t Number::NUMBER[Number::NUM][Number::SIZE][Number::SIZE]
+const u8arm_t Font::FONT[Font::NUM][Font::SIZE][Font::SIZE]
 {
 
 		{ // 0

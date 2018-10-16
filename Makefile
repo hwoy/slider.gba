@@ -34,9 +34,10 @@ run: $(BIN).gba
 	$(GBA) $(BIN).gba
 
 
-lcg.o: lcg.cpp lcg.h
+
+lcg.o: lcg.cpp lcg.h arm7type.hpp
 loader.o: loader.cpp
-main.o: main.cpp slider.h arm7type.hpp Graphic.hpp Keypad.hpp Number.hpp \
+main.o: main.cpp slider.h arm7type.hpp Graphic.hpp Keypad.hpp Font.hpp \
  Draw.hpp Square.hpp
-minstd.o: minstd.cpp minstd.h lcg.h
-slider.o: slider.cpp slider.h minstd.h lcg.h
+minstd.o: minstd.cpp minstd.h arm7type.hpp lcg.h
+slider.o: slider.cpp slider.h arm7type.hpp minstd.h lcg.h

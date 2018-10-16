@@ -3,7 +3,7 @@
 #include "arm7type.hpp"
 #include "Graphic.hpp"
 #include "Keypad.hpp"
-#include "Number.hpp"
+#include "Font.hpp"
 #include "Square.hpp"
 
 //******************** Unit test *************************//
