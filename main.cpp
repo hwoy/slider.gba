@@ -21,9 +21,9 @@
 
 
 //********************** Graphic ***********************//
-#define FRGAP 2
+#define FRGAP 4
 
-#define RGAP (FRGAP*GraphicDevice::COL/GraphicDevice::ROW)
+#define RGAP 1
 #define CGAP RGAP
 
 

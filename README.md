@@ -16,7 +16,7 @@ Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/r
 - LEFT   == moves block right
 - RIGHT  == moves block left
 - START  == reset a board
-- SELECT == succ random seed and init board
+- SELECT == succ origin random seed and init board
 
 ### Game Play
 - Complete block arrangement
