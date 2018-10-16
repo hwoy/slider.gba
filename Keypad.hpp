@@ -59,7 +59,9 @@ struct Keypad
 
         while(( (tmp=*kd) & KEY_ALL) == KEY_ALL ){} //Press Down
 
+        *kd=KEY_ALL;
         lastkey=tmp;
+
 
 		return lastkey;
     }
