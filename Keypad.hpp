@@ -71,7 +71,7 @@ struct Keypad
 
         while( ((*kd) &KEY_ALL ) != KEY_ALL){} //Press Up
 
-        return tmp;
+        return lastkey=tmp;
     }
 	
 	inline bool ispress(u16arm_t key) const
