@@ -1,6 +1,5 @@
 *.o
 *~
-slider.gba
 *.exe
 *.elf
 *.ini
