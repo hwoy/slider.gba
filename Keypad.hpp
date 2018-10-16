@@ -32,23 +32,23 @@ struct Keypad
         KEY_DOWN = 128,
         KEY_R = 256,
         KEY_L = 512,
-        KEY_INVALID = 0x3ff
+        KEY_ALL= 0x03ff
     };
 
     KeypadDevice kd;
     u16arm_t lastkey;
 
-    explicit inline Keypad(const KeypadDevice &kd):kd(kd),lastkey(KEY_INVALID){ }
+    explicit inline Keypad(const KeypadDevice &kd):kd(kd),lastkey(KEY_ALL){ }
 
     u16arm_t untilkeypressDownUp()
     {
         volatile u16arm_t tmp;
 
-        while( (tmp=*kd) == KEY_INVALID){} //Press Down
+        while(( (tmp=*kd) & KEY_ALL) == KEY_ALL ){} //Press Down
 
         lastkey=tmp;
 
-        while((*kd) != KEY_INVALID){} //Press Up
+        while( ((*kd) &KEY_ALL ) != KEY_ALL){} //Press Up
 
 		return lastkey;
     }
@@ -57,7 +57,7 @@ struct Keypad
     {
         volatile u16arm_t tmp;
 
-        while( (tmp=*kd) == KEY_INVALID){} //Press Down
+        while(( (tmp=*kd) & KEY_ALL) == KEY_ALL ){} //Press Down
 
         lastkey=tmp;
 
