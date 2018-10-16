@@ -77,6 +77,26 @@ static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],co
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width-1,rgap+square.width-1);
 }
 
+
+static void swapbuff(Graphic &g,const Square &square,u8arm_t from,u8arm_t to,u8arm_t num)
+{
+    u8arm_t jfrom=from%WxH;
+    u8arm_t ifrom=from/WxH;
+    u8arm_t jto=to%WxH;
+    u8arm_t ito=to/WxH;
+
+    u8arm_t xto=FCGAP+jto*(square.width+CGAP);
+    u8arm_t yto=FRGAP+ito*(square.width+RGAP);; 
+
+    square.draw(g,{xto,yto},num);
+
+    u8arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
+    u8arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
+    g.rectangle(BGCOLOR,xfrom,yfrom,xfrom+square.width-1,yfrom+square.width-1);
+
+
+}
+
 extern "C"
 int main()
 {
@@ -100,24 +120,57 @@ int main()
 
     drawboard(g,square,sq,sqlist,index);
 
-    for(u32arm_t kid=0;keypad.untilkeypressDown();keypad.untilkeypressUp())
+    for(;keypad.untilkeypressDown();keypad.untilkeypressUp())
     {
+        u32arm_t kid=-1U;
+
+        struct point p;
+        u32arm_t _index;
+        u8arm_t indexfrom=0,indexto=0;
+        u8arm_t num;
+
+        getxy(_index = getindex(sq, index, WxH), &p, WxH);
 
         if(keypad==Keypad::KEY_UP)
         {
-            kid=0;
+            if (p.y > 0)
+            {
+                indexfrom=_index - WxH;
+                indexto=_index;
+
+                kid=0;
+            }
+
         }
         else if(keypad==Keypad::KEY_DOWN)
         {
-            kid=1;
+            if(p.y < WxH - 1)
+            {
+                indexfrom=_index + WxH;
+                indexto=_index;
+                
+                kid=1;
+            }
         }
         else if(keypad==Keypad::KEY_LEFT)
         {
-            kid=2;
+            if(p.x > 0)
+            {
+                indexfrom=_index - 1;
+                indexto=_index;
+
+                kid=2;
+            }
         }
         else if(keypad==Keypad::KEY_RIGHT)
         {
-            kid=3;
+            if(p.x < WxH - 1)
+            {
+                indexfrom=_index + 1;
+                indexto=_index;
+
+                kid=3;
+            }
         }
         else if(keypad==Keypad::KEY_SELECT)
         {
@@ -136,7 +189,10 @@ int main()
             continue;
         }
 
-        if(kid==4 || kid==5 || (slide(sq, kid, index, WxH)!=-1UL)) drawboard(g,square,sq,sqlist,index);
+        if(kid==4 || kid==5)
+            drawboard(g,square,sq,sqlist,index);
+        else if(num=sqlist[sq[indexfrom]],(slide(sq, kid, index, WxH)!=-1UL))
+            swapbuff(g,square,indexfrom,indexto,num);
 
         
     }
