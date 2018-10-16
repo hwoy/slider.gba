@@ -89,7 +89,7 @@ int main()
 
     drawboard(g,square,sq,sqstr,index);
 
-    while(keypad)
+    while(keypad.untilkeypressDownUp())
     {
         u32arm_t kid;
 
