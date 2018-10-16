@@ -59,11 +59,15 @@ struct Keypad
 
         while(( (tmp=*kd) & KEY_ALL) == KEY_ALL ){} //Press Down
 
-        *kd=KEY_ALL;
         lastkey=tmp;
 
 
 		return lastkey;
+    }
+
+    inline void untilkeypressUp()
+    {
+        while( ((*kd) &KEY_ALL ) != KEY_ALL){} //Press Up
     }
 	
 	inline bool ispress(u16arm_t key) const
