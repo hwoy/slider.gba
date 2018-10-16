@@ -92,6 +92,7 @@ static void swapsquare(Graphic &g,const Square &square,u8arm_t from,u8arm_t to,u
 
     u8arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
     u8arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
+    
     g.rectangle(BGCOLOR,xfrom,yfrom,xfrom+square.width-1,yfrom+square.width-1);
 
 
