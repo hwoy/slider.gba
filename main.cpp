@@ -54,11 +54,14 @@ static constexpr u32arm_t slen(const i8arm_t (&)[N])
 }
 
 
+
 template <usize_t N>
 static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const i8arm_t *sqstr,u32arm_t index)
 {
-    for(u8arm_t i=0,rgap=FRGAP,k=0;i<3;++i,rgap+=(RGAP+square.width))
-		for(u8arm_t j=0,cgap=FCGAP;j<3;++j,cgap+=(CGAP+square.width),++k)
+    static_assert(WxH*WxH==N,"WxH*WxH !=N => It's not square!!");
+
+    for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
+		for(u8arm_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
 			if(sq[k]!=index)
                 square.draw(g,{cgap,rgap},sqstr[sq[k]]-'0');
             else
@@ -69,6 +72,8 @@ extern "C"
 int main()
 {
     static const i8arm_t sqstr[] = SQSTR;
+
+    static_assert(WxH*WxH==slen(sqstr),"WxH*WxH !=slen(sqstr) => It's not square!!");
 
     u32arm_t sq[WxH * WxH];
     u32arm_t seed, origseed;
