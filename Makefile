@@ -12,7 +12,6 @@ CXXFLAGS=-std=c++11  -fno-exceptions -fno-rtti -fno-asynchronous-unwind-tables -
 CC = arm-eabi-gcc
 CFLAGS=-std=c99 -fno-asynchronous-unwind-tables -nostdinc -nostdlib $(FLAGS)
 
-LDFLAGS = -LC:\gcc-arm-eabi\lib\gcc\arm-eabi\7.2.0
 
 GBA = VisualBoyAdvance.exe
 
@@ -22,7 +21,7 @@ all: $(BIN).gba
 
 
 $(BIN).elf: loader.o main.o slider.o minstd.o lcg.o
-		$(LD) $(LDFLAGS) -Map=$(BIN).map -N -e _start -Ttext 0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -lgcc
+		$(CC) -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -lgcc
 
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
