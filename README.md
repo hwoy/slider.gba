@@ -11,10 +11,10 @@ Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/r
 - Work great on [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
  
 ### Keypad
-- UP     == moves block down
-- DOWN   == moves block up
-- LEFT   == moves block right
-- RIGHT  == moves block left
+- UP     == moves down block
+- DOWN   == moves up block
+- LEFT   == moves left block to right
+- RIGHT  == moves right block to left
 - START  == reset a board
 - A      == pred origin random seed and init board
 - B      == succ origin random seed and init board
