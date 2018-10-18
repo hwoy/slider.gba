@@ -51,6 +51,8 @@ static_assert(WxH*WxH==slen(sqlist),"WxH*WxH !=slen(sqlist) => It's not square!!
 
 static constexpr const Color BOXCOLOR  {31,0,0};
 static constexpr const Color IBOXCOLOR {0,31,0};
+static constexpr const Color COMBOXCOLOR = IBOXCOLOR;
+
 static constexpr const Color NUMCOLOR  {0,0,31};
 
 static constexpr const Color BGCOLOR   {0,0,0};
@@ -66,19 +68,20 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 
 
 template <usize_t N>
-static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const u8arm_t *sqlist,u32arm_t index)
+static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u32arm_t index)
 {
+    constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,IBOXCOLOR,NUMCOLOR}; 
 
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
 		for(u8arm_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
 			if(sq[k]!=index)
-                square.draw(g,{cgap,rgap},sqlist[sq[k]]);
+                (sq[k]==k? comsquare : square).draw(g,{cgap,rgap},sqlist[sq[k]]);
             else
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width-1,rgap+square.width-1);
 }
 
-
-static void movesquare(Graphic &g,const Square &square,u8arm_t from,u8arm_t to,u8arm_t num)
+template <usize_t N>
+static void movesquare(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u8arm_t from,u8arm_t to,u8arm_t num)
 {
     u8arm_t jfrom=from%WxH;
     u8arm_t ifrom=from/WxH;
@@ -86,9 +89,12 @@ static void movesquare(Graphic &g,const Square &square,u8arm_t from,u8arm_t to,u
     u8arm_t ito=to/WxH;
 
     u8arm_t xto=FCGAP+jto*(square.width+CGAP);
-    u8arm_t yto=FRGAP+ito*(square.width+RGAP);; 
+    u8arm_t yto=FRGAP+ito*(square.width+RGAP);
 
-    square.draw(g,{xto,yto},num);
+    constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,IBOXCOLOR,NUMCOLOR}; 
+
+    (sq[to]==to? comsquare : square).draw(g,{xto,yto},num);
+
 
     u8arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
     u8arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
@@ -197,7 +203,7 @@ int main()
             case 3:
                     num=sqlist[sq[indexfrom]];
                     if(slide(sq, kid, index, WxH)!=-1UL)
-                        movesquare(g,square,indexfrom,indexto,num);
+                        movesquare(g,square,sq,sqlist,indexfrom,indexto,num);
                     break;
             case 4:
             case 5:
