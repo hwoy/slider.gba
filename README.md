@@ -5,7 +5,7 @@ Port [Slider game](https://github.com/hwoy/slider) to GameBoy Advance on VisualB
 Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) for [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 
 # What is a slider.gba
-- slider.gba is a very simple NxN board game that can run on GameBoy Advance. 
+- slider.gba is a very simple NxN board game that can be run on GameBoy Advance. 
 - It has been written in ISO C++11 abstraction.
 - No special library(libheart) or even libc, except libgcc for basic software math function.
 - Work great on [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
@@ -26,7 +26,7 @@ Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/r
 ### Tools for slider.gba
 
 - **Toolchain:** [Mingw toolchains for ARM-eabi](http://sysprogs.com/files/gnutoolchains/arm-eabi/arm-eabi-gcc7.2.0-r3.exe)
-- **GameBoy Advance enulator:** [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
+- **GameBoy Advance emulator:** [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 - **Builder:** GNU make for Windows that comes with [Mingw toolchains for ARM-eabi](http://sysprogs.com/files/gnutoolchains/arm-eabi/arm-eabi-gcc7.2.0-r3.exe)
 
 ### How to make
