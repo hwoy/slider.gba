@@ -83,21 +83,21 @@ static void drawboard(Graphic &g,const Square &square,const u32arm_t (&sq)[N],co
 template <usize_t N>
 static void movesquare(Graphic &g,const Square &square,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u8arm_t from,u8arm_t to,u8arm_t num)
 {
-    u8arm_t jfrom=from%WxH;
-    u8arm_t ifrom=from/WxH;
-    u8arm_t jto=to%WxH;
-    u8arm_t ito=to/WxH;
+    const u8arm_t jfrom=from%WxH;
+    const u8arm_t ifrom=from/WxH;
+    const u8arm_t jto=to%WxH;
+    const u8arm_t ito=to/WxH;
 
-    u8arm_t xto=FCGAP+jto*(square.width+CGAP);
-    u8arm_t yto=FRGAP+ito*(square.width+RGAP);
+    const u8arm_t xto=FCGAP+jto*(square.width+CGAP);
+    const u8arm_t yto=FRGAP+ito*(square.width+RGAP);
 
     constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,IBOXCOLOR,NUMCOLOR}; 
 
     (sq[to]==to? comsquare : square).draw(g,{xto,yto},num);
 
 
-    u8arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
-    u8arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
+    const u8arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
+    const u8arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
     
     g.rectangle(BGCOLOR,xfrom,yfrom,xfrom+square.width-1,yfrom+square.width-1);
 
