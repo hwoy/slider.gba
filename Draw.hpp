@@ -1,7 +1,7 @@
 #ifndef __DRAW_HPP__
 #define __DRAW_HPP__
 
-#include "arm7type.hpp"
+#include "arm7type.h"
 #include "Graphic.hpp"
 
 struct Draw 

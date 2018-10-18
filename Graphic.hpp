@@ -2,7 +2,7 @@
 #define __GRAPHIC_HPP__
 
 
-#include "arm7type.hpp"
+#include "arm7type.h"
 
 #define RGB16(r,g,b)  ((r)+(g<<5)+(b<<10))
 

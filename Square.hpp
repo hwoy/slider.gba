@@ -1,7 +1,7 @@
 #ifndef __SQUARE_HPP__
 #define __SQUARE_HPP__
 
-#include "arm7type.hpp"
+#include "arm7type.h"
 #include "Graphic.hpp"
 #include "Font.hpp"
 

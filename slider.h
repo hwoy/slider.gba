@@ -5,7 +5,11 @@
 #define RANDLOOP 1024
 #endif
 
-#include "arm7type.hpp"
+#include "arm7type.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct point {
     u32arm_t y, x;
@@ -42,6 +46,10 @@ u32arm_t extractcanmovesq(u32arm_t* const d, u32arm_t value);
 u32arm_t randomsq(u32arm_t* const sq, u32arm_t index, u32arm_t hw, u32arm_t* seed);
 
 u32arm_t gameid(const u32arm_t* const sq, u32arm_t hw);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

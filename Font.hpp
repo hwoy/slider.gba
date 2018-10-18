@@ -1,7 +1,7 @@
 #ifndef __FONT_HPP__
 #define __FONT_HPP__
 
-#include "arm7type.hpp"
+#include "arm7type.h"
 #include "Graphic.hpp"
 #include "Draw.hpp"
 

@@ -1,6 +1,6 @@
 #include "slider.h"
 
-#include "arm7type.hpp"
+#include "arm7type.h"
 #include "Graphic.hpp"
 #include "Keypad.hpp"
 #include "Font.hpp"

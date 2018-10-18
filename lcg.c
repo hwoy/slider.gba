@@ -1,5 +1,5 @@
 #include "lcg.h"
-#include "arm7type.hpp"
+#include "arm7type.h"
 
 u32arm_t lcg_lehmer(u32arm_t* sd, u32arm_t a, u32arm_t m)
 {

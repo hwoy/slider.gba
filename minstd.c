@@ -1,5 +1,5 @@
 #include "minstd.h"
-#include "arm7type.hpp"
+#include "arm7type.h"
 
 u32arm_t minstd_rand0(u32arm_t* sd)
 {

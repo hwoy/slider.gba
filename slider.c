@@ -1,7 +1,7 @@
 #include "slider.h"
 #include "minstd.h"
 
-#include "arm7type.hpp"
+#include "arm7type.h"
 
 void swap(u32arm_t* const a, u32arm_t* const b)
 {
