@@ -142,7 +142,7 @@ int main()
             {
                 indexfrom=indexto - WxH;
 
-                kid=0;
+                kid=cmd_up;
             }
 
         }
@@ -152,7 +152,7 @@ int main()
             {
                 indexfrom=indexto + WxH;
                 
-                kid=1;
+                kid=cmd_down;
             }
         }
         else if(keypad==Keypad::KEY_LEFT)
@@ -161,7 +161,7 @@ int main()
             {
                 indexfrom=indexto - 1;
 
-                kid=2;
+                kid=cmd_left;
             }
         }
         else if(keypad==Keypad::KEY_RIGHT)
@@ -170,38 +170,39 @@ int main()
             {
                 indexfrom=indexto + 1;
 
-                kid=3;
+                kid=cmd_right;
             }
         }
         else if(keypad==Keypad::KEY_A)
         {
-            kid=4;
+            kid=cmd_right+1;
             seed=--origseed;
         }
         else if(keypad==Keypad::KEY_B)
         {
-            kid=5;
+            kid=cmd_right+2;
             seed=++origseed;
         }
         else if(keypad==Keypad::KEY_START)
         {
-            kid=6;
+            kid=cmd_right+3;
             seed=origseed;
         } 
 
         switch(kid)
         {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
+            case cmd_up:
+            case cmd_down:
+            case cmd_left:
+            case cmd_right:
                     num=sqlist[sq[indexfrom]];
                     if(slide(sq, kid, index, WxH)!=-1UL)
                         movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto,num);
                     break;
-            case 4:
-            case 5:
-            case 6:
+                    
+            case cmd_right+1:
+            case cmd_right+2:
+            case cmd_right+3:
                     initgame(sq, &seed, index, WxH);
                     drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
