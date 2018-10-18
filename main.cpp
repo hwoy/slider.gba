@@ -53,7 +53,7 @@ static constexpr const Color BOXCOLOR  {31,0,0};
 static constexpr const Color IBOXCOLOR {0,31,0};
 static constexpr const Color NUMCOLOR  {0,0,31};
 
-static constexpr const Color COMBOXCOLOR  = IBOXCOLOR;
+static constexpr const Color COMBOXCOLOR  = BOXCOLOR;
 static constexpr const Color COMIBOXCOLOR = COMBOXCOLOR;
 static constexpr const Color COMNUMCOLOR  = NUMCOLOR;
 
