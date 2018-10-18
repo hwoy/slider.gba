@@ -71,10 +71,8 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 
 
 template <usize_t N>
-static void drawboard(Graphic &g,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u32arm_t index)
+static void drawboard(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u32arm_t index)
 {
-    constexpr const Square square{WIDTH,IWIDTH,BOXCOLOR,IBOXCOLOR,NUMCOLOR};
-    constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,COMIBOXCOLOR,COMNUMCOLOR}; 
 
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
 		for(u8arm_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
@@ -85,10 +83,8 @@ static void drawboard(Graphic &g,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)
 }
 
 template <usize_t N>
-static void movesquare(Graphic &g,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u8arm_t from,u8arm_t to,u8arm_t num)
+static void movesquare(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u8arm_t from,u8arm_t to,u8arm_t num)
 {
-    constexpr const Square square{WIDTH,IWIDTH,BOXCOLOR,IBOXCOLOR,NUMCOLOR};
-    constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,COMIBOXCOLOR,COMNUMCOLOR}; 
 
     const u8arm_t jfrom=from%WxH;
     const u8arm_t ifrom=from/WxH;
@@ -112,6 +108,8 @@ static void movesquare(Graphic &g,const u32arm_t (&sq)[N],const u8arm_t (&sqlist
 extern "C"
 int main()
 {
+    static constexpr const Square square{WIDTH,IWIDTH,BOXCOLOR,IBOXCOLOR,NUMCOLOR};
+    static constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,COMIBOXCOLOR,COMNUMCOLOR}; 
 
     u32arm_t sq[WxH * WxH];
     u32arm_t seed, origseed;
@@ -127,7 +125,7 @@ int main()
 
     Keypad keypad{KeypadDevice{}};
 
-    drawboard(g,sq,sqlist,index);
+    drawboard(g,square,comsquare,sq,sqlist,index);
 
     for(;keypad.untilkeypressDown();keypad.untilkeypressUp())
     {
@@ -205,13 +203,13 @@ int main()
             case 3:
                     num=sqlist[sq[indexfrom]];
                     if(slide(sq, kid, index, WxH)!=-1UL)
-                        movesquare(g,sq,sqlist,indexfrom,indexto,num);
+                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto,num);
                     break;
             case 4:
             case 5:
             case 6:
                     initgame(sq, &seed, index, WxH);
-                    drawboard(g,sq,sqlist,index);
+                    drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
 
             default: break;
