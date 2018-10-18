@@ -4,13 +4,13 @@ BIN=slider
 OBJCOPY = arm-eabi-objcopy
 LD = arm-eabi-ld
 
-FLAGS = -pedantic -Wall -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations
+FLAGS = -pedantic -Wall -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin
 
 CXX = arm-eabi-g++
 CXXFLAGS=-std=c++11  -fno-exceptions -fno-rtti -fno-asynchronous-unwind-tables -nostdinc -nostdinc++ $(FLAGS)
 
 CC = arm-eabi-gcc
-CFLAGS=-std=c99 -fno-asynchronous-unwind-tables -nostdinc -nostdlib $(FLAGS)
+CFLAGS=-std=c99 -fno-asynchronous-unwind-tables -nostdinc $(FLAGS)
 
 
 GBA = VisualBoyAdvance.exe
@@ -35,7 +35,7 @@ run: $(BIN).gba
 
 
 lcg.o: lcg.cpp lcg.h arm7type.hpp
-loader.o: loader.cpp
+loader.o: loader.c
 main.o: main.cpp slider.h arm7type.hpp Graphic.hpp Keypad.hpp Font.hpp \
  Draw.hpp Square.hpp
 minstd.o: minstd.cpp minstd.h arm7type.hpp lcg.h
