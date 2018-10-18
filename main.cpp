@@ -112,8 +112,8 @@ int main()
     static constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,COMIBOXCOLOR,COMNUMCOLOR}; 
 
     u32arm_t sq[WxH * WxH];
+    
     u32arm_t seed, origseed;
-
     origseed = seed = INITSEED;
 
     constexpr const u32arm_t index = slen(sqlist)-1;
@@ -123,27 +123,24 @@ int main()
     Graphic g(GraphicDevice{});
 	g.setbgcolor(BGCOLOR);
 
-    Keypad keypad{KeypadDevice{}};
-
     drawboard(g,square,comsquare,sq,sqlist,index);
 
-    for(;keypad.untilkeypressDown();keypad.untilkeypressUp())
+    for(Keypad keypad{KeypadDevice{}};keypad.untilkeypressDown();keypad.untilkeypressUp())
     {
         u32arm_t kid=-1U;
 
         struct point p;
-        u32arm_t _index;
+
         u8arm_t indexfrom,indexto;
         u8arm_t num;
 
-        getxy(_index = getindex(sq, index, WxH), &p, WxH);
+        getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
         if(keypad==Keypad::KEY_UP)
         {
             if (p.y > 0)
             {
-                indexfrom=_index - WxH;
-                indexto=_index;
+                indexfrom=indexto - WxH;
 
                 kid=0;
             }
@@ -153,8 +150,7 @@ int main()
         {
             if(p.y < WxH - 1)
             {
-                indexfrom=_index + WxH;
-                indexto=_index;
+                indexfrom=indexto + WxH;
                 
                 kid=1;
             }
@@ -163,8 +159,7 @@ int main()
         {
             if(p.x > 0)
             {
-                indexfrom=_index - 1;
-                indexto=_index;
+                indexfrom=indexto - 1;
 
                 kid=2;
             }
@@ -173,8 +168,7 @@ int main()
         {
             if(p.x < WxH - 1)
             {
-                indexfrom=_index + 1;
-                indexto=_index;
+                indexfrom=indexto + 1;
 
                 kid=3;
             }
