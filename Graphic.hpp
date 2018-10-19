@@ -22,7 +22,7 @@ struct GraphicDevice
 	static constexpr const u8arm_t ROW=160;
 
 	static volatile u32arm_t * const iomem;
-	static volatile u16arm_t *const vidmem;
+	static volatile u16arm_t * const vidmem;
 
 	static inline void setmode(u32arm_t mode)
 	{
@@ -67,7 +67,7 @@ struct GraphicDevice
 };
 
 volatile u32arm_t * const GraphicDevice::iomem=IOMEM;
-volatile u16arm_t *const GraphicDevice::vidmem=VIDMEM;
+volatile u16arm_t * const GraphicDevice::vidmem=VIDMEM;
 
 struct Graphic_Type
 {
