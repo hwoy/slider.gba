@@ -5,9 +5,9 @@ Port [Slider game](https://github.com/hwoy/slider) to GameBoy Advance on VisualB
 Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) for [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 
 # What is a slider.gba
-- slider.gba is a very simple NxN board game that can be run on GameBoy Advance. 
+- slider.gba is a very simple NxN puzzle slider game that can be run on GameBoy Advance. 
 - It has been written in ISO C++11 abstraction.
-- No special library(libheart) or even libc, except libgcc for basic software math function.
+- No special library(libheart) or even libc, except libgcc for basic software math function(div and mod).
 - Work great on [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
  
 ### Keypad
