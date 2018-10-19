@@ -1,15 +1,15 @@
 NAME=main
 BIN=slider
 
-OBJCOPY = arm-eabi-objcopy
-LD = arm-eabi-ld
+OBJCOPY = arm-none-eabi-objcopy
+LD = arm-none-eabi-ld
 
 FLAGS = -pedantic -Wall -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
 
-CXX = arm-eabi-g++
+CXX = arm-none-eabi-g++
 CXXFLAGS=-std=c++11 $(FLAGS) -fno-exceptions -fno-rtti -nostdinc -nostdinc++
 
-CC = arm-eabi-gcc
+CC = arm-none-eabi-gcc
 CFLAGS=-std=c99  $(FLAGS) -nostdinc
 
 
@@ -27,7 +27,7 @@ $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
  
 clean:
-	del *.gba *.o *.elf *.map
+	rm -rf *.txt *.gba *.o *.elf *.map
 
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
