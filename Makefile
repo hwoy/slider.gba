@@ -15,19 +15,29 @@ CFLAGS=-std=c99  $(FLAGS) -nostdinc
 
 GBA = VisualBoyAdvance.exe
 
-.PHONY: all clean run
+.PHONY: all clean run gha
 
-all: $(BIN).gba
+all: $(BIN).gba $(BIN)-actual-GBA.gba
 
+$(BIN)-actual-GBA.elf: loader.o main.o slider.o minstd.o lcg.o
+		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 loader.o main.o slider.o minstd.o lcg.o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc
+
+$(BIN)-actual-GBA.gba: gha/gha.exe $(BIN)-actual-GBA.elf
+		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA-noheader.gba
+		gha/gha.exe $(BIN)-actual-GBA-noheader.gba $(BIN)-actual-GBA.gba
 
 $(BIN).elf: loader.o main.o slider.o minstd.o lcg.o
 		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -static-libgcc -lgcc
 
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
+
+gha/gha.exe:
+	make -C gha
  
 clean:
 	rm -rf *.txt *.gba *.o *.elf *.map
+	make -C gha clean
 
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
