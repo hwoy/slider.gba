@@ -6,69 +6,68 @@
 
 #define RGB16(r,g,b)  ((r)+(g<<5)+(b<<10))
 
-#define VIDMEM ((volatile u16arm_t *)0x6000000)
 #define IOMEM ((volatile u32arm_t *)0x4000000)
+#define VIDMEM ((volatile u16arm_t *)0x6000000)
+
 
 struct Point
 {
 	u8arm_t x,y;
 };
 
+
 struct GraphicDevice
 {
 	static constexpr const u8arm_t COL=240;
 	static constexpr const u8arm_t ROW=160;
 
-	volatile u32arm_t *iomem;
-	volatile u16arm_t *vidmem;
+	static volatile u32arm_t * const iomem;
+	static volatile u16arm_t *const vidmem;
 
-	inline void setmode(u32arm_t mode)
+	static inline void setmode(u32arm_t mode)
 	{
 		*iomem=mode;
 	}
 
-	inline u32arm_t getmode(void) const
+	static inline u32arm_t getmode(void)
 	{
 		return *iomem;
 	}
 
-	inline void setvidmem(volatile u16arm_t *vd)
-	{
-		vidmem=vd;
-	}
-
-	inline volatile u16arm_t *getvidmem(void)
+	static inline volatile u16arm_t *getvidmem(void)
 	{
 		return vidmem;
 	}
 
 
-	explicit inline GraphicDevice(u32arm_t mode=0x403,volatile u32arm_t *iomem=IOMEM,volatile u16arm_t *vidmem=VIDMEM)
-	:iomem(iomem),vidmem(vidmem)
+	explicit inline GraphicDevice(u32arm_t mode=0x403)
 	{
 		*iomem=mode;
 	}
 
-	inline u16arm_t read(u16arm_t index) const
+	static inline u16arm_t read(u16arm_t index)
 	{
 		return vidmem[index];
 	}
 
-	inline void write(u16arm_t index,u16arm_t value)
+	static inline void write(u16arm_t index,u16arm_t value)
 	{
 		vidmem[index]=value;
 	}
 
-	inline u16arm_t read(u8arm_t x,u8arm_t y) const
+	static inline u16arm_t read(u8arm_t x,u8arm_t y)
 	{
 		return read(x+y*COL);
 	}
 
-	inline void write(u8arm_t x,u8arm_t y,u16arm_t value)
+	static inline void write(u8arm_t x,u8arm_t y,u16arm_t value)
 	{
 		write(x+y*COL,value);
 	}
 };
+
+volatile u32arm_t * const GraphicDevice::iomem=IOMEM;
+volatile u16arm_t *const GraphicDevice::vidmem=VIDMEM;
 
 struct Graphic_Type
 {
