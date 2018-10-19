@@ -112,9 +112,9 @@ int main(int argc, char *argv[])
 
 	if(!(fout=fopen(argv[2], "wb"))) { fclose(fin); return printerr(err_fout,errstr); }
 
-	header.complement = 0;
-	header.checksum = 0;
+	
 	header.complement = HeaderComplement(&header);
+	
 	fwrite(&header, sizeof(header), 1, fout);
 
 	while((ch=fgetc(fin))!=EOF)

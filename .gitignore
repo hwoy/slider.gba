@@ -1,6 +1,8 @@
 *.o
 *~
 slider.gba
+slider-actual-GBA.gba
+slider-actual-GBA-noheader.gba
 *.exe
 *.elf
 *.ini
