@@ -58,12 +58,11 @@ static Header header = {
 char HeaderComplement(const Header *header)
 {
 	char c = 0;
-	char *p = (char *)header + 0xA0;
-	int n;
+	const char *p = (const char *)header + 0xA0;
+	unsigned int n;
 	for (n=0; n<0xBD-0xA0; n++)
-	{
 		c += *p++;
-	}
+
 	return -(0x19+c);
 }
 

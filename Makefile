@@ -15,7 +15,7 @@ CFLAGS=-std=c99  $(FLAGS) -nostdinc
 
 GBA = VisualBoyAdvance.exe
 
-.PHONY: all clean run gha
+.PHONY: all clean run
 
 all: $(BIN).gba $(BIN)-actual-GBA.gba
 
