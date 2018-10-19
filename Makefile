@@ -23,8 +23,8 @@ $(BIN)-actual-GBA.elf: loader.o main.o slider.o minstd.o lcg.o
 		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 loader.o main.o slider.o minstd.o lcg.o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc
 
 $(BIN)-actual-GBA.gba: gha/gha.exe $(BIN)-actual-GBA.elf
-		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA-noheader.gba
-		gha/gha.exe $(BIN)-actual-GBA-noheader.gba $(BIN)-actual-GBA.gba
+		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
+		gha/gha.exe $(BIN)-actual-GBA.noheader $(BIN)-actual-GBA.gba
 
 $(BIN).elf: loader.o main.o slider.o minstd.o lcg.o
 		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -static-libgcc -lgcc
@@ -36,7 +36,7 @@ gha/gha.exe:
 	make -C gha
  
 clean:
-	rm -rf *.txt *.gba *.o *.elf *.map
+	rm -rf *.txt *.gba *.o *.elf *.map $(BIN)-actual-GBA.noheader
 	make -C gha clean
 
 run: $(BIN).gba
