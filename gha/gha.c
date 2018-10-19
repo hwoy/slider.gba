@@ -55,10 +55,10 @@ static Header header = {
 };
 
 
-char HeaderComplement(const Header *header)
+unsigned char HeaderComplement(const Header *header)
 {
-	char c = 0;
-	const char *p = (const char *)header + 0xA0;
+	unsigned char c = 0;
+	const unsigned char *p = (unsigned const char *)header + 0xA0;
 	unsigned int n;
 	for (n=0; n<0xBD-0xA0; n++)
 		c += *p++;
