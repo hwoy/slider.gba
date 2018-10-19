@@ -2,21 +2,17 @@
 
 struct KeypadDevice
 {
-    static volatile u16arm_t * const keys;
-
-    inline volatile u16arm_t &operator *()
+    inline volatile u16arm_t operator *()
     {
-        return *keys;
+        return *KEYS;
     }
 
-    inline const volatile u16arm_t &operator *() const
+    inline const volatile u16arm_t operator *() const
     {
-        return *keys;
+        return *KEYS;
     }
 
 };
-
-volatile u16arm_t * const KeypadDevice::keys=KEYS;
 
 struct Keypad
 {

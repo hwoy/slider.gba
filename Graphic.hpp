@@ -21,38 +21,29 @@ struct GraphicDevice
 	static constexpr const u8arm_t COL=240;
 	static constexpr const u8arm_t ROW=160;
 
-	static volatile u32arm_t * const iomem;
-	static volatile u16arm_t * const vidmem;
-
 	static inline void setmode(u32arm_t mode)
 	{
-		*iomem=mode;
+		*IOMEM=mode;
 	}
 
 	static inline u32arm_t getmode(void)
 	{
-		return *iomem;
+		return *IOMEM;
 	}
-
-	static inline volatile u16arm_t *getvidmem(void)
-	{
-		return vidmem;
-	}
-
 
 	explicit inline GraphicDevice(u32arm_t mode=0x403)
 	{
-		*iomem=mode;
+		*IOMEM=mode;
 	}
 
 	static inline u16arm_t read(u16arm_t index)
 	{
-		return vidmem[index];
+		return VIDMEM[index];
 	}
 
 	static inline void write(u16arm_t index,u16arm_t value)
 	{
-		vidmem[index]=value;
+		VIDMEM[index]=value;
 	}
 
 	static inline u16arm_t read(u8arm_t x,u8arm_t y)
@@ -65,9 +56,6 @@ struct GraphicDevice
 		write(x+y*COL,value);
 	}
 };
-
-volatile u32arm_t * const GraphicDevice::iomem=IOMEM;
-volatile u16arm_t * const GraphicDevice::vidmem=VIDMEM;
 
 struct Graphic_Type
 {
