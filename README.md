@@ -28,6 +28,7 @@ Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/r
 - **Toolchain:** [bleeding-edge-toolchain for ARM-eabi](http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain)
 - **GameBoy Advance emulator:** [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
 - **Builder:** [GNU make for Windows](http://ftp.gnu.org/gnu/make/?C=M;O=D) can be compiled from source by [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/) (mingw-w64 bundles GNU make)
+- **Native Compiler:** Native C compiler for compiling gha [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/) (mingw-w64 bundles GNU make)
 
 ### How to make
 
@@ -40,7 +41,7 @@ $ make
 
 ```
 
-- If it success , you will see [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba)
+- If it success , you will see [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) or [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-actual-GBA.gba) for actual ROM
 
 
 ### Contact me. 
