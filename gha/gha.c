@@ -88,14 +88,14 @@ static const char *croppath(const char *path)
 	return cpath;
 }
 
-static int showhekp(const char *pname)
+static int showhelp(const char *pname)
 {
 	fprintf(stderr,"\n%s is GameBoy Advance Head Adder\n",pname);
 	fprintf(stderr,"\nUSAGE:: %s infile outfile\n",pname);
 	return 1;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
 	int ch;
 	FILE *fin;
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 	if(argc !=3)
 	{
 		printerr(err_param,errstr);
-		return showhekp(croppath(argv[0]));
+		return showhelp(croppath(argv[0]));
 	}
 
 	if(!(fin=fopen(argv[1], "rb"))) return printerr(err_fin,errstr);
