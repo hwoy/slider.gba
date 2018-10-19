@@ -25,9 +25,9 @@ Download [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/r
 
 ### Tools for slider.gba
 
-- **Toolchain:** [Mingw toolchains for ARM-eabi](http://sysprogs.com/files/gnutoolchains/arm-eabi/arm-eabi-gcc7.2.0-r3.exe)
+- **Toolchain:** [GCC toolchains for ARM-eabi](http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain)
 - **GameBoy Advance emulator:** [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip)
-- **Builder:** GNU make for Windows that comes with [Mingw toolchains for ARM-eabi](http://sysprogs.com/files/gnutoolchains/arm-eabi/arm-eabi-gcc7.2.0-r3.exe)
+- **Builder:** GNU make for Windows can be compiled from source by MinGW [make](http://ftp.gnu.org/gnu/make/?C=M;O=D)
 
 ### How to make
 
