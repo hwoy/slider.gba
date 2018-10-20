@@ -83,7 +83,7 @@ static void drawboard(Graphic &g,const Square &square,const Square &comsquare,co
 }
 
 template <usize_t N>
-static void movesquare(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u8arm_t from,u8arm_t to,u8arm_t num)
+static void movesquare(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u8arm_t from,u8arm_t to)
 {
 
     const u8arm_t jfrom=from%WxH;
@@ -94,7 +94,7 @@ static void movesquare(Graphic &g,const Square &square,const Square &comsquare,c
     const u8arm_t xto=FCGAP+jto*(square.width+CGAP);
     const u8arm_t yto=FRGAP+ito*(square.width+RGAP);
 
-    (sq[to]==to? comsquare : square).draw(g,{xto,yto},num);
+    (sq[to]==to? comsquare : square).draw(g,{xto,yto},sqlist[sq[to]]);
 
 
     const u8arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
@@ -195,7 +195,7 @@ int main()
             case cmd_left:
             case cmd_right:
                     if(slide(sq, kid, index, WxH)!=-1UL)
-                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto,sqlist[sq[indexto]]);
+                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
                     break;
                     
             case cmd_right+1:
