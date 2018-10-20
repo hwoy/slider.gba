@@ -63,17 +63,6 @@ enum Error{
 static const char *errstr[]={"Number of Param must be 2","can not access Input File","can not access Output File",NULL};
 
 
-static unsigned char HeaderComplement(const Header *header)
-{
-	unsigned char c = 0;
-	const unsigned char *p = (const unsigned char *)header + 0xA0;
-	unsigned int n;
-	for (n=0xA0; n<=0xBC; n++)
-		c += *p++;
-
-	return -(0x19+c);
-}
-
 static int printerr(int id,const char **errstr)
 {
 	fprintf(stderr,"\nError id:%d => %s\n",id,errstr[id]);
@@ -93,6 +82,17 @@ static int showhelp(const char *pname)
 	fprintf(stderr,"\n%s is GameBoy Advance Head Adder\n",pname);
 	fprintf(stderr,"\nUSAGE:: %s infile outfile\n",pname);
 	return 1;
+}
+
+static unsigned char HeaderComplement(const Header *header)
+{
+	unsigned char c = 0;
+	const unsigned char *p = (const unsigned char *)header + 0xA0;
+	unsigned int n;
+	for (n=0xA0; n<=0xBC; n++)
+		c += *p++;
+
+	return -(0x19+c);
 }
 
 int main(int argc, const char *argv[])
