@@ -2,7 +2,7 @@ CC=gcc
 
 BIN=gbafix2
 
-CFLAGS=-O2 -ansi -pedantic -Wall
+CFLAGS=-O2 -ansi -pedantic -Wall -Wextra
 
 
 
