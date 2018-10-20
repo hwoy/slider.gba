@@ -54,8 +54,16 @@ static Header header = {
 	0x0000
 };
 
+enum Error{
+	err_param,
+	err_fin,
+	err_fout
+};
 
-unsigned char HeaderComplement(const Header *header)
+static const char *errstr[]={"Number of Param must be 2","can not access Input File","can not access Output File",NULL};
+
+
+static unsigned char HeaderComplement(const Header *header)
 {
 	unsigned char c = 0;
 	const unsigned char *p = (const unsigned char *)header + 0xA0;
@@ -65,14 +73,6 @@ unsigned char HeaderComplement(const Header *header)
 
 	return -(0x19+c);
 }
-
-enum Error{
-	err_param,
-	err_fin,
-	err_fout
-};
-
-static const char *errstr[]={"Number of Param must be 2","can not access Input File","can not access Output File",NULL};
 
 static int printerr(int id,const char **errstr)
 {
