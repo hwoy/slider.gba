@@ -107,7 +107,7 @@ static int showhelp(const char *pname,const char *opt[],const char *optstr[])
 	return 1;
 }
 
-static const char* opt[] = { "-g","-a", "-p", "-t:","-c:","-m:","-r:","-o:","-d", NULL };
+static const char* opt[] = { "-g","-a", "-p", "-t:","-c:","-m:","-r:","-o:","-d:", NULL };
 static const char* optstr[] = { 
 "Replaced by good header","Add header to an output file",\
  "Pad to next exact power of 2. No minimum size",\
@@ -116,7 +116,7 @@ static const char* optstr[] = {
 "Patch maker code (two characters)",\
 "Patch game version (number)",\
 "Output file (must be assigned)",\
-"Degug enabled", NULL };
+"Degug enabled (0 or 1)", NULL };
 
 enum {
 	opt_g,

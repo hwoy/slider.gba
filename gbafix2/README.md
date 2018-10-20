@@ -26,7 +26,7 @@ USAGE:: gbafix2 [option] infile
 -m:	 => Patch maker code (two characters)
 -r:	 => Patch game version (number)
 -o:	 => Output file (must be assigned)
--d	 => Degug enabled
+-d:	 => Degug enabled (0 or 1)
 
 
 ```
