@@ -107,10 +107,11 @@ static int showhelp(const char *pname,const char *opt[],const char *optstr[])
 	return 1;
 }
 
-static const char* opt[] = { "-g","-a", "-p", "-t:","-c:","-m:","-r:","-o:","-d:", NULL };
+static const char* opt[] = { "-g","-a", "-p","-P", "-t:","-c:","-m:","-r:","-o:","-d:", NULL };
 static const char* optstr[] = { 
 "Replaced by good header","Add header to an output file",\
- "Pad to next exact power of 2. No minimum size",\
+"Pad to next exact power of 2. No minimum size",\
+"Pad only and exit",\
 "Patch title. Fill zero if none given",\
 "Patch game code (four characters)",\
 "Patch maker code (two characters)",\
@@ -122,6 +123,7 @@ enum {
 	opt_g,
     opt_a,
     opt_p,
+	opt_P,
     opt_t,
 	opt_c,
 	opt_m,
@@ -165,7 +167,7 @@ int main(int argc, const char *argv[])
 
 	FILE *fin=NULL,*fout=NULL;
 
-	int isgood=0,isadd=0,ispadding=0,istitle=0,isgamecode=0,ismakercode=0,isversion=0,isdebug=0;
+	int isgood=0,isadd=0,ispadding=0,ispadonly=0,istitle=0,isgamecode=0,ismakercode=0,isversion=0,isdebug=0;
 
 	if(argc==1)
 		return showhelp(croppath(argv[0]),opt,optstr);
@@ -196,6 +198,12 @@ int main(int argc, const char *argv[])
             case opt_p:
 
 					ispadding =1;
+
+                	break;
+
+            case opt_P:
+
+					ispadonly =1;
 
                 	break;
 
@@ -334,6 +342,10 @@ int main(int argc, const char *argv[])
 		fwrite(&addheader, sizeof(addheader), 1, fout);
 
 		msg="Header ROM Added!";
+	}
+	else if(ispadonly)
+	{
+		msg="Padding only activated!"; ispadding=1;
 	}
 	else
 	{
