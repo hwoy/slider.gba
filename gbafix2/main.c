@@ -98,7 +98,7 @@ static const char *croppath(const char *path)
 static int showhelp(const char *pname,const char *opt[],const char *optstr[])
 {
 	size_t i;
-	fprintf(stderr,"\n%s is a GameBoy Advance Head Builder & Fixer\n",pname);
+	fprintf(stderr,"\n%s is a ROM GameBoy Advance Head Builder & Fixer\n",pname);
 	fprintf(stderr,"\nUSAGE:: %s [option] infile\n\n",pname);
 
 	for(i=0;opt[i];++i)
@@ -108,7 +108,9 @@ static int showhelp(const char *pname,const char *opt[],const char *optstr[])
 }
 
 static const char* opt[] = { "-g","-a", "-p", "-t:","-c:","-m:","-r:","-o:","-d", NULL };
-static const char* optstr[] = { "Replaced by good header","Add header to an output file", "Pad to next exact power of 2. No minimum size",\
+static const char* optstr[] = { 
+"Replaced by good header","Add header to an output file",\
+ "Pad to next exact power of 2. No minimum size",\
 "Patch title. Fill zero if none given",\
 "Patch game code (four characters)",\
 "Patch maker code (two characters)",\
@@ -146,10 +148,10 @@ static void filepadding(FILE *fout,int padval)
 
 	size = ftell(fout);
 
-	for (bit=31; bit>=0; bit--) if (size & (1<<bit)) break;
-	if (size != (1<<bit))
+	for (bit=32; bit>=1; bit--) if (size & (1<<(bit-1))) break;
+	if (size != (1U<<(bit-1)))
 	{
-		size_t todo = (1<<(bit+1)) - size;
+		size_t todo = (1U<<bit) - size;
 		while (todo--) fputc(padval, fout);
 	}
 }
