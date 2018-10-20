@@ -304,14 +304,14 @@ int main(int argc, const char *argv[])
 
 	if(isgood)
 	{
-		addheader = good_header;
-		addheader.complement = HeaderComplement(&addheader);
+		static Header replaceheader = good_header;
+		replaceheader.complement = HeaderComplement(&replaceheader);
 		
-		fwrite(&addheader, sizeof(addheader), 1, fout);
+		fwrite(&replaceheader, sizeof(replaceheader), 1, fout);
 
 		msg="Header ROM Replaced by good one!";
 
-		fseek(fin,sizeof(addheader),SEEK_CUR);
+		fseek(fin,sizeof(replaceheader),SEEK_CUR);
 
 	}
 	else if(isadd)
