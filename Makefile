@@ -22,9 +22,9 @@ all: $(BIN).gba $(BIN)-actual-GBA.gba
 $(BIN)-actual-GBA.elf: loader.o main.o slider.o minstd.o lcg.o
 		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 loader.o main.o slider.o minstd.o lcg.o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc
 
-$(BIN)-actual-GBA.gba: gha/gha.exe $(BIN)-actual-GBA.elf
+$(BIN)-actual-GBA.gba: gbafix2/gbafix2.exe $(BIN)-actual-GBA.elf
 		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
-		gha/gha.exe $(BIN)-actual-GBA.noheader $(BIN)-actual-GBA.gba
+		gbafix2/gbafix2.exe $(BIN)-actual-GBA.noheader -o:$(BIN)-actual-GBA.gba -a
 
 $(BIN).elf: loader.o main.o slider.o minstd.o lcg.o
 		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -static-libgcc -lgcc
@@ -32,12 +32,12 @@ $(BIN).elf: loader.o main.o slider.o minstd.o lcg.o
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
 
-gha/gha.exe:
-	make -C gha
+gbafix2/gbafix2.exe:
+	make -C gbafix2
  
 clean:
 	rm -rf *.txt *.gba *.o *.elf *.map $(BIN)-actual-GBA.noheader
-	make -C gha clean
+	make -C gbafix2 clean
 
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
