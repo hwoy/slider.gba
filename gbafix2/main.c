@@ -65,7 +65,8 @@ enum Error{
 	err_makercode,
 	err_version,
 	err_dfout,
-	err_dfin
+	err_dfin,
+	err_debug
 };
 
 static const char *errstr[]={
@@ -76,6 +77,7 @@ static const char *errstr[]={
 "game version",\
 "double output file",\
 "double input file",\
+"Debug entry point",\
 NULL};
 
 
@@ -105,13 +107,14 @@ static int showhelp(const char *pname,const char *opt[],const char *optstr[])
 	return 1;
 }
 
-static const char* opt[] = { "-g","-a", "-p", "-t:","-c:","-m:","-r:","-o:", NULL };
+static const char* opt[] = { "-g","-a", "-p", "-t:","-c:","-m:","-r:","-o:","-d", NULL };
 static const char* optstr[] = { "Replaced by good header","Add header to an output file", "Pad to next exact power of 2. No minimum size",\
 "Patch title. Fill zero if none given",\
 "Patch game code (four characters)",\
 "Patch maker code (two characters)",\
 "Patch game version (number)",\
-"Output file (must be assigned)", NULL };
+"Output file (must be assigned)",\
+"Degug enabled", NULL };
 
 enum {
 	opt_g,
@@ -121,7 +124,8 @@ enum {
 	opt_c,
 	opt_m,
 	opt_r,
-	opt_o
+	opt_o,
+	opt_d
 };
 
 static unsigned char HeaderComplement(const Header *header)
@@ -159,7 +163,7 @@ int main(int argc, const char *argv[])
 
 	FILE *fin=NULL,*fout=NULL;
 
-	int isgood=0,isadd=0,ispadding=0,istitle=0,isgamecode=0,ismakercode=0,isversion=0;
+	int isgood=0,isadd=0,ispadding=0,istitle=0,isgamecode=0,ismakercode=0,isversion=0,isdebug=0;
 
 	if(argc==1)
 		return showhelp(croppath(argv[0]),opt,optstr);
@@ -261,6 +265,21 @@ int main(int argc, const char *argv[])
 
 					break;
 
+			case opt_d:
+					if (!*buff || !isUint(buff))
+					{
+						if(fin) fclose(fin);
+						if(fout) fclose(fout);
+
+						return printerr(err_debug,errstr);
+					}
+					addheader.logo[0x9C-0x04] = 0xA5;
+					addheader.device_type = ((s2ui(buff) & 1) << 7);
+
+					isdebug=1;
+
+					break;
+
             default:
 					if(fin)
 					{
@@ -294,14 +313,6 @@ int main(int argc, const char *argv[])
 	fread(&header, sizeof(header), 1, fin);
 	rewind(fin);
 
-	if(istitle) memcpy(header.title,addheader.title,sizeof(header.title));
-
-	if(isgamecode) memcpy(&header.game_code,&addheader.game_code,sizeof(header.game_code));
-
-	if(ismakercode) memcpy(&header.maker_code,&addheader.maker_code,sizeof(header.maker_code));
-
-	if(isversion) memcpy(&header.game_version,&addheader.game_version,sizeof(header.game_version));
-
 	if(isgood)
 	{
 		static Header replaceheader = good_header;
@@ -326,7 +337,21 @@ int main(int argc, const char *argv[])
 	{
 		memcpy(header.logo, good_header.logo, sizeof(header.logo));
 		memcpy(&header.fixed, &good_header.fixed, sizeof(header.fixed));
-		memcpy(&header.device_type, &good_header.device_type, sizeof(header.device_type));
+		header.device_type=good_header.device_type;
+
+		if(istitle) memcpy(header.title,addheader.title,sizeof(header.title));
+
+		if(isgamecode) header.game_code=addheader.game_code;
+
+		if(ismakercode) header.maker_code=addheader.maker_code;
+
+		if(isversion) memcpy(&header.game_version,&addheader.game_version,sizeof(header.game_version));
+
+		if(isdebug) 
+		{
+			header.logo[0x9C-0x04]=addheader.logo[0x9C-0x04];
+			header.device_type=addheader.device_type;
+		}
 			
 		header.complement = 0;
 		header.checksum = 0;
