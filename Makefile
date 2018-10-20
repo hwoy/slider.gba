@@ -10,7 +10,7 @@ CXX = arm-none-eabi-g++
 CXXFLAGS=-std=c++11 $(FLAGS) -fno-exceptions -fno-rtti -nostdinc -nostdinc++
 
 CC = arm-none-eabi-gcc
-CFLAGS=-std=c99  $(FLAGS) -nostdinc
+CFLAGS=-std=c90  $(FLAGS) -nostdinc
 
 
 GBA = VisualBoyAdvance.exe
