@@ -21,6 +21,7 @@ USAGE:: gbafix2 [option] infile
 -g	 => Replaced by good header
 -a	 => Add header to an output file
 -p	 => Pad to next exact power of 2. No minimum size
+-P	 => Pad only and exit
 -t:	 => Patch title. Fill zero if none given
 -c:	 => Patch game code (four characters)
 -m:	 => Patch maker code (two characters)
