@@ -311,7 +311,7 @@ int main(int argc, const char *argv[])
 
 		msg="Header ROM Replaced by good one!";
 
-		fseek(fin,sizeof(header),SEEK_CUR);
+		fseek(fin,sizeof(addheader),SEEK_CUR);
 
 	}
 	else if(isadd)
