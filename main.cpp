@@ -132,7 +132,6 @@ int main()
         struct point p;
 
         u8arm_t indexfrom,indexto;
-        u8arm_t num;
 
         getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
@@ -195,9 +194,8 @@ int main()
             case cmd_down:
             case cmd_left:
             case cmd_right:
-                    num=sqlist[sq[indexfrom]];
                     if(slide(sq, kid, index, WxH)!=-1UL)
-                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto,num);
+                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto,sqlist[sq[indexto]]);
                     break;
                     
             case cmd_right+1:
