@@ -41,7 +41,9 @@ $ make
 
 ```
 
-- If it success , you will see [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) or [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-actual-GBA.gba) for actual ROM
+- If it success , you will see 
+1. [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) for RAW instruction codes
+2. [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-actual-GBA.gba) for actual ROM
 
 
 ### Contact me. 
