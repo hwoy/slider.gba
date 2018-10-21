@@ -123,7 +123,7 @@ int main()
 
     drawboard(g,square,comsquare,sq,sqlist,index);
 
-    for(Keypad keypad{KeypadDevice{}};keypad.untilkeypressDown();keypad.untilkeypressUp())
+    for(Keypad keypad{KeypadDevice{}};keypad.untilkeypressDown();)
     {
         u32arm_t kid=-1U;
 
@@ -184,6 +184,11 @@ int main()
         {
             kid=cmd_right+3;
             seed=origseed;
+        }
+        else if(keypad==Keypad::KEY_SELECT)
+        {
+            kid=cmd_right+4;
+            seed=origseed;
         } 
 
         switch(kid)
@@ -203,9 +208,23 @@ int main()
                     drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
 
+            case cmd_right+4:
+                    {
+                        u32arm_t sq[WxH * WxH];
+                        initsq(sq, WxH);
+                        drawboard(g,square,comsquare,sq,sqlist,index);
+
+                    }
+                    break;
+
             default: break;
 
         }
+
+        keypad.untilkeypressUp();
+
+        if(kid==cmd_right+4)
+            drawboard(g,square,comsquare,sq,sqlist,index);
         
     }
 
