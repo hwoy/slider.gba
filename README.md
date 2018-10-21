@@ -11,13 +11,19 @@ Download [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.g
 - Work great on [higan](https://mprd.se/media/emulators/files/higan_v106-windows.7z), [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
  
 ### Keypad
+
+```sh
+
 - UP     == moves down block
 - DOWN   == moves up block
 - LEFT   == moves left block to right
 - RIGHT  == moves right block to left
 - START  == reset a board
+- SELECT == Hold SELECT for complete board representation
 - A      == pred origin random seed and init board
 - B      == succ origin random seed and init board
+
+```
 
 ### Game Play
 - Complete block arrangement
