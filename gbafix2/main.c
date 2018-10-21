@@ -66,7 +66,10 @@ enum Error{
 	err_version,
 	err_dfout,
 	err_dfin,
-	err_debug
+	err_debug,
+	err_hfile,
+	err_fread,
+	err_oneoper
 };
 
 static const char *errstr[]={
@@ -78,6 +81,9 @@ static const char *errstr[]={
 "double output file",\
 "double input file",\
 "Debug entry point",\
+"can not access header file",\
+"Less byte length of file",\
+"Only one \"-g\",\"-a\",\"-R\",\"-C\",\"-l:\",\"-P\" ",\
 NULL};
 
 
@@ -107,21 +113,28 @@ static int showhelp(const char *pname,const char *opt[],const char *optstr[])
 	return 1;
 }
 
-static const char* opt[] = { "-g","-a", "-p","-P", "-t:","-c:","-m:","-r:","-o:","-d:", NULL };
+static const char* opt[] = { "-g","-a","-R","-C","-l:","-p","-P", "-t:","-c:","-m:","-r:","-o:","-d:", NULL };
 static const char* optstr[] = { 
-"Replaced by good header","Add header to an output file",\
+"Replaced by good header (No patch)",\
+"Add a header to an output file",\
+"Remove header (No patch, No Padding)",\
+"Copy header (No Padding)",\
+"Concat header and file",\
 "Pad to next exact power of 2. No minimum size",\
-"Pad only and exit",\
+"Pad only and exit (No patch)",\
 "Patch title. Fill zero if none given",\
 "Patch game code (four characters)",\
 "Patch maker code (two characters)",\
 "Patch game version (number)",\
 "Output file (must be assigned)",\
-"Degug enabled (0 or 1)", NULL };
+"Patch Degug enabled (0 or 1)", NULL };
 
 enum {
 	opt_g,
     opt_a,
+	opt_R,
+	opt_C,
+	opt_l,
     opt_p,
 	opt_P,
     opt_t,
@@ -145,29 +158,54 @@ static unsigned char HeaderComplement(const Header *header)
 
 static void filepadding(FILE *fout,int padval)
 {
-	size_t size ;
-	size_t bit;
+	const size_t size = ftell(fout);
+	const size_t one=1;
 
-	size = ftell(fout);
+	unsigned int bit;
 
-	for (bit=32; bit>=1; bit--) if (size & (1<<(bit-1))) break;
-	if (size != (1U<<(bit-1)))
+	for (bit=32; bit>=1; bit--) if (size & (one<<(bit-1))) break;
+	if (size != (one<<(bit-1)))
 	{
-		size_t todo = (1U<<bit) - size;
+		size_t todo = (one<<bit) - size;
 		while (todo--) fputc(padval, fout);
 	}
 }
 
+static void applyheader(Header *header,const Header *addheader,int istitle,int isgamecode,int ismakercode,int isversion,int isdebug)
+{
+
+	if(istitle) memcpy(header->title,addheader->title,sizeof(header->title));
+
+	if(isgamecode) header->game_code=addheader->game_code;
+
+	if(ismakercode) header->maker_code=addheader->maker_code;
+
+	if(isversion) memcpy(&header->game_version,&addheader->game_version,sizeof(header->game_version));
+
+	if(isdebug) 
+	{
+		header->logo[0x9C-0x04]=addheader->logo[0x9C-0x04];
+		header->device_type=addheader->device_type;
+	}
+			
+	header->complement = 0;
+	header->checksum = 0;
+	header->complement = HeaderComplement(header);
+}
+
 int main(int argc, const char *argv[])
 {
-	static Header header;
 	static Header addheader=good_header;
 	static char buff[BSIZE];
-	const char *msg;
+
+	Header header;
+	Header linkheader;
 
 	FILE *fin=NULL,*fout=NULL;
 
-	int isgood=0,isadd=0,ispadding=0,ispadonly=0,istitle=0,isgamecode=0,ismakercode=0,isversion=0,isdebug=0;
+	const char *msg;
+
+	int isgood=0,isadd=0,isremove=0,iscopy=0,islink=0,ispadding=0,ispadonly=0,istitle=0,isgamecode=0,ismakercode=0,isversion=0,isdebug=0;
 
 	if(argc==1)
 		return showhelp(croppath(argv[0]),opt,optstr);
@@ -192,6 +230,45 @@ int main(int argc, const char *argv[])
             case opt_a:
 
 					isadd = 1;
+
+                	break;
+
+            case opt_R:
+
+					isremove = 1;
+
+                	break;
+
+            case opt_C:
+
+					iscopy = 1;
+
+                	break;
+
+            case opt_l:
+			{
+					FILE *hfile=fopen(buff,"rb");
+					if(!hfile)
+					{
+						if(fin) fclose(fin);
+						if(fout) fclose(fout);
+
+						return printerr(err_hfile,errstr);
+					}
+
+					if(fread(&linkheader, sizeof(linkheader), 1, hfile)<1)
+					{
+						fclose(hfile);
+						if(fin) fclose(fin);
+						if(fout) fclose(fout);
+
+						return printerr(err_fread,errstr);
+
+					}
+
+					fclose(hfile);
+			}
+					islink = 1;
 
                 	break;
 
@@ -320,19 +397,24 @@ int main(int argc, const char *argv[])
 		return printerr(err_fout,errstr); 
 	}
 
-	fread(&header, sizeof(header), 1, fin);
-	rewind(fin);
+	if(isgood+isadd+isremove+iscopy+islink+ispadonly>1)
+	{
+		if(fin) fclose(fin);
+		if(fout) fclose(fout);
+
+		return printerr(err_oneoper,errstr);
+	}
 
 	if(isgood)
 	{
-		static Header replaceheader = good_header;
-		replaceheader.complement = HeaderComplement(&replaceheader);
+		header = good_header;
+		header.complement = HeaderComplement(&header);
 		
-		fwrite(&replaceheader, sizeof(replaceheader), 1, fout);
+		fwrite(&header, sizeof(header), 1, fout);
+
+		fseek(fin,sizeof(header),SEEK_SET);
 
 		msg="Header ROM Replaced by good one!";
-
-		fseek(fin,sizeof(replaceheader),SEEK_CUR);
 
 	}
 	else if(isadd)
@@ -343,39 +425,71 @@ int main(int argc, const char *argv[])
 
 		msg="Header ROM Added!";
 	}
+	else if(isremove)
+	{
+		fseek(fin,sizeof(Header),SEEK_SET);
+
+		ispadding=0;
+
+		msg="Header ROM Removed!";
+	}
+	else if(iscopy)
+	{
+		if(fread(&header, sizeof(header), 1, fin)<1)
+		{
+			if(fin) fclose(fin);
+			if(fout) fclose(fout);
+
+			return printerr(err_fread,errstr);
+
+		}
+
+		applyheader(&header,&addheader,istitle,isgamecode,ismakercode,isversion,isdebug);
+
+		fwrite(&header, sizeof(header), 1, fout);
+
+		fseek(fin,0,SEEK_END);
+
+		ispadding=0;
+
+		msg="Header ROM Copied!";
+
+	}
+	else if(islink)
+	{	
+		applyheader(&linkheader,&addheader,istitle,isgamecode,ismakercode,isversion,isdebug);
+
+		fwrite(&linkheader, sizeof(linkheader), 1, fout);
+
+		msg="Header ROM Concat!";
+
+	}
 	else if(ispadonly)
 	{
-		msg="Padding only activated!"; ispadding=1;
+		ispadding=1;
+
+		msg="Padding only activated!";
 	}
 	else
 	{
+		if(fread(&header, sizeof(header), 1, fin)<1)
+		{
+			if(fin) fclose(fin);
+			if(fout) fclose(fout);
+
+			return printerr(err_fread,errstr);
+
+		}
+
 		memcpy(header.logo, good_header.logo, sizeof(header.logo));
 		memcpy(&header.fixed, &good_header.fixed, sizeof(header.fixed));
 		header.device_type=good_header.device_type;
 
-		if(istitle) memcpy(header.title,addheader.title,sizeof(header.title));
-
-		if(isgamecode) header.game_code=addheader.game_code;
-
-		if(ismakercode) header.maker_code=addheader.maker_code;
-
-		if(isversion) memcpy(&header.game_version,&addheader.game_version,sizeof(header.game_version));
-
-		if(isdebug) 
-		{
-			header.logo[0x9C-0x04]=addheader.logo[0x9C-0x04];
-			header.device_type=addheader.device_type;
-		}
-			
-		header.complement = 0;
-		header.checksum = 0;
-		header.complement = HeaderComplement(&header);
+		applyheader(&header,&addheader,istitle,isgamecode,ismakercode,isversion,isdebug);
 
 		fwrite(&header, sizeof(header), 1, fout);
 
 		msg="Header ROM fixed!";
-
-		fseek(fin,sizeof(header),SEEK_CUR);
 	}
 
 	{
