@@ -11,15 +11,15 @@ struct Font
 	static constexpr const u8arm_t SIZE=8;
 	static constexpr const u8arm_t NUM=128;
 
-	static const u8arm_t FONT[NUM][SIZE*SIZE];
+	static const u8arm_t FONT[NUM][SIZE][SIZE];
 
 	static inline void draw(Graphic &g,const Point &point,const Color &color,const u8arm_t ch)
 	{
-		Draw::draw(g,point,color,FONT,ch,SIZE);
+		Draw::draw(g,point,color,FONT,ch);
 	}
 };
 
-const u8arm_t Font::FONT[Font::NUM][Font::SIZE*Font::SIZE] =
+const u8arm_t Font::FONT[Font::NUM][Font::SIZE][Font::SIZE] =
 {
     // char 0
     {
