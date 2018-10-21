@@ -8,7 +8,7 @@
 
 //******************** Unit test *************************//
 
-#define SQLIST {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,0}
+#define SQLIST "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+-0"
 
 template <typename T,usize_t N>
 static constexpr usize_t square(const T (&a)[N],usize_t n=2)
@@ -24,9 +24,9 @@ static constexpr u32arm_t slen(const T (&)[N])
 
 static const u8arm_t sqlist[] = SQLIST;
 
-static constexpr const u8arm_t WxH=square(sqlist);
+static constexpr const u8arm_t WxH=square(sqlist)-1;
 
-static_assert(WxH*WxH==slen(sqlist),"WxH*WxH !=slen(sqlist) => It's not square!!");
+static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square!!");
 
 
 //********************** SEED ***********************//
@@ -50,11 +50,9 @@ static_assert(WxH*WxH==slen(sqlist),"WxH*WxH !=slen(sqlist) => It's not square!!
 
 
 static constexpr const Color BOXCOLOR  {31,0,0};
-static constexpr const Color IBOXCOLOR {0,31,0};
 static constexpr const Color NUMCOLOR  {0,0,31};
 
-static constexpr const Color COMBOXCOLOR  = BOXCOLOR;
-static constexpr const Color COMIBOXCOLOR = COMBOXCOLOR;
+static constexpr const Color COMBOXCOLOR  = {0,31,0};
 static constexpr const Color COMNUMCOLOR  = NUMCOLOR;
 
 
@@ -70,8 +68,8 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 }
 
 
-template <usize_t N>
-static void drawboard(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u32arm_t index)
+template <usize_t N,usize_t M>
+static void drawboard(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
 {
 
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
@@ -82,8 +80,8 @@ static void drawboard(Graphic &g,const Square &square,const Square &comsquare,co
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width-1,rgap+square.width-1);
 }
 
-template <usize_t N>
-static void movesquare(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[N],u8arm_t from,u8arm_t to)
+template <usize_t N,usize_t M>
+static void movesquare(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
 {
 
     const u8arm_t jfrom=from%WxH;
@@ -108,15 +106,15 @@ static void movesquare(Graphic &g,const Square &square,const Square &comsquare,c
 extern "C"
 int main()
 {
-    static constexpr const Square square{WIDTH,IWIDTH,BOXCOLOR,IBOXCOLOR,NUMCOLOR};
-    static constexpr const Square comsquare{WIDTH,IWIDTH,COMBOXCOLOR,COMIBOXCOLOR,COMNUMCOLOR}; 
+    static constexpr const Square square{WIDTH,BOXCOLOR,NUMCOLOR};
+    static constexpr const Square comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
 
     u32arm_t sq[WxH * WxH];
     
     u32arm_t seed, origseed;
     origseed = seed = INITSEED;
 
-    constexpr const u32arm_t index = slen(sqlist)-1;
+    constexpr const u32arm_t index = slen(sqlist)-1-1;
 
     initgame(sq, &seed, index, WxH);
 

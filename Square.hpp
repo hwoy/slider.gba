@@ -8,22 +8,17 @@
 
 struct Square
 {
-	u8arm_t width,iwidth;
-	Color color,icolor,ncolor;
+	u8arm_t width;
+	Color color,ncolor;
 
-	void draw(Graphic &g,const Point &point,u8arm_t num) const
+	void draw(Graphic &g,const Point &point,u8arm_t ch) const
 	{
 		g.rectangle(color,point.x,point.y,point.x+width-1,point.y+width-1);
 
-		u8arm_t ix=point.x+(width-iwidth)/2;
-		u8arm_t iy=point.y+(width-iwidth)/2;
+		const u8arm_t x=point.x+(width-Font::SIZE)/2;
+		const u8arm_t y=point.y+(width-Font::SIZE)/2;
 
-		g.rectangle(icolor,ix,iy,ix+iwidth-1,iy+iwidth-1);
-
-		u8arm_t nx=ix+(iwidth-Font::SIZE)/2;
-		u8arm_t ny=iy+(iwidth-Font::SIZE)/2;
-
-		Font::draw(g,{nx,ny},ncolor,num);
+		Font::draw(g,{x,y},ncolor,ch);
 	}
 };
 
