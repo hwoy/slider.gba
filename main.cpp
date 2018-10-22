@@ -39,7 +39,7 @@ static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square
 //********************** Graphic ***********************//
 #define FRGAP 4
 
-#define RGAP 1
+#define RGAP 2
 #define CGAP RGAP
 
 
