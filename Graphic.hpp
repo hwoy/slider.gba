@@ -69,11 +69,14 @@ struct Graphic_Type
 				u16arm_t r:5;
 				u16arm_t g:5;
 				u16arm_t b:5;
+				u16arm_t unused:1;
 		}__rgb__;
-		
-		inline constexpr Color(u16arm_t r,u16arm_t g,u16arm_t b):__rgb__{r,g,b} {}
+
+		inline static constexpr u16arm_t rgb(u16arm_t r,u16arm_t g,u16arm_t b) { return RGB16(r,g,b); }
 
 		inline constexpr Color(u16arm_t color):color(color) {}
+		
+		inline constexpr Color(u16arm_t r,u16arm_t g,u16arm_t b):__rgb__{r,g,b,0} {}
 
 		inline constexpr u16arm_t get(void) const
 		{
@@ -84,8 +87,6 @@ struct Graphic_Type
 		{
 			return __rgb__;
 		}
-
-		static constexpr u16arm_t rgb(u16arm_t r,u16arm_t g,u16arm_t b) { return RGB16(r,g,b); }
 	};
 };
 
