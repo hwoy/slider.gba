@@ -14,6 +14,8 @@ struct Point
 {
 	u8arm_t x,y;
 
+	inline constexpr Point(u8arm_t x,u8arm_t y):x(x),y(y){}
+
 	inline constexpr bool operator != (const Point & p) const
 	{
 		return x != p.x || y != p.y;
@@ -146,7 +148,7 @@ struct Grange
 
 
 	inline constexpr Grange(const Point &p1,const Point &p2):
-	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,{static_cast<u8arm_t>(p1.x),static_cast<u8arm_t>(p2.y+1)}) {}
+	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,Point(p1.x,p2.y+1)) {}
 
 
 	inline Iterator begin()
@@ -250,7 +252,7 @@ struct Graphic: public Graphic_Type
 
 	static void drawbuffer(const u16arm_t *buffer,u16arm_t x=0,u16arm_t  y=0,u16arm_t w=GD::COL,u16arm_t h=GD::ROW)
 	{
-		for(auto &rpoint:Grange<GD>({x,y},{static_cast<u8arm_t>(x+w-1),static_cast<u8arm_t>(y+h-1)}))
+		for(auto &rpoint:Grange<GD>({x,y},Point(x+w-1,y+h-1)))
 			rpoint=*buffer++;
 	}
 };
