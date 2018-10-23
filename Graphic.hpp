@@ -250,10 +250,8 @@ struct Graphic: public Graphic_Type
 
 	static void drawbuffer(const u16arm_t *buffer,u16arm_t x=0,u16arm_t  y=0,u16arm_t w=GD::COL,u16arm_t h=GD::ROW)
 	{
-		for(u16arm_t i=y;i<y+h;++i)
-			for(u16arm_t j=x;j<x+w;++j)
-				pixel(buffer[i*w+j],j,i);
-
+		for(auto &rpoint:Grange<GD>({x,y},{static_cast<u8arm_t>(x+w-1),static_cast<u8arm_t>(y+h-1)}))
+			rpoint=*buffer++;
 	}
 };
 
