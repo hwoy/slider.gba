@@ -13,6 +13,17 @@
 struct Point
 {
 	u8arm_t x,y;
+
+	inline constexpr bool operator != (const Point & p) const
+	{
+		return x != p.x || y != p.y;
+	}
+
+	inline constexpr bool operator == (const Point & p) const
+	{
+		return x == p.x && y == p.y;
+	}
+
 };
 
 
@@ -56,6 +67,98 @@ struct GraphicDevice
 		write(x+y*COL,value);
 	}
 };
+
+struct Grange
+{
+	struct Iterator
+	{
+		const u8arm_t x1,x2;
+		Point p;
+
+		inline constexpr Iterator(u8arm_t x1,u8arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
+
+		inline constexpr const volatile u16arm_t &operator * () const
+		{
+			return VIDMEM[p.x+p.y*GraphicDevice::COL];
+		}
+
+		inline volatile u16arm_t &operator * ()
+		{
+			return VIDMEM[p.x+p.y*GraphicDevice::COL];
+		}
+
+		volatile u16arm_t *operator ++ ()
+		{
+			if(p.x+1>x2)
+			{
+				p.x=x1;
+				++p.y;
+
+			}
+			
+			else
+			{
+				++p.x;
+			}
+			
+
+			return VIDMEM+p.x+p.y*GraphicDevice::COL;
+			
+		}
+
+		volatile u16arm_t *operator -- ()
+		{
+			if(p.x-1<x1)
+			{
+				p.x=x2;
+				--p.y;
+
+			}
+			
+			else
+			{
+				--p.x;
+			}
+			
+
+			return VIDMEM+p.x+p.y*GraphicDevice::COL;
+			
+		}
+
+		inline constexpr bool operator != (const Iterator & it) const
+		{
+			return p != it.p;
+		}
+
+	}itbegin,itend;
+
+
+	constexpr Grange(const Point &p1,const Point &p2):
+	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,{static_cast<u8arm_t>(p1.x),static_cast<u8arm_t>(p2.y+1)}) {}
+
+
+	inline Iterator begin()
+	{
+		return itbegin;
+	}
+
+	inline Iterator end()
+	{
+		return itend;
+	}
+
+	inline constexpr const Iterator begin() const
+	{
+		return itbegin;
+	}
+
+	inline constexpr const Iterator end() const
+	{
+		return itend;
+	}
+
+};
+
 
 struct Graphic_Type
 {
@@ -116,9 +219,8 @@ struct Graphic: public Graphic_Type
 
 	void rectangle(u16arm_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
-		for(u8arm_t y=y1;y<=y2;++y)
-			for(u8arm_t x=x1;x<=x2;++x)
-				gd.write(x,y,color);
+		for(auto &rpoint:Grange({x1,y1},{x2,y2}))
+			rpoint=color;
 	}
 
 	void rectangle(const Color &color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
