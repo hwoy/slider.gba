@@ -66,25 +66,37 @@ struct GraphicDevice
 	{
 		write(x+y*COL,value);
 	}
+
+	static inline constexpr volatile u16arm_t &refvid(u8arm_t x,u8arm_t y)
+	{
+		return VIDMEM[x+y*COL];
+	}
+
+	static inline constexpr volatile u16arm_t *ptrvid(u8arm_t x,u8arm_t y)
+	{
+		return VIDMEM+x+y*COL;
+	}
 };
 
+template <class GD>
 struct Grange
 {
+
 	struct Iterator
 	{
 		const u8arm_t x1,x2;
 		Point p;
 
-		inline constexpr Iterator(u8arm_t x1,u8arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
+		explicit inline constexpr Iterator(u8arm_t x1,u8arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
 
 		inline constexpr const volatile u16arm_t &operator * () const
 		{
-			return VIDMEM[p.x+p.y*GraphicDevice::COL];
+			return GD::refvid(p.x,p.y);
 		}
 
 		inline volatile u16arm_t &operator * ()
 		{
-			return VIDMEM[p.x+p.y*GraphicDevice::COL];
+			return GD::refvid(p.x,p.y);
 		}
 
 		volatile u16arm_t *operator ++ ()
@@ -102,7 +114,7 @@ struct Grange
 			}
 			
 
-			return VIDMEM+p.x+p.y*GraphicDevice::COL;
+			return GD::ptrvid(p.x,p.y);
 			
 		}
 
@@ -121,7 +133,7 @@ struct Grange
 			}
 			
 
-			return VIDMEM+p.x+p.y*GraphicDevice::COL;
+			return GD::ptrvid(p.x,p.y);
 			
 		}
 
@@ -133,7 +145,7 @@ struct Grange
 	}itbegin,itend;
 
 
-	constexpr Grange(const Point &p1,const Point &p2):
+	inline constexpr Grange(const Point &p1,const Point &p2):
 	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,{static_cast<u8arm_t>(p1.x),static_cast<u8arm_t>(p2.y+1)}) {}
 
 
@@ -147,12 +159,12 @@ struct Grange
 		return itend;
 	}
 
-	inline constexpr const Iterator begin() const
+	inline const Iterator begin() const
 	{
 		return itbegin;
 	}
 
-	inline constexpr const Iterator end() const
+	inline const Iterator end() const
 	{
 		return itend;
 	}
@@ -193,52 +205,50 @@ struct Graphic_Type
 	};
 };
 
+template <class GD>
 struct Graphic: public Graphic_Type
 {
 	using Color = typename Graphic_Type::Color;
 
-	GraphicDevice gd;
 
-	explicit inline constexpr Graphic(const GraphicDevice &gd):gd(gd) {}
-
-
-	inline void pixel(u16arm_t color,u8arm_t x,u8arm_t y)
+	static inline void pixel(u16arm_t color,u8arm_t x,u8arm_t y)
 	{
-		gd.write(x,y,color);
+		GD::write(x,y,color);
 	}
 
-	inline void pixel(const Color &color,u8arm_t x,u8arm_t y)
+	static inline void pixel(const Color &color,u8arm_t x,u8arm_t y)
 	{
 		pixel(color.get(),x,y);
 	}
 
-	inline Color::Rgb pixel(u8arm_t x,u8arm_t y)
+	static inline Color::Rgb pixel(u8arm_t x,u8arm_t y)
 	{
-		return Color(gd.read(x,y)).getrgb();
+		return Color(GD::read(x,y)).getrgb();
 	}
 
-	void rectangle(u16arm_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
+	static void rectangle(u16arm_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
-		for(auto &rpoint:Grange({x1,y1},{x2,y2}))
+		for(auto &rpoint:Grange<GD>({x1,y1},{x2,y2}))
 			rpoint=color;
+
 	}
 
-	void rectangle(const Color &color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
+	static void rectangle(const Color &color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
 		rectangle(color.get(),x1,y1,x2,y2);
 	}
 
-	void setbgcolor(u16arm_t color)
+	static void setbgcolor(u16arm_t color)
 	{
-		rectangle(color,0,0,GraphicDevice::COL-1,GraphicDevice::ROW-1);
+		rectangle(color,0,0,GD::COL-1,GD::ROW-1);
 	}
 
-	void setbgcolor(const Color &color)
+	static void setbgcolor(const Color &color)
 	{
 		setbgcolor(color.get());
 	}
 
-	void drawbuffer(const u16arm_t *buffer,u16arm_t x=0,u16arm_t  y=0,u16arm_t w=GraphicDevice::COL,u16arm_t h=GraphicDevice::ROW)
+	static void drawbuffer(const u16arm_t *buffer,u16arm_t x=0,u16arm_t  y=0,u16arm_t w=GD::COL,u16arm_t h=GD::ROW)
 	{
 		for(u16arm_t i=y;i<y+h;++i)
 			for(u16arm_t j=x;j<x+w;++j)

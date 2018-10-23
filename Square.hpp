@@ -11,7 +11,8 @@ struct Square
 	u8arm_t width;
 	Color color,ncolor;
 
-	void draw(Graphic &g,const Point &point,u8arm_t ch) const
+	template <class GD>
+	void draw(const Graphic<GD> &g,const Point &point,u8arm_t ch) const
 	{
 		g.rectangle(color,point.x,point.y,point.x+width-1,point.y+width-1);
 

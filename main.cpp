@@ -68,8 +68,8 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 }
 
 
-template <usize_t N,usize_t M>
-static void drawboard(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
+template <class GD,usize_t N,usize_t M>
+static void drawboard(const Graphic<GD> &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
 {
 
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
@@ -80,8 +80,8 @@ static void drawboard(Graphic &g,const Square &square,const Square &comsquare,co
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width-1,rgap+square.width-1);
 }
 
-template <usize_t N,usize_t M>
-static void movesquare(Graphic &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
+template <class GD,usize_t N,usize_t M>
+static void movesquare(const Graphic<GD> &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
 {
 
     const u8arm_t jfrom=from%WxH;
@@ -118,7 +118,10 @@ int main()
 
     initgame(sq, &seed, index, WxH);
 
-    Graphic g(GraphicDevice{});
+    GraphicDevice::setmode(0x403);
+
+    constexpr const Graphic<GraphicDevice> g;
+
 	g.setbgcolor(BGCOLOR);
 
     drawboard(g,square,comsquare,sq,sqlist,index);
