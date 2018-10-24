@@ -43,11 +43,6 @@ struct GraphicDevice
 	{
 		return *IOMEM;
 	}
-
-	explicit inline GraphicDevice(u32arm_t mode=0x403)
-	{
-		*IOMEM=mode;
-	}
 };
 
 template <typename VIDMEMTYPE>
