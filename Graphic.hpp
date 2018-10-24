@@ -31,12 +31,9 @@ struct Point
 
 struct GraphicDevice
 {
-	static constexpr const u8arm_t COL=240;
-	static constexpr const u8arm_t ROW=160;
-
-	static inline void setreg(u32arm_t bg)
+	static inline void setreg(u32arm_t bgmode)
 	{
-		*IOMEM=bg;
+		*IOMEM=bgmode;
 	}
 
 	static inline u32arm_t getreg(void)
@@ -45,10 +42,13 @@ struct GraphicDevice
 	}
 };
 
-template <typename VIDMEMTYPE>
+template <typename VIDMEMTYPE,u8arm_t _COL,u8arm_t _ROW>
 struct BGMODE
 {
 	using Vidmem_t = VIDMEMTYPE;
+
+	static constexpr const u8arm_t COL=_COL;
+	static constexpr const u8arm_t ROW=_ROW;
 
 	static inline Vidmem_t read(Vidmem_t index)
 	{
@@ -62,32 +62,32 @@ struct BGMODE
 
 	static inline Vidmem_t read(u8arm_t x,u8arm_t y)
 	{
-		return read(x+y*GraphicDevice::COL);
+		return read(x+y*COL);
 	}
 
 	static inline void write(u8arm_t x,u8arm_t y,Vidmem_t value)
 	{
-		write(x+y*GraphicDevice::COL,value);
+		write(x+y*COL,value);
 	}
 
 	static inline constexpr volatile Vidmem_t &refvid(u8arm_t x,u8arm_t y)
 	{
-		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[x+y*GraphicDevice::COL];
+		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[x+y*COL];
 	}
 
 	static inline constexpr volatile Vidmem_t *ptrvid(u8arm_t x,u8arm_t y)
 	{
-		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)+x+y*GraphicDevice::COL;
+		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)+x+y*COL;
 	}
 };
 
-using BG3 = BGMODE<u16arm_t>;
-using BG4 = BGMODE<u8arm_t>;
+using BGMODE3 = BGMODE<u16arm_t,240,160>;
+using BGMODE4 = BGMODE<u8arm_t,240,160>;
 
 template <class BGCOLORMODE>
 struct Grange
 {
-	using bg = typename BGCOLORMODE::bg;
+	using bgmode = typename BGCOLORMODE::bgmode;
 	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
 	using Color_t = Vidmem_t;
 
@@ -100,12 +100,12 @@ struct Grange
 
 		inline constexpr const volatile Vidmem_t &operator * () const
 		{
-			return bg::refvid(p.x,p.y);
+			return bgmode::refvid(p.x,p.y);
 		}
 
 		inline volatile Vidmem_t &operator * ()
 		{
-			return bg::refvid(p.x,p.y);
+			return bgmode::refvid(p.x,p.y);
 		}
 
 		volatile Vidmem_t *operator ++ ()
@@ -123,7 +123,7 @@ struct Grange
 			}
 			
 
-			return bg::ptrvid(p.x,p.y);
+			return bgmode::ptrvid(p.x,p.y);
 			
 		}
 
@@ -142,7 +142,7 @@ struct Grange
 			}
 			
 
-			return bg::ptrvid(p.x,p.y);
+			return bgmode::ptrvid(p.x,p.y);
 			
 		}
 
@@ -182,41 +182,48 @@ struct Grange
 
 struct Color3
 {
-	using bg = BG3;
-	using Vidmem_t = bg::Vidmem_t;
+	using bgmode = BGMODE3;
+	using Vidmem_t = bgmode::Vidmem_t;
 	using Color_t = Vidmem_t;
 
 	static constexpr const u32arm_t mode = 0x03;
+	static constexpr const u8arm_t COL=bgmode::COL;
+	static constexpr const u8arm_t ROW=bgmode::ROW;
 
 };
 
 struct Color4
 {
-	using bg = BG4;
-	using Vidmem_t = bg::Vidmem_t;
+	using bgmode = BGMODE4;
+	using Vidmem_t = bgmode::Vidmem_t;
 	using Color_t = Vidmem_t;
 
 	static constexpr const u32arm_t mode = 0x04;
+	static constexpr const u8arm_t COL=bgmode::COL;
+	static constexpr const u8arm_t ROW=bgmode::ROW;
 
 };
 
 template <class BGCOLORMODE>
 struct Graphic: public BGCOLORMODE
 {
-	using bg = typename BGCOLORMODE::bg;
+	using bgmode = typename BGCOLORMODE::bgmode;
 	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
 	using Color_t = Vidmem_t;
+
+	static constexpr const u8arm_t COL=bgmode::COL;
+	static constexpr const u8arm_t ROW=bgmode::ROW;
 
 
 
 	static inline void pixel(Color_t color,u8arm_t x,u8arm_t y)
 	{
-		bg::write(x,y,color);
+		bgmode::write(x,y,color);
 	}
 
 	static inline Color_t pixel(u8arm_t x,u8arm_t y)
 	{
-		return bg::read(x,y);
+		return bgmode::read(x,y);
 	}
 
 	static void rectangle(Color_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
@@ -228,10 +235,10 @@ struct Graphic: public BGCOLORMODE
 
 	static void setbgcolor(Color_t color)
 	{
-		rectangle(color,0,0,GraphicDevice::COL-1,GraphicDevice::ROW-1);
+		rectangle(color,0,0,COL-1,ROW-1);
 	}
 
-	static void drawbuffer(const Color_t *buffer,u8arm_t x=0,u8arm_t  y=0,u8arm_t w=GraphicDevice::COL,u8arm_t h=GraphicDevice::ROW)
+	static void drawbuffer(const Color_t *buffer,u8arm_t x=0,u8arm_t  y=0,u8arm_t w=COL,u8arm_t h=ROW)
 	{
 		for(auto &rpoint:Grange<BGCOLORMODE>({x,y},Point(x+w-1,y+h-1)))
 			rpoint=*buffer++;

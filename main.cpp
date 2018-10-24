@@ -43,15 +43,17 @@ static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square
 #define CGAP RGAP
 
 
-#define WIDTH ((GraphicDevice::ROW-RGAP*(WxH-1)-FRGAP*2)/WxH)
+#define WIDTH ((ROW-RGAP*(WxH-1)-FRGAP*2)/WxH)
 #define IWIDTH (WIDTH*2/5)
 
-#define FCGAP ((GraphicDevice::COL-CGAP*(WxH-1)-WIDTH*WxH)/2)
+#define FCGAP ((COL-CGAP*(WxH-1)-WIDTH*WxH)/2)
 
 using Color = Color3;
 using Color_t = Color::Color_t;
 
 static constexpr const u32arm_t regcontrol = 0x400 | Color::mode;
+static constexpr const u8arm_t COL=Color::COL;
+static constexpr const u8arm_t ROW=Color::ROW;
 
 
 static constexpr const Color_t BOXCOLOR = RGB15(31,0,0);
