@@ -8,7 +8,7 @@
 
 #define DISPCNT ((volatile u32arm_t *)0x4000000)
 #define VRAM ((volatile void *)0x6000000)
-#define PRAM  ((volatile u8arm_t*)0x5000000)
+#define PRAM  ((volatile u16arm_t*)0x5000000)
 
 
 struct Point
@@ -178,7 +178,7 @@ struct Color4
 	using bgmode = BGMODE4;
 	using Vram_t = bgmode::Vram_t;
 	using Color_t = Vram_t;
-	using Pram_t = Vram_t;
+	using Pram_t = u16arm_t;
 
 	static constexpr const u32arm_t mode = 0x04;
 	static constexpr const u8arm_t COL=bgmode::COL;
@@ -190,13 +190,6 @@ struct Color4
 			PRAM[i+M]=buff[i];
 
 	}
-
-	static void platelet(void)
-	{
-		for(usize_t i=0;i<=0xff;++i)
-			PRAM[i]=i;
-
-	}	
 
 	inline static constexpr volatile Pram_t &platelet(usize_t N)
 	{
