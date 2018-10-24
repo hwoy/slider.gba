@@ -47,6 +47,7 @@ template <typename VRAMTYPE,u8arm_t _COL,u8arm_t _ROW>
 struct BGMODE
 {
 	using Vram_t = VRAMTYPE;
+	using Pram_t = u16arm_t;
 
 	static constexpr const u8arm_t COL=_COL;
 	static constexpr const u8arm_t ROW=_ROW;
@@ -60,52 +61,73 @@ struct BGMODE
 	{
 		return reinterpret_cast<volatile Vram_t *>(VRAM)+x+y*COL;
 	}
+
+	static inline constexpr volatile Pram_t &refplt(usize_t index)
+	{
+		return PRAM[index];
+	}
+
+	static inline constexpr volatile Pram_t *ptrplt(usize_t index)
+	{
+		return PRAM+index;
+	}
 };
 
 using BGMODE3 = BGMODE<u16arm_t,240,160>;
 using BGMODE4 = BGMODE<u8arm_t,240,160>;
+using BGMODE4X = BGMODE<u16arm_t,120,160>;
 
-struct Color3
+template <class _BGMODE_,u32arm_t _mode_>
+struct ColorTrait
 {
-	using bgmode = BGMODE3;
-	using Vram_t = bgmode::Vram_t;
+	using bgmode = _BGMODE_;
+	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
-	static constexpr const u32arm_t mode = 0x03;
+	using Pram_t = typename bgmode::Pram_t;
+
+	static constexpr const u32arm_t mode = _mode_;
 	static constexpr const u8arm_t COL=bgmode::COL;
 	static constexpr const u8arm_t ROW=bgmode::ROW;
 
 };
 
-struct Color4
+template <class COLOR>
+struct PlateletImp
 {
-	using bgmode = BGMODE4;
-	using Vram_t = bgmode::Vram_t;
-	using Color_t = Vram_t;
-	using Pram_t = u16arm_t;
-
-	static constexpr const u32arm_t mode = 0x04;
-	static constexpr const u8arm_t COL=bgmode::COL;
-	static constexpr const u8arm_t ROW=bgmode::ROW;
+	using bgmode = typename COLOR::bgmode;
+	using Pram_t = typename bgmode::Pram_t;
 
 	static void platelet(const Pram_t *buff,usize_t N,usize_t M=0)
 	{
 		for(usize_t i=0;i<N;++i)
-			PRAM[i+M]=buff[i];
+			bgmode::refplt(i+M)=buff[i];
 	}
 
 	inline static constexpr volatile Pram_t &platelet(usize_t N,usize_t M=0)
 	{
-		return PRAM[N+M];
+		return bgmode::refplt(N+M);
 	}
 
 	template <usize_t N>
 	static void platelet(const Pram_t (&buff)[N],usize_t M=0)
 	{
 		platelet(buff,N,M);
-	}
-
+	}	
 };
+
+using Color3 = ColorTrait<BGMODE3,0x03>;
+
+struct Color4 : public ColorTrait<BGMODE4,0x04> , public PlateletImp<ColorTrait<BGMODE4,0x04>>
+{
+	using bgmode = typename ColorTrait<BGMODE4,0x04>::bgmode;
+};
+
+struct Color4x : public ColorTrait<BGMODE4X,0x04> , public PlateletImp<ColorTrait<BGMODE4X,0x04>>
+{
+	using bgmode = typename ColorTrait<BGMODE4X,0x04>::bgmode;
+};
+
 
 template <class BGCOLORMODE>
 struct Grange
@@ -208,8 +230,9 @@ template <class BGCOLORMODE>
 struct Graphic: public BGCOLORMODE
 {
 	using bgmode = typename BGCOLORMODE::bgmode;
-	using Vram_t = typename BGCOLORMODE::Vram_t;
+	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
+	using Pram_t = typename bgmode::Pram_t;
 
 	static constexpr const u8arm_t COL=bgmode::COL;
 	static constexpr const u8arm_t ROW=bgmode::ROW;
