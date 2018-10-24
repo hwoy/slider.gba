@@ -95,10 +95,10 @@ struct Color4
 
 	}
 
-	inline static constexpr volatile Pram_t &platelet(usize_t N)
+	inline static constexpr volatile Pram_t &platelet(usize_t N,usize_t M=0)
 	{
 
-		return PRAM[N];
+		return PRAM[N+M];
 	}
 
 };
