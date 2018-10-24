@@ -34,12 +34,12 @@ struct GraphicDevice
 	static constexpr const u8arm_t COL=240;
 	static constexpr const u8arm_t ROW=160;
 
-	static inline void setmode(u32arm_t mode)
+	static inline void setreg(u32arm_t bg)
 	{
-		*IOMEM=mode;
+		*IOMEM=bg;
 	}
 
-	static inline u32arm_t getmode(void)
+	static inline u32arm_t getreg(void)
 	{
 		return *IOMEM;
 	}
@@ -87,7 +87,7 @@ using BG4 = BGMODE<u8arm_t>;
 template <class BGCOLORMODE>
 struct Grange
 {
-	using bgmode = typename BGCOLORMODE::bgmod;
+	using bg = typename BGCOLORMODE::bg;
 	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
 	using Color_t = Vidmem_t;
 
@@ -100,12 +100,12 @@ struct Grange
 
 		inline constexpr const volatile Vidmem_t &operator * () const
 		{
-			return bgmode::refvid(p.x,p.y);
+			return bg::refvid(p.x,p.y);
 		}
 
 		inline volatile Vidmem_t &operator * ()
 		{
-			return bgmode::refvid(p.x,p.y);
+			return bg::refvid(p.x,p.y);
 		}
 
 		volatile Vidmem_t *operator ++ ()
@@ -123,7 +123,7 @@ struct Grange
 			}
 			
 
-			return bgmode::ptrvid(p.x,p.y);
+			return bg::ptrvid(p.x,p.y);
 			
 		}
 
@@ -142,7 +142,7 @@ struct Grange
 			}
 			
 
-			return bgmode::ptrvid(p.x,p.y);
+			return bg::ptrvid(p.x,p.y);
 			
 		}
 
@@ -182,24 +182,28 @@ struct Grange
 
 struct Color3
 {
-	using bgmod = BG3;
-	using Vidmem_t = bgmod::Vidmem_t;
+	using bg = BG3;
+	using Vidmem_t = bg::Vidmem_t;
 	using Color_t = Vidmem_t;
+
+	static constexpr const u16arm_t mode = 0x03;
 
 };
 
 struct Color4
 {
-	using bgmod = BG4;
-	using Vidmem_t = bgmod::Vidmem_t;
+	using bg = BG4;
+	using Vidmem_t = bg::Vidmem_t;
 	using Color_t = Vidmem_t;
+
+	static constexpr const u16arm_t mode = 0x04;
 
 };
 
 template <class BGCOLORMODE>
 struct Graphic: public BGCOLORMODE
 {
-	using bgmode = typename BGCOLORMODE::bgmod;
+	using bg = typename BGCOLORMODE::bg;
 	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
 	using Color_t = Vidmem_t;
 
@@ -207,12 +211,12 @@ struct Graphic: public BGCOLORMODE
 
 	static inline void pixel(Color_t color,u8arm_t x,u8arm_t y)
 	{
-		bgmode::write(x,y,color);
+		bg::write(x,y,color);
 	}
 
 	static inline Color_t pixel(u8arm_t x,u8arm_t y)
 	{
-		return bgmode::read(x,y);
+		return bg::read(x,y);
 	}
 
 	static void rectangle(Color_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)

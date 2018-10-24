@@ -51,6 +51,8 @@ static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square
 using Color = Color3;
 using Color_t = Color::Color_t;
 
+static constexpr const u32arm_t regcontrol = 0x400 | Color::mode;
+
 
 static constexpr const Color_t BOXCOLOR = RGB15(31,0,0);
 static constexpr const Color_t NUMCOLOR  = RGB15(0,0,31);
@@ -121,7 +123,7 @@ int main()
 
     initgame(sq, &seed, index, WxH);
 
-    GraphicDevice::setmode(0x403);
+    GraphicDevice::setreg(regcontrol);
 
     constexpr const Graphic<Color> g;
 
