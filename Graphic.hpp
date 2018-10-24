@@ -8,6 +8,7 @@
 
 #define DISPCNT ((volatile u32arm_t *)0x4000000)
 #define VRAM ((volatile u16arm_t *)0x6000000)
+#define PRAM  ((volatile u8arm_t*)0x5000000)
 
 
 struct Point
@@ -197,10 +198,24 @@ struct Color4
 	using bgmode = BGMODE4;
 	using Vram_t = bgmode::Vram_t;
 	using Color_t = Vram_t;
+	using Pram_t = Vram_t;
 
 	static constexpr const u32arm_t mode = 0x04;
 	static constexpr const u8arm_t COL=bgmode::COL;
 	static constexpr const u8arm_t ROW=bgmode::ROW;
+
+	static void platelet(const Pram_t *buff,usize_t N,usize_t M=0)
+	{
+		for(usize_t i=0;i<N;++i)
+			PRAM[i+M]=buff[i];
+
+	}
+
+	inline static constexpr volatile Pram_t &platelet(usize_t N)
+	{
+
+		return PRAM[N];
+	}
 
 };
 
@@ -228,7 +243,7 @@ struct Graphic: public BGCOLORMODE
 
 	static void rectangle(Color_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
-		for(auto &rpoint:Grange<BGCOLORMODE>({x1,y1},{x2,y2}))
+		for(auto volatile &rpoint:Grange<BGCOLORMODE>({x1,y1},{x2,y2}))
 			rpoint=color;
 
 	}
@@ -240,7 +255,7 @@ struct Graphic: public BGCOLORMODE
 
 	static void drawbuffer(const Color_t *buffer,u8arm_t x=0,u8arm_t  y=0,u8arm_t w=COL,u8arm_t h=ROW)
 	{
-		for(auto &rpoint:Grange<BGCOLORMODE>({x,y},Point(x+w-1,y+h-1)))
+		for(auto volatile &rpoint:Grange<BGCOLORMODE>({x,y},Point(x+w-1,y+h-1)))
 			rpoint=*buffer++;
 	}
 };
