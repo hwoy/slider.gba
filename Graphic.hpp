@@ -92,13 +92,17 @@ struct Color4
 	{
 		for(usize_t i=0;i<N;++i)
 			PRAM[i+M]=buff[i];
-
 	}
 
 	inline static constexpr volatile Pram_t &platelet(usize_t N,usize_t M=0)
 	{
-
 		return PRAM[N+M];
+	}
+
+	template <usize_t N>
+	static void platelet(const Pram_t (&buff)[N],usize_t M=0)
+	{
+		platelet(buff,N,M);
 	}
 
 };
@@ -234,10 +238,14 @@ struct Graphic: public BGCOLORMODE
 		rectangle(color,0,0,COL-1,ROW-1);
 	}
 
-	static void drawbuffer(const Color_t *buffer,u8arm_t x=0,u8arm_t  y=0,u8arm_t w=COL,u8arm_t h=ROW)
+	template <usize_t N>
+	static void drawbuffer(const Color_t (&buffer)[N],u8arm_t x=0,u8arm_t  y=0,u8arm_t w=COL)
 	{
-		for(auto volatile &rpoint:Grange<BGCOLORMODE>({x,y},Point(x+w-1,y+h-1)))
-			rpoint=*buffer++;
+		for(u8arm_t i=0;i<N;++i)
+		{
+			bgmode::refvid(x+i%w,y+i/w)=buffer[i];
+		}
+
 	}
 };
 
