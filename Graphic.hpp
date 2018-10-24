@@ -89,10 +89,12 @@ struct BGMODE
 using BG3 = BGMODE<u16arm_t>;
 using BG4 = BGMODE<u8arm_t>;
 
-template <class BG>
+template <class BGCOLORMODE>
 struct Grange
 {
-	using Vidmem_t = typename BG::Vidmem_t;
+	using bgmode = typename BGCOLORMODE::bgmod;
+	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
+	using Color_t = Vidmem_t;
 
 	struct Iterator
 	{
@@ -103,12 +105,12 @@ struct Grange
 
 		inline constexpr const volatile Vidmem_t &operator * () const
 		{
-			return BG::refvid(p.x,p.y);
+			return bgmode::refvid(p.x,p.y);
 		}
 
 		inline volatile Vidmem_t &operator * ()
 		{
-			return BG::refvid(p.x,p.y);
+			return bgmode::refvid(p.x,p.y);
 		}
 
 		volatile Vidmem_t *operator ++ ()
@@ -126,7 +128,7 @@ struct Grange
 			}
 			
 
-			return BG::ptrvid(p.x,p.y);
+			return bgmode::ptrvid(p.x,p.y);
 			
 		}
 
@@ -145,7 +147,7 @@ struct Grange
 			}
 			
 
-			return BG::ptrvid(p.x,p.y);
+			return bgmode::ptrvid(p.x,p.y);
 			
 		}
 
@@ -208,31 +210,31 @@ struct Graphic: public BGCOLORMODE
 
 
 
-	static inline void pixel(Vidmem_t color,u8arm_t x,u8arm_t y)
+	static inline void pixel(Color_t color,u8arm_t x,u8arm_t y)
 	{
 		bgmode::write(x,y,color);
 	}
 
-	static inline Vidmem_t pixel(u8arm_t x,u8arm_t y)
+	static inline Color_t pixel(u8arm_t x,u8arm_t y)
 	{
 		return bgmode::read(x,y);
 	}
 
-	static void rectangle(u16arm_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
+	static void rectangle(Color_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
-		for(auto &rpoint:Grange<bgmode>({x1,y1},{x2,y2}))
+		for(auto &rpoint:Grange<BGCOLORMODE>({x1,y1},{x2,y2}))
 			rpoint=color;
 
 	}
 
-	static void setbgcolor(Vidmem_t color)
+	static void setbgcolor(Color_t color)
 	{
 		rectangle(color,0,0,GraphicDevice::COL-1,GraphicDevice::ROW-1);
 	}
 
-	static void drawbuffer(const Vidmem_t *buffer,u8arm_t x=0,u8arm_t  y=0,u8arm_t w=GraphicDevice::COL,u8arm_t h=GraphicDevice::ROW)
+	static void drawbuffer(const Color_t *buffer,u8arm_t x=0,u8arm_t  y=0,u8arm_t w=GraphicDevice::COL,u8arm_t h=GraphicDevice::ROW)
 	{
-		for(auto &rpoint:Grange<bgmode>({x,y},Point(x+w-1,y+h-1)))
+		for(auto &rpoint:Grange<BGCOLORMODE>({x,y},Point(x+w-1,y+h-1)))
 			rpoint=*buffer++;
 	}
 };
