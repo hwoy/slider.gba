@@ -5,22 +5,24 @@
 #include "Graphic.hpp"
 #include "Draw.hpp"
 
-
+template <class COLORMODE>
 struct Font
 {
+    using Color_t = typename COLORMODE::Color_t;
+    
 	static constexpr const u8arm_t SIZE=8;
 	static constexpr const u8arm_t NUM=128;
 
 	static const u8arm_t FONT[NUM][SIZE][SIZE];
 
-    template <class GD>
-	static inline void draw(const Graphic<GD> &g,const Point &point,const Color &color,const u8arm_t ch)
+	static inline void draw(const Graphic<COLORMODE> &g,const Point &point,const Color_t &color,const u8arm_t ch)
 	{
-		Draw::draw(g,point,color,FONT,ch);
+		Draw<COLORMODE>::draw(g,point,color,FONT,ch);
 	}
 };
 
-const u8arm_t Font::FONT[Font::NUM][Font::SIZE][Font::SIZE] =
+template <class COLORMODE>
+const u8arm_t Font<COLORMODE>::FONT[Font<COLORMODE>::NUM][Font<COLORMODE>::SIZE][Font<COLORMODE>::SIZE] =
 {
     // char 0
     {

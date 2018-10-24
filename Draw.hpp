@@ -4,10 +4,13 @@
 #include "arm7type.h"
 #include "Graphic.hpp"
 
+template <class COLORMODE>
 struct Draw 
 {
-	template <class GD,usize_t M,usize_t N,usize_t P>
-	static void draw(const Graphic<GD> &g,const Point &point,const Color &color,const u8arm_t (&alpha)[M][N][P],const u8arm_t ch)
+	using Color_t = typename COLORMODE::Color_t;
+
+	template <usize_t M,usize_t N,usize_t P>
+	static void draw(const Graphic<COLORMODE> &g,const Point &point,const Color_t &color,const u8arm_t (&alpha)[M][N][P],const u8arm_t ch)
 	{
 		for(u8arm_t y=0;y<N;++y)
 			for(u8arm_t x=0;x<P;++x)

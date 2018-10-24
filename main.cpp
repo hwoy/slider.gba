@@ -48,15 +48,18 @@ static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square
 
 #define FCGAP ((GraphicDevice::COL-CGAP*(WxH-1)-WIDTH*WxH)/2)
 
-
-static constexpr const Color BOXCOLOR  {31,0,0};
-static constexpr const Color NUMCOLOR  {0,0,31};
-
-static constexpr const Color COMBOXCOLOR  = {0,31,0};
-static constexpr const Color COMNUMCOLOR  = NUMCOLOR;
+using Color = Color3;
+using Color_t = Color::Color_t;
 
 
-static constexpr const Color BGCOLOR   {0,0,0};
+static constexpr const Color_t BOXCOLOR = RGB15(31,0,0);
+static constexpr const Color_t NUMCOLOR  = RGB15(0,0,31);
+
+static constexpr const Color_t COMBOXCOLOR  = RGB15(0,31,0);
+static constexpr const Color_t COMNUMCOLOR  = NUMCOLOR;
+
+
+static constexpr const Color_t BGCOLOR = RGB15(0,0,0);
 
 
 //********************** Game function ***********************//
@@ -68,8 +71,8 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 }
 
 
-template <class GD,usize_t N,usize_t M>
-static void drawboard(const Graphic<GD> &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
+template <class COLORMODE,usize_t N,usize_t M>
+static void drawboard(const Graphic<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
 {
 
     for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
@@ -80,8 +83,8 @@ static void drawboard(const Graphic<GD> &g,const Square &square,const Square &co
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width-1,rgap+square.width-1);
 }
 
-template <class GD,usize_t N,usize_t M>
-static void movesquare(const Graphic<GD> &g,const Square &square,const Square &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
+template <class COLORMODE,usize_t N,usize_t M>
+static void movesquare(const Graphic<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
 {
 
     const u8arm_t jfrom=from%WxH;
@@ -106,8 +109,8 @@ static void movesquare(const Graphic<GD> &g,const Square &square,const Square &c
 extern "C"
 int main()
 {
-    static constexpr const Square square{WIDTH,BOXCOLOR,NUMCOLOR};
-    static constexpr const Square comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
+    static constexpr const Square<Color> square{WIDTH,BOXCOLOR,NUMCOLOR};
+    static constexpr const Square<Color> comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
 
     u32arm_t sq[WxH * WxH];
     
@@ -120,7 +123,7 @@ int main()
 
     GraphicDevice::setmode(0x403);
 
-    constexpr const Graphic<GraphicDevice> g;
+    constexpr const Graphic<Color> g;
 
 	g.setbgcolor(BGCOLOR);
 

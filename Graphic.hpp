@@ -4,7 +4,7 @@
 
 #include "arm7type.h"
 
-#define RGB16(r,g,b)  ((r)+(g<<5)+(b<<10))
+#define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
 
 #define IOMEM ((volatile u32arm_t *)0x4000000)
 #define VIDMEM ((volatile u16arm_t *)0x6000000)
@@ -48,41 +48,51 @@ struct GraphicDevice
 	{
 		*IOMEM=mode;
 	}
+};
 
-	static inline u16arm_t read(u16arm_t index)
+template <typename VIDMEMTYPE>
+struct BGMODE
+{
+	using Vidmem_t = VIDMEMTYPE;
+
+	static inline Vidmem_t read(Vidmem_t index)
 	{
-		return VIDMEM[index];
+		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[index];
 	}
 
-	static inline void write(u16arm_t index,u16arm_t value)
+	static inline void write(Vidmem_t index,Vidmem_t value)
 	{
-		VIDMEM[index]=value;
+		reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[index]=value;
 	}
 
-	static inline u16arm_t read(u8arm_t x,u8arm_t y)
+	static inline Vidmem_t read(u8arm_t x,u8arm_t y)
 	{
-		return read(x+y*COL);
+		return read(x+y*GraphicDevice::COL);
 	}
 
-	static inline void write(u8arm_t x,u8arm_t y,u16arm_t value)
+	static inline void write(u8arm_t x,u8arm_t y,Vidmem_t value)
 	{
-		write(x+y*COL,value);
+		write(x+y*GraphicDevice::COL,value);
 	}
 
-	static inline constexpr volatile u16arm_t &refvid(u8arm_t x,u8arm_t y)
+	static inline constexpr volatile Vidmem_t &refvid(u8arm_t x,u8arm_t y)
 	{
-		return VIDMEM[x+y*COL];
+		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[x+y*GraphicDevice::COL];
 	}
 
-	static inline constexpr volatile u16arm_t *ptrvid(u8arm_t x,u8arm_t y)
+	static inline constexpr volatile Vidmem_t *ptrvid(u8arm_t x,u8arm_t y)
 	{
-		return VIDMEM+x+y*COL;
+		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)+x+y*GraphicDevice::COL;
 	}
 };
 
-template <class GD>
+using BG3 = BGMODE<u16arm_t>;
+using BG4 = BGMODE<u8arm_t>;
+
+template <class BG>
 struct Grange
 {
+	using Vidmem_t = typename BG::Vidmem_t;
 
 	struct Iterator
 	{
@@ -91,17 +101,17 @@ struct Grange
 
 		explicit inline constexpr Iterator(u8arm_t x1,u8arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
 
-		inline constexpr const volatile u16arm_t &operator * () const
+		inline constexpr const volatile Vidmem_t &operator * () const
 		{
-			return GD::refvid(p.x,p.y);
+			return BG::refvid(p.x,p.y);
 		}
 
-		inline volatile u16arm_t &operator * ()
+		inline volatile Vidmem_t &operator * ()
 		{
-			return GD::refvid(p.x,p.y);
+			return BG::refvid(p.x,p.y);
 		}
 
-		volatile u16arm_t *operator ++ ()
+		volatile Vidmem_t *operator ++ ()
 		{
 			if(p.x+1>x2)
 			{
@@ -116,11 +126,11 @@ struct Grange
 			}
 			
 
-			return GD::ptrvid(p.x,p.y);
+			return BG::ptrvid(p.x,p.y);
 			
 		}
 
-		volatile u16arm_t *operator -- ()
+		volatile Vidmem_t *operator -- ()
 		{
 			if(p.x-1<x1)
 			{
@@ -135,7 +145,7 @@ struct Grange
 			}
 			
 
-			return GD::ptrvid(p.x,p.y);
+			return BG::ptrvid(p.x,p.y);
 			
 		}
 
@@ -173,91 +183,59 @@ struct Grange
 
 };
 
-
-struct Graphic_Type
+struct Color3
 {
+	using bgmod = BG3;
+	using Vidmem_t = bgmod::Vidmem_t;
+	using Color_t = Vidmem_t;
 
-	union Color
-	{
-		
-		u16arm_t color;
-		struct Rgb
-		{
-				u16arm_t r:5;
-				u16arm_t g:5;
-				u16arm_t b:5;
-				u16arm_t unused:1;
-		}__rgb__;
-
-		inline static constexpr u16arm_t rgb(u16arm_t r,u16arm_t g,u16arm_t b) { return RGB16(r,g,b); }
-
-		inline constexpr Color(u16arm_t color):color(color) {}
-		
-		inline constexpr Color(u16arm_t r,u16arm_t g,u16arm_t b):__rgb__{r,g,b,0} {}
-
-		inline constexpr u16arm_t get(void) const
-		{
-			return color;
-		}
-
-		inline Rgb getrgb(void) const
-		{
-			return __rgb__;
-		}
-	};
 };
 
-template <class GD>
-struct Graphic: public Graphic_Type
+struct Color4
 {
-	using Color = typename Graphic_Type::Color;
+	using bgmod = BG4;
+	using Vidmem_t = bgmod::Vidmem_t;
+	using Color_t = Vidmem_t;
+
+};
+
+template <class BGCOLORMODE>
+struct Graphic: public BGCOLORMODE
+{
+	using bgmode = typename BGCOLORMODE::bgmod;
+	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
+	using Color_t = Vidmem_t;
 
 
-	static inline void pixel(u16arm_t color,u8arm_t x,u8arm_t y)
+
+	static inline void pixel(Vidmem_t color,u8arm_t x,u8arm_t y)
 	{
-		GD::write(x,y,color);
+		bgmode::write(x,y,color);
 	}
 
-	static inline void pixel(const Color &color,u8arm_t x,u8arm_t y)
+	static inline Vidmem_t pixel(u8arm_t x,u8arm_t y)
 	{
-		pixel(color.get(),x,y);
-	}
-
-	static inline Color::Rgb pixel(u8arm_t x,u8arm_t y)
-	{
-		return Color(GD::read(x,y)).getrgb();
+		return bgmode::read(x,y);
 	}
 
 	static void rectangle(u16arm_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
 	{
-		for(auto &rpoint:Grange<GD>({x1,y1},{x2,y2}))
+		for(auto &rpoint:Grange<bgmode>({x1,y1},{x2,y2}))
 			rpoint=color;
 
 	}
 
-	static void rectangle(const Color &color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
+	static void setbgcolor(Vidmem_t color)
 	{
-		rectangle(color.get(),x1,y1,x2,y2);
+		rectangle(color,0,0,GraphicDevice::COL-1,GraphicDevice::ROW-1);
 	}
 
-	static void setbgcolor(u16arm_t color)
+	static void drawbuffer(const Vidmem_t *buffer,u8arm_t x=0,u8arm_t  y=0,u8arm_t w=GraphicDevice::COL,u8arm_t h=GraphicDevice::ROW)
 	{
-		rectangle(color,0,0,GD::COL-1,GD::ROW-1);
-	}
-
-	static void setbgcolor(const Color &color)
-	{
-		setbgcolor(color.get());
-	}
-
-	static void drawbuffer(const u16arm_t *buffer,u16arm_t x=0,u16arm_t  y=0,u16arm_t w=GD::COL,u16arm_t h=GD::ROW)
-	{
-		for(auto &rpoint:Grange<GD>({x,y},Point(x+w-1,y+h-1)))
+		for(auto &rpoint:Grange<bgmode>({x,y},Point(x+w-1,y+h-1)))
 			rpoint=*buffer++;
 	}
 };
-
-using Color = Graphic_Type::Color;
 
 
 #endif
