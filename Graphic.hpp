@@ -6,8 +6,8 @@
 
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
 
-#define IOMEM ((volatile u32arm_t *)0x4000000)
-#define VIDMEM ((volatile u16arm_t *)0x6000000)
+#define DISPCNT ((volatile u32arm_t *)0x4000000)
+#define VRAM ((volatile u16arm_t *)0x6000000)
 
 
 struct Point
@@ -33,51 +33,51 @@ struct GraphicDevice
 {
 	static inline void setreg(u32arm_t bgmode)
 	{
-		*IOMEM=bgmode;
+		*DISPCNT=bgmode;
 	}
 
 	static inline u32arm_t getreg(void)
 	{
-		return *IOMEM;
+		return *DISPCNT;
 	}
 };
 
-template <typename VIDMEMTYPE,u8arm_t _COL,u8arm_t _ROW>
+template <typename VRAMTYPE,u8arm_t _COL,u8arm_t _ROW>
 struct BGMODE
 {
-	using Vidmem_t = VIDMEMTYPE;
+	using Vram_t = VRAMTYPE;
 
 	static constexpr const u8arm_t COL=_COL;
 	static constexpr const u8arm_t ROW=_ROW;
 
-	static inline Vidmem_t read(Vidmem_t index)
+	static inline Vram_t read(Vram_t index)
 	{
-		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[index];
+		return reinterpret_cast<volatile Vram_t *>(VRAM)[index];
 	}
 
-	static inline void write(Vidmem_t index,Vidmem_t value)
+	static inline void write(Vram_t index,Vram_t value)
 	{
-		reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[index]=value;
+		reinterpret_cast<volatile Vram_t *>(VRAM)[index]=value;
 	}
 
-	static inline Vidmem_t read(u8arm_t x,u8arm_t y)
+	static inline Vram_t read(u8arm_t x,u8arm_t y)
 	{
 		return read(x+y*COL);
 	}
 
-	static inline void write(u8arm_t x,u8arm_t y,Vidmem_t value)
+	static inline void write(u8arm_t x,u8arm_t y,Vram_t value)
 	{
 		write(x+y*COL,value);
 	}
 
-	static inline constexpr volatile Vidmem_t &refvid(u8arm_t x,u8arm_t y)
+	static inline constexpr volatile Vram_t &refvid(u8arm_t x,u8arm_t y)
 	{
-		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)[x+y*COL];
+		return reinterpret_cast<volatile Vram_t *>(VRAM)[x+y*COL];
 	}
 
-	static inline constexpr volatile Vidmem_t *ptrvid(u8arm_t x,u8arm_t y)
+	static inline constexpr volatile Vram_t *ptrvid(u8arm_t x,u8arm_t y)
 	{
-		return reinterpret_cast<volatile Vidmem_t *>(VIDMEM)+x+y*COL;
+		return reinterpret_cast<volatile Vram_t *>(VRAM)+x+y*COL;
 	}
 };
 
@@ -88,8 +88,8 @@ template <class BGCOLORMODE>
 struct Grange
 {
 	using bgmode = typename BGCOLORMODE::bgmode;
-	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
-	using Color_t = Vidmem_t;
+	using Vram_t = typename BGCOLORMODE::Vram_t;
+	using Color_t = Vram_t;
 
 	struct Iterator
 	{
@@ -98,17 +98,17 @@ struct Grange
 
 		explicit inline constexpr Iterator(u8arm_t x1,u8arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
 
-		inline constexpr const volatile Vidmem_t &operator * () const
+		inline constexpr const volatile Vram_t &operator * () const
 		{
 			return bgmode::refvid(p.x,p.y);
 		}
 
-		inline volatile Vidmem_t &operator * ()
+		inline volatile Vram_t &operator * ()
 		{
 			return bgmode::refvid(p.x,p.y);
 		}
 
-		volatile Vidmem_t *operator ++ ()
+		volatile Vram_t *operator ++ ()
 		{
 			if(p.x+1>x2)
 			{
@@ -127,7 +127,7 @@ struct Grange
 			
 		}
 
-		volatile Vidmem_t *operator -- ()
+		volatile Vram_t *operator -- ()
 		{
 			if(p.x-1<x1)
 			{
@@ -183,8 +183,8 @@ struct Grange
 struct Color3
 {
 	using bgmode = BGMODE3;
-	using Vidmem_t = bgmode::Vidmem_t;
-	using Color_t = Vidmem_t;
+	using Vram_t = bgmode::Vram_t;
+	using Color_t = Vram_t;
 
 	static constexpr const u32arm_t mode = 0x03;
 	static constexpr const u8arm_t COL=bgmode::COL;
@@ -195,8 +195,8 @@ struct Color3
 struct Color4
 {
 	using bgmode = BGMODE4;
-	using Vidmem_t = bgmode::Vidmem_t;
-	using Color_t = Vidmem_t;
+	using Vram_t = bgmode::Vram_t;
+	using Color_t = Vram_t;
 
 	static constexpr const u32arm_t mode = 0x04;
 	static constexpr const u8arm_t COL=bgmode::COL;
@@ -208,8 +208,8 @@ template <class BGCOLORMODE>
 struct Graphic: public BGCOLORMODE
 {
 	using bgmode = typename BGCOLORMODE::bgmode;
-	using Vidmem_t = typename BGCOLORMODE::Vidmem_t;
-	using Color_t = Vidmem_t;
+	using Vram_t = typename BGCOLORMODE::Vram_t;
+	using Color_t = Vram_t;
 
 	static constexpr const u8arm_t COL=bgmode::COL;
 	static constexpr const u8arm_t ROW=bgmode::ROW;
