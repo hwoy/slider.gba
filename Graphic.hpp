@@ -65,6 +65,44 @@ struct BGMODE
 using BGMODE3 = BGMODE<u16arm_t,240,160>;
 using BGMODE4 = BGMODE<u8arm_t,240,160>;
 
+struct Color3
+{
+	using bgmode = BGMODE3;
+	using Vram_t = bgmode::Vram_t;
+	using Color_t = Vram_t;
+
+	static constexpr const u32arm_t mode = 0x03;
+	static constexpr const u8arm_t COL=bgmode::COL;
+	static constexpr const u8arm_t ROW=bgmode::ROW;
+
+};
+
+struct Color4
+{
+	using bgmode = BGMODE4;
+	using Vram_t = bgmode::Vram_t;
+	using Color_t = Vram_t;
+	using Pram_t = u16arm_t;
+
+	static constexpr const u32arm_t mode = 0x04;
+	static constexpr const u8arm_t COL=bgmode::COL;
+	static constexpr const u8arm_t ROW=bgmode::ROW;
+
+	static void platelet(const Pram_t *buff,usize_t N,usize_t M=0)
+	{
+		for(usize_t i=0;i<N;++i)
+			PRAM[i+M]=buff[i];
+
+	}
+
+	inline static constexpr volatile Pram_t &platelet(usize_t N)
+	{
+
+		return PRAM[N];
+	}
+
+};
+
 template <class BGCOLORMODE>
 struct Grange
 {
@@ -161,43 +199,6 @@ struct Grange
 
 };
 
-struct Color3
-{
-	using bgmode = BGMODE3;
-	using Vram_t = bgmode::Vram_t;
-	using Color_t = Vram_t;
-
-	static constexpr const u32arm_t mode = 0x03;
-	static constexpr const u8arm_t COL=bgmode::COL;
-	static constexpr const u8arm_t ROW=bgmode::ROW;
-
-};
-
-struct Color4
-{
-	using bgmode = BGMODE4;
-	using Vram_t = bgmode::Vram_t;
-	using Color_t = Vram_t;
-	using Pram_t = u16arm_t;
-
-	static constexpr const u32arm_t mode = 0x04;
-	static constexpr const u8arm_t COL=bgmode::COL;
-	static constexpr const u8arm_t ROW=bgmode::ROW;
-
-	static void platelet(const Pram_t *buff,usize_t N,usize_t M=0)
-	{
-		for(usize_t i=0;i<N;++i)
-			PRAM[i+M]=buff[i];
-
-	}
-
-	inline static constexpr volatile Pram_t &platelet(usize_t N)
-	{
-
-		return PRAM[N];
-	}
-
-};
 
 template <class BGCOLORMODE>
 struct Graphic: public BGCOLORMODE
