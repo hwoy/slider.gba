@@ -7,7 +7,7 @@
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
 
 #define DISPCNT ((volatile u32arm_t *)0x4000000)
-#define VRAM ((volatile u16arm_t *)0x6000000)
+#define VRAM ((volatile void *)0x6000000)
 #define PRAM  ((volatile u8arm_t*)0x5000000)
 
 
@@ -50,26 +50,6 @@ struct BGMODE
 
 	static constexpr const u8arm_t COL=_COL;
 	static constexpr const u8arm_t ROW=_ROW;
-
-	static inline Vram_t read(Vram_t index)
-	{
-		return reinterpret_cast<volatile Vram_t *>(VRAM)[index];
-	}
-
-	static inline void write(Vram_t index,Vram_t value)
-	{
-		reinterpret_cast<volatile Vram_t *>(VRAM)[index]=value;
-	}
-
-	static inline Vram_t read(u8arm_t x,u8arm_t y)
-	{
-		return read(x+y*COL);
-	}
-
-	static inline void write(u8arm_t x,u8arm_t y,Vram_t value)
-	{
-		write(x+y*COL,value);
-	}
 
 	static inline constexpr volatile Vram_t &refvid(u8arm_t x,u8arm_t y)
 	{
@@ -211,6 +191,13 @@ struct Color4
 
 	}
 
+	static void platelet(void)
+	{
+		for(usize_t i=0;i<=0xff;++i)
+			PRAM[i]=i;
+
+	}	
+
 	inline static constexpr volatile Pram_t &platelet(usize_t N)
 	{
 
@@ -233,12 +220,12 @@ struct Graphic: public BGCOLORMODE
 
 	static inline void pixel(Color_t color,u8arm_t x,u8arm_t y)
 	{
-		bgmode::write(x,y,color);
+		bgmode::refvid(x,y)=color;
 	}
 
 	static inline Color_t pixel(u8arm_t x,u8arm_t y)
 	{
-		return bgmode::read(x,y);
+		return bgmode::refvid(x,y);
 	}
 
 	static void rectangle(Color_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
