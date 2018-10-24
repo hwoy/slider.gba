@@ -186,7 +186,7 @@ struct Color3
 	using Vidmem_t = bg::Vidmem_t;
 	using Color_t = Vidmem_t;
 
-	static constexpr const u16arm_t mode = 0x03;
+	static constexpr const u32arm_t mode = 0x03;
 
 };
 
@@ -196,7 +196,7 @@ struct Color4
 	using Vidmem_t = bg::Vidmem_t;
 	using Color_t = Vidmem_t;
 
-	static constexpr const u16arm_t mode = 0x04;
+	static constexpr const u32arm_t mode = 0x04;
 
 };
 
