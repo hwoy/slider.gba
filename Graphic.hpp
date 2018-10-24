@@ -241,7 +241,7 @@ struct Graphic: public BGCOLORMODE
 	template <usize_t N>
 	static void drawbuffer(const Color_t (&buffer)[N],u8arm_t x=0,u8arm_t  y=0,u8arm_t w=COL)
 	{
-		for(u8arm_t i=0;i<N;++i)
+		for(usize_t i=0;i<N;++i)
 		{
 			bgmode::refvid(x+i%w,y+i/w)=buffer[i];
 		}
