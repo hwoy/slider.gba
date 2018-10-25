@@ -7,7 +7,7 @@
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
 
 static constexpr const u32arm_t VRAM    = 0x6000000;
-static constexpr const u32arm_t VRAM2   = 0x6000A00;
+static constexpr const u32arm_t VRAM2   = 0x600A000;
 static constexpr const u32arm_t PRAM    = 0x5000000;
 static constexpr const u32arm_t DISPCNT = 0x4000000;
 
@@ -90,6 +90,12 @@ using BGMODE4P2    = BGMODE<VRAM2,u8arm_t,240,160>;
 using BGMODE4X16P2 = BGMODE<VRAM2,u16arm_t,120,160>;
 using BGMODE4X32P2 = BGMODE<VRAM2,u16arm_t,60,160>;
 
+using BGMODE5      = BGMODE<VRAM,u16arm_t,160,128>;
+using BGMODE5X32   = BGMODE<VRAM,u32arm_t,80,128>;
+
+using BGMODE5P2      = BGMODE<VRAM2,u16arm_t,160,128>;
+using BGMODE5X32P2   = BGMODE<VRAM2,u32arm_t,80,128>;
+
 template <class _BGMODE_,u32arm_t _mode_>
 struct ColorTrait
 {
@@ -162,6 +168,14 @@ struct Color4x32p2 : public ColorTrait<BGMODE4X32P2,0x04> , public PaletteImp<Co
 {
 	using bgmode = typename ColorTrait<BGMODE4X32P2,0x04>::bgmode;
 };
+
+using Color5 = ColorTrait<BGMODE5,0x05>;
+
+using Color5x32 = ColorTrait<BGMODE5X32,0x05>;
+
+using Color5p2 = ColorTrait<BGMODE5P2,0x05>;
+
+using Color5x32p2 = ColorTrait<BGMODE5X32P2,0x05>;
 
 
 template <class BGCOLORMODE>
