@@ -204,7 +204,7 @@ struct Grange
 			return bgmode::refvid(p.x,p.y);
 		}
 
-		volatile Vram_t *operator ++ ()
+		Iterator &operator ++ ()
 		{
 			if(p.x+1>x2)
 			{
@@ -217,11 +217,18 @@ struct Grange
 				++p.x;
 			}		
 
-			return bgmode::ptrvid(p.x,p.y);
+			return *this;
 			
 		}
 
-		volatile Vram_t *operator -- ()
+		Iterator operator ++ (int)
+		{
+			Iterator it = *this;
+			++(*this);
+			return it;
+		}
+
+		Iterator &operator -- ()
 		{
 			if(p.x-1<x1)
 			{
@@ -234,13 +241,25 @@ struct Grange
 				--p.x;
 			}
 			
-			return bgmode::ptrvid(p.x,p.y);
+			return *this;
 			
+		}
+
+		Iterator operator -- (int)
+		{
+			Iterator it = *this;
+			--(*this);
+			return it;
 		}
 
 		inline constexpr bool operator != (const Iterator & it) const
 		{
 			return p != it.p;
+		}
+
+		inline constexpr bool operator == (const Iterator & it) const
+		{
+			return p == it.p;
 		}
 
 	}itbegin,itend;
