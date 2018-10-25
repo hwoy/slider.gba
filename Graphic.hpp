@@ -49,18 +49,19 @@ struct BGMODE
 {
 	using Vram_t = VRAMTYPE;
 	using Pram_t = u16arm_t;
+	using PtrVram_t = volatile Vram_t *;
 
 	static constexpr const u32arm_t COL=_COL;
 	static constexpr const u32arm_t ROW=_ROW;
 
 	static inline constexpr volatile Vram_t &refvid(u32arm_t x,u32arm_t y)
 	{
-		return reinterpret_cast<volatile Vram_t *>(_VRAM_)[x+y*COL];
+		return reinterpret_cast<PtrVram_t>(_VRAM_)[x+y*COL];
 	}
 
 	static inline constexpr volatile Vram_t *ptrvid(u32arm_t x,u32arm_t y)
 	{
-		return reinterpret_cast<volatile Vram_t *>(_VRAM_)+x+y*COL;
+		return reinterpret_cast<PtrVram_t>(_VRAM_)+x+y*COL;
 	}
 
 	static inline constexpr volatile Pram_t &refplt(usize_t index)
