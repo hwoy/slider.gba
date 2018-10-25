@@ -125,7 +125,7 @@ int main()
 
     initgame(sq, &seed, index, WxH);
 
-    GraphicDevice::setreg(regcontrol);
+    GraphicDevice::refdispcnt()=regcontrol;
 
     constexpr const Graphic<Color> g;
 

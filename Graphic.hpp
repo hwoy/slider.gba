@@ -6,12 +6,10 @@
 
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
 
-#define DISPCNT ((volatile u32arm_t *)0x4000000)
-#define PRAM  ((volatile u16arm_t*)0x5000000)
-
-static constexpr const u32arm_t VRAM  = 0x6000000;
-static constexpr const u32arm_t VRAM2 = 0x6000A00;
-
+static constexpr const u32arm_t VRAM    = 0x6000000;
+static constexpr const u32arm_t VRAM2   = 0x6000A00;
+static constexpr const u32arm_t PRAM    = 0x5000000;
+static constexpr const u32arm_t DISPCNT = 0x4000000;
 
 struct Point
 {
@@ -34,14 +32,17 @@ struct Point
 
 struct GraphicDevice
 {
-	static inline void setreg(u32arm_t bgmode)
+	using Dispcnt_t = u32arm_t;
+	using PtrDispcnt_t = volatile Dispcnt_t *;
+
+	static inline constexpr volatile Dispcnt_t & refdispcnt(void)
 	{
-		*DISPCNT=bgmode;
+		return *reinterpret_cast<PtrDispcnt_t>(DISPCNT);
 	}
 
-	static inline u32arm_t getreg(void)
+	static inline constexpr PtrDispcnt_t ptrdispcnt(void)
 	{
-		return *DISPCNT;
+		return reinterpret_cast<PtrDispcnt_t>(DISPCNT);
 	}
 };
 
@@ -49,8 +50,10 @@ template <unsigned long _VRAM_,typename VRAMTYPE,u32arm_t _COL,u32arm_t _ROW>
 struct BGMODE
 {
 	using Vram_t = VRAMTYPE;
-	using Pram_t = u16arm_t;
 	using PtrVram_t = volatile Vram_t *;
+
+	using Pram_t = u16arm_t;
+	using PtrPram_t = volatile Pram_t *;
 
 	static constexpr const u32arm_t COL=_COL;
 	static constexpr const u32arm_t ROW=_ROW;
@@ -60,19 +63,19 @@ struct BGMODE
 		return reinterpret_cast<PtrVram_t>(_VRAM_)[x+y*COL];
 	}
 
-	static inline constexpr volatile Vram_t *ptrvid(u32arm_t x,u32arm_t y)
+	static inline constexpr PtrVram_t ptrvid(u32arm_t x,u32arm_t y)
 	{
 		return reinterpret_cast<PtrVram_t>(_VRAM_)+x+y*COL;
 	}
 
 	static inline constexpr volatile Pram_t &refplt(usize_t index)
 	{
-		return PRAM[index];
+		return reinterpret_cast<PtrPram_t>(PRAM)[index];
 	}
 
-	static inline constexpr volatile Pram_t *ptrplt(usize_t index)
+	static inline constexpr PtrPram_t ptrplt(usize_t index)
 	{
-		return PRAM+index;
+		return reinterpret_cast<PtrPram_t>(PRAM)+index;
 	}
 };
 
