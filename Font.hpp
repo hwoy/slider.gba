@@ -15,7 +15,7 @@ struct Font
 
 	static const u8arm_t FONT[NUM][SIZE][SIZE];
 
-	static inline void draw(const Graphic<COLORMODE> &g,const Point &point,const Color_t &color,const u8arm_t ch)
+	static inline void draw(const Graphicx<COLORMODE> &g,const Point &point,const Color_t &color,const u8arm_t ch)
 	{
 		Draw<COLORMODE>::draw(g,point,color,FONT,ch);
 	}

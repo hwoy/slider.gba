@@ -76,7 +76,7 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 
 
 template <class COLORMODE,usize_t N,usize_t M>
-static void drawboard(const Graphic<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
+static void drawboard(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
 {
 
     for(usize_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
@@ -88,7 +88,7 @@ static void drawboard(const Graphic<COLORMODE> &g,const Square<COLORMODE> &squar
 }
 
 template <class COLORMODE,usize_t N,usize_t M>
-static void movesquare(const Graphic<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
+static void movesquare(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
 {
 
     const u32arm_t jfrom=from%WxH;
@@ -127,7 +127,7 @@ int main()
 
     GraphicDevice::refdispcnt()=regcontrol;
 
-    constexpr const Graphic<Color> g;
+    constexpr const Graphicx<Color> g;
 
 	g.setbgcolor(BGCOLOR);
 

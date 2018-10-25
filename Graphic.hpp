@@ -286,8 +286,6 @@ struct Graphic: public BGCOLORMODE
 	static constexpr const u32arm_t COL=bgmode::COL;
 	static constexpr const u32arm_t ROW=bgmode::ROW;
 
-
-
 	static inline void pixel(Color_t color,u32arm_t x,u32arm_t y)
 	{
 		bgmode::refvid(x,y)=color;
@@ -301,17 +299,6 @@ struct Graphic: public BGCOLORMODE
 	static inline constexpr Grange<BGCOLORMODE> grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
 	{
 		return Grange<BGCOLORMODE>(x1,y1,x2,y2);
-	}
-
-	static void rectangle(Color_t color,u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
-	{
-		for(volatile auto &rpoint:grange(x1,y1,x2,y2))
-			rpoint=color;
-	}
-
-	static void setbgcolor(Color_t color)
-	{
-		rectangle(color,0,0,COL-1,ROW-1);
 	}
 
 	template <usize_t N>
@@ -334,5 +321,46 @@ struct Graphic: public BGCOLORMODE
 
 };
 
+template <class GRAPHIC>
+struct SharpImp
+{
+	using bgmode = typename GRAPHIC::bgmode;
+	using Vram_t = typename bgmode::Vram_t;
+	using Color_t = Vram_t;
+
+	static constexpr const u32arm_t COL=bgmode::COL;
+	static constexpr const u32arm_t ROW=bgmode::ROW;
+
+	static void rectangle(Color_t color,u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
+	{
+		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x2,y2))
+			rpoint=color;
+	}
+
+	static void setbgcolor(Color_t color)
+	{
+		rectangle(color,0,0,COL-1,ROW-1);
+	}
+
+	static void box(Color_t color,u32arm_t x,u32arm_t y,u32arm_t w,u32arm_t h)
+	{
+		for(volatile auto &rpoint:GRAPHIC::grange(x,y,x+w,y))
+			rpoint=color;
+
+		for(volatile auto &rpoint:GRAPHIC::grange(x,y,x,y+h))
+			rpoint=color;
+
+		for(volatile auto &rpoint:GRAPHIC::grange(x+w,y,x+w,y+h))
+			rpoint=color;
+		
+		for(volatile auto &rpoint:GRAPHIC::grange(x,y+h,x+w,y+h))
+			rpoint=color;
+	}
+};
+
+template <class BGCOLORMODE>
+struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMODE>>
+{
+};
 
 #endif
