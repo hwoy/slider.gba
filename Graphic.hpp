@@ -74,6 +74,7 @@ struct BGMODE
 };
 
 using BGMODE3 = BGMODE<u16arm_t,240,160>;
+using BGMODE3X = BGMODE<u32arm_t,120,160>;
 using BGMODE4 = BGMODE<u8arm_t,240,160>;
 using BGMODE4X = BGMODE<u16arm_t,120,160>;
 
@@ -117,6 +118,8 @@ struct PlateletImp
 };
 
 using Color3 = ColorTrait<BGMODE3,0x03>;
+
+using Color3X = ColorTrait<BGMODE3X,0x03>;
 
 struct Color4 : public ColorTrait<BGMODE4,0x04> , public PlateletImp<ColorTrait<BGMODE4,0x04>>
 {
