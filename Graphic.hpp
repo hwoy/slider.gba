@@ -298,11 +298,15 @@ struct Graphic: public BGCOLORMODE
 		return bgmode::refvid(x,y);
 	}
 
+	static inline constexpr Grange<BGCOLORMODE> grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
+	{
+		return Grange<BGCOLORMODE>(x1,y1,x2,y2);
+	}
+
 	static void rectangle(Color_t color,u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
 	{
-		for(volatile auto &rpoint:Grange<BGCOLORMODE>(x1,y1,x2,y2))
+		for(volatile auto &rpoint:grange(x1,y1,x2,y2))
 			rpoint=color;
-
 	}
 
 	static void setbgcolor(Color_t color)
