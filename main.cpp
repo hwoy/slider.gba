@@ -51,7 +51,7 @@ static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square
 using Color = Color3;
 using Color_t = Color::Color_t;
 
-static constexpr const u32arm_t regcontrol = 0x400 | Color::mode;
+static constexpr const GraphicDevice::Dispcnt_t regcontrol = 0x400 | Color::mode;
 static constexpr const u32arm_t COL=Color::COL;
 static constexpr const u32arm_t ROW=Color::ROW;
 

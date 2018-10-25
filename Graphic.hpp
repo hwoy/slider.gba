@@ -194,14 +194,12 @@ struct Grange
 			{
 				p.x=x1;
 				++p.y;
-
 			}
 			
 			else
 			{
 				++p.x;
-			}
-			
+			}		
 
 			return bgmode::ptrvid(p.x,p.y);
 			
@@ -213,7 +211,6 @@ struct Grange
 			{
 				p.x=x2;
 				--p.y;
-
 			}
 			
 			else
@@ -221,7 +218,6 @@ struct Grange
 				--p.x;
 			}
 			
-
 			return bgmode::ptrvid(p.x,p.y);
 			
 		}
