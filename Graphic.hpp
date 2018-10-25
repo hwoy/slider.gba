@@ -190,7 +190,9 @@ struct Grange
 		const u32arm_t x1,x2;
 		Point p;
 
-		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
+		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,const Point &p):x1(x1),x2(x2),p(p) {}
+
+		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,u32arm_t x,u32arm_t y):Iterator(x1,x2,{x,y}) {}
 
 		inline constexpr const volatile Vram_t &operator * () const
 		{
@@ -247,6 +249,8 @@ struct Grange
 	inline constexpr Grange(const Point &p1,const Point &p2):
 	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,Point(p1.x,p2.y+1)) {}
 
+	inline constexpr Grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2):
+	Grange({x1,y1},{x2,y2}) {}
 
 	inline Iterator begin()
 	{
