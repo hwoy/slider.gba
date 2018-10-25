@@ -7,7 +7,8 @@
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
 
 #define DISPCNT ((volatile u32arm_t *)0x4000000)
-#define VRAM ((volatile void *)0x6000000)
+#define VRAM  0x6000000UL
+#define VRAM2 0x6000A00UL
 #define PRAM  ((volatile u16arm_t*)0x5000000)
 
 
@@ -43,7 +44,7 @@ struct GraphicDevice
 	}
 };
 
-template <typename VRAMTYPE,u32arm_t _COL,u32arm_t _ROW>
+template <unsigned long _VRAM_,typename VRAMTYPE,u32arm_t _COL,u32arm_t _ROW>
 struct BGMODE
 {
 	using Vram_t = VRAMTYPE;
@@ -54,12 +55,12 @@ struct BGMODE
 
 	static inline constexpr volatile Vram_t &refvid(u32arm_t x,u32arm_t y)
 	{
-		return reinterpret_cast<volatile Vram_t *>(VRAM)[x+y*COL];
+		return reinterpret_cast<volatile Vram_t *>(_VRAM_)[x+y*COL];
 	}
 
 	static inline constexpr volatile Vram_t *ptrvid(u32arm_t x,u32arm_t y)
 	{
-		return reinterpret_cast<volatile Vram_t *>(VRAM)+x+y*COL;
+		return reinterpret_cast<volatile Vram_t *>(_VRAM_)+x+y*COL;
 	}
 
 	static inline constexpr volatile Pram_t &refplt(usize_t index)
@@ -73,11 +74,15 @@ struct BGMODE
 	}
 };
 
-using BGMODE3 = BGMODE<u16arm_t,240,160>;
-using BGMODE3X32 = BGMODE<u32arm_t,120,160>;
-using BGMODE4 = BGMODE<u8arm_t,240,160>;
-using BGMODE4X16 = BGMODE<u16arm_t,120,160>;
-using BGMODE4X32 = BGMODE<u16arm_t,60,160>;
+using BGMODE3      = BGMODE<VRAM,u16arm_t,240,160>;
+using BGMODE3X32   = BGMODE<VRAM,u32arm_t,120,160>;
+using BGMODE4      = BGMODE<VRAM,u8arm_t,240,160>;
+using BGMODE4X16   = BGMODE<VRAM,u16arm_t,120,160>;
+using BGMODE4X32   = BGMODE<VRAM,u16arm_t,60,160>;
+
+using BGMODE4P2    = BGMODE<VRAM2,u8arm_t,240,160>;
+using BGMODE4X16P2 = BGMODE<VRAM2,u16arm_t,120,160>;
+using BGMODE4X32P2 = BGMODE<VRAM2,u16arm_t,60,160>;
 
 template <class _BGMODE_,u32arm_t _mode_>
 struct ColorTrait
@@ -135,6 +140,21 @@ struct Color4x16 : public ColorTrait<BGMODE4X16,0x04> , public PlateletImp<Color
 struct Color4x32 : public ColorTrait<BGMODE4X32,0x04> , public PlateletImp<ColorTrait<BGMODE4X32,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4X32,0x04>::bgmode;
+};
+
+struct Color4p2 : public ColorTrait<BGMODE4P2,0x04> , public PlateletImp<ColorTrait<BGMODE4P2,0x04>>
+{
+	using bgmode = typename ColorTrait<BGMODE4P2,0x04>::bgmode;
+};
+
+struct Color4x16p2 : public ColorTrait<BGMODE4X16P2,0x04> , public PlateletImp<ColorTrait<BGMODE4X16P2,0x04>>
+{
+	using bgmode = typename ColorTrait<BGMODE4X16P2,0x04>::bgmode;
+};
+
+struct Color4x32p2 : public ColorTrait<BGMODE4X32P2,0x04> , public PlateletImp<ColorTrait<BGMODE4X32P2,0x04>>
+{
+	using bgmode = typename ColorTrait<BGMODE4X32P2,0x04>::bgmode;
 };
 
 
