@@ -52,8 +52,8 @@ using Color = Color3;
 using Color_t = Color::Color_t;
 
 static constexpr const u32arm_t regcontrol = 0x400 | Color::mode;
-static constexpr const u8arm_t COL=Color::COL;
-static constexpr const u8arm_t ROW=Color::ROW;
+static constexpr const u32arm_t COL=Color::COL;
+static constexpr const u32arm_t ROW=Color::ROW;
 
 
 static constexpr const Color_t BOXCOLOR = RGB15(31,0,0);
@@ -79,8 +79,8 @@ template <class COLORMODE,usize_t N,usize_t M>
 static void drawboard(const Graphic<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
 {
 
-    for(u8arm_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
-		for(u8arm_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
+    for(usize_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
+		for(usize_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
 			if(sq[k]!=index)
                 (sq[k]==k? comsquare : square).draw(g,{cgap,rgap},sqlist[sq[k]]);
             else
@@ -91,19 +91,19 @@ template <class COLORMODE,usize_t N,usize_t M>
 static void movesquare(const Graphic<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
 {
 
-    const u8arm_t jfrom=from%WxH;
-    const u8arm_t ifrom=from/WxH;
-    const u8arm_t jto=to%WxH;
-    const u8arm_t ito=to/WxH;
+    const u32arm_t jfrom=from%WxH;
+    const u32arm_t ifrom=from/WxH;
+    const u32arm_t jto=to%WxH;
+    const u32arm_t ito=to/WxH;
 
-    const u8arm_t xto=FCGAP+jto*(square.width+CGAP);
-    const u8arm_t yto=FRGAP+ito*(square.width+RGAP);
+    const u32arm_t xto=FCGAP+jto*(square.width+CGAP);
+    const u32arm_t yto=FRGAP+ito*(square.width+RGAP);
 
     (sq[to]==to? comsquare : square).draw(g,{xto,yto},sqlist[sq[to]]);
 
 
-    const u8arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
-    const u8arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
+    const u32arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
+    const u32arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
     
     g.rectangle(BGCOLOR,xfrom,yfrom,xfrom+square.width-1,yfrom+square.width-1);
 
@@ -139,7 +139,7 @@ int main()
 
         struct point p;
 
-        u8arm_t indexfrom,indexto;
+        u32arm_t indexfrom,indexto;
 
         getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 

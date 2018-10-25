@@ -10,8 +10,8 @@ struct Font
 {
     using Color_t = typename COLORMODE::Color_t;
     
-	static constexpr const u8arm_t SIZE=8;
-	static constexpr const u8arm_t NUM=128;
+	static constexpr const u32arm_t SIZE=8;
+	static constexpr const u32arm_t NUM=128;
 
 	static const u8arm_t FONT[NUM][SIZE][SIZE];
 

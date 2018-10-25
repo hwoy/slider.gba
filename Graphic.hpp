@@ -13,9 +13,9 @@
 
 struct Point
 {
-	u8arm_t x,y;
+	u32arm_t x,y;
 
-	inline constexpr Point(u8arm_t x,u8arm_t y):x(x),y(y){}
+	inline constexpr Point(u32arm_t x,u32arm_t y):x(x),y(y){}
 
 	inline constexpr bool operator != (const Point & p) const
 	{
@@ -43,21 +43,21 @@ struct GraphicDevice
 	}
 };
 
-template <typename VRAMTYPE,u8arm_t _COL,u8arm_t _ROW>
+template <typename VRAMTYPE,u32arm_t _COL,u32arm_t _ROW>
 struct BGMODE
 {
 	using Vram_t = VRAMTYPE;
 	using Pram_t = u16arm_t;
 
-	static constexpr const u8arm_t COL=_COL;
-	static constexpr const u8arm_t ROW=_ROW;
+	static constexpr const u32arm_t COL=_COL;
+	static constexpr const u32arm_t ROW=_ROW;
 
-	static inline constexpr volatile Vram_t &refvid(u8arm_t x,u8arm_t y)
+	static inline constexpr volatile Vram_t &refvid(u32arm_t x,u32arm_t y)
 	{
 		return reinterpret_cast<volatile Vram_t *>(VRAM)[x+y*COL];
 	}
 
-	static inline constexpr volatile Vram_t *ptrvid(u8arm_t x,u8arm_t y)
+	static inline constexpr volatile Vram_t *ptrvid(u32arm_t x,u32arm_t y)
 	{
 		return reinterpret_cast<volatile Vram_t *>(VRAM)+x+y*COL;
 	}
@@ -87,8 +87,8 @@ struct ColorTrait
 	using Pram_t = typename bgmode::Pram_t;
 
 	static constexpr const u32arm_t mode = _mode_;
-	static constexpr const u8arm_t COL=bgmode::COL;
-	static constexpr const u8arm_t ROW=bgmode::ROW;
+	static constexpr const u32arm_t COL=bgmode::COL;
+	static constexpr const u32arm_t ROW=bgmode::ROW;
 
 };
 
@@ -138,10 +138,10 @@ struct Grange
 
 	struct Iterator
 	{
-		const u8arm_t x1,x2;
+		const u32arm_t x1,x2;
 		Point p;
 
-		explicit inline constexpr Iterator(u8arm_t x1,u8arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
+		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,const Point &p):x1(x1),x2(x2),p(p){}
 
 		inline constexpr const volatile Vram_t &operator * () const
 		{
@@ -234,24 +234,24 @@ struct Graphic: public BGCOLORMODE
 	using Color_t = Vram_t;
 	using Pram_t = typename bgmode::Pram_t;
 
-	static constexpr const u8arm_t COL=bgmode::COL;
-	static constexpr const u8arm_t ROW=bgmode::ROW;
+	static constexpr const u32arm_t COL=bgmode::COL;
+	static constexpr const u32arm_t ROW=bgmode::ROW;
 
 
 
-	static inline void pixel(Color_t color,u8arm_t x,u8arm_t y)
+	static inline void pixel(Color_t color,u32arm_t x,u32arm_t y)
 	{
 		bgmode::refvid(x,y)=color;
 	}
 
-	static inline Color_t pixel(u8arm_t x,u8arm_t y)
+	static inline Color_t pixel(u32arm_t x,u32arm_t y)
 	{
 		return bgmode::refvid(x,y);
 	}
 
-	static void rectangle(Color_t color,u8arm_t x1,u8arm_t y1,u8arm_t x2,u8arm_t y2)
+	static void rectangle(Color_t color,u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
 	{
-		for(auto volatile &rpoint:Grange<BGCOLORMODE>({x1,y1},{x2,y2}))
+		for(volatile auto &rpoint:Grange<BGCOLORMODE>({x1,y1},{x2,y2}))
 			rpoint=color;
 
 	}
@@ -262,7 +262,7 @@ struct Graphic: public BGCOLORMODE
 	}
 
 	template <usize_t N>
-	static void drawbuffer(const Color_t (&buffer)[N],u8arm_t x=0,u8arm_t  y=0,u8arm_t w=COL)
+	static void drawbuffer(const Color_t (&buffer)[N],u32arm_t w=COL,u32arm_t x=0,u32arm_t y=0)
 	{
 		for(usize_t i=0;i<N;++i)
 		{
@@ -270,6 +270,15 @@ struct Graphic: public BGCOLORMODE
 		}
 
 	}
+
+	template <usize_t N,usize_t M>
+	static void drawbuffer(const Color_t (&buffer)[N][M],u32arm_t x=0,u32arm_t y=0)
+	{
+		for(usize_t i=0;i<N;++i)
+			for(usize_t j=0;j<M;++j)
+				bgmode::refvid(x+j,y+i)=buffer[i][j];
+	}
+
 };
 
 
