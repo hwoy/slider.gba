@@ -92,10 +92,10 @@ struct ColorTrait
 
 };
 
-template <class COLOR>
+template <class BGCOLORMODE>
 struct PlateletImp
 {
-	using bgmode = typename COLOR::bgmode;
+	using bgmode = typename BGCOLORMODE::bgmode;
 	using Pram_t = typename bgmode::Pram_t;
 
 	static void platelet(const Pram_t *buff,usize_t N,usize_t M=0)
