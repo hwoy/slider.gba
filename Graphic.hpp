@@ -293,7 +293,7 @@ struct Graphic: public BGCOLORMODE
 		bgmode::refvid(x,y)=color;
 	}
 
-	static inline Color_t pixel(u32arm_t x,u32arm_t y)
+	static inline constexpr Color_t pixel(u32arm_t x,u32arm_t y)
 	{
 		return bgmode::refvid(x,y);
 	}
