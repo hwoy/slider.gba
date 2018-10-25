@@ -111,21 +111,21 @@ struct PaletteImp
 	using bgmode = typename BGCOLORMODE::bgmode;
 	using Pram_t = typename bgmode::Pram_t;
 
-	static void Palette(const Pram_t *buff,usize_t N,usize_t M=0)
+	static void palette(const Pram_t *buff,usize_t N,usize_t M=0)
 	{
 		for(usize_t i=0;i<N;++i)
 			bgmode::refplt(i+M)=buff[i];
 	}
 
-	inline static constexpr volatile Pram_t &Palette(usize_t N,usize_t M=0)
+	inline static constexpr volatile Pram_t &palette(usize_t N,usize_t M=0)
 	{
 		return bgmode::refplt(N+M);
 	}
 
 	template <usize_t N>
-	static void Palette(const Pram_t (&buff)[N],usize_t M=0)
+	static void palette(const Pram_t (&buff)[N],usize_t M=0)
 	{
-		Palette(buff,N,M);
+		palette(buff,N,M);
 	}	
 };
 
