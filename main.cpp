@@ -133,7 +133,7 @@ int main()
 
     drawboard(g,square,comsquare,sq,sqlist,index);
 
-    for(Keypad keypad{KeypadDevice{}};keypad.untilkeypressDown();)
+    for(Keypad<KeypadDevice> keypad;keypad.untilkeypressDown();)
     {
         u32arm_t kid=-1U;
 
@@ -143,7 +143,7 @@ int main()
 
         getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
-        if(keypad==Keypad::KEY_UP)
+        if(keypad==keypad.KEY_UP)
         {
             if (p.y > 0)
             {
@@ -153,7 +153,7 @@ int main()
             }
 
         }
-        else if(keypad==Keypad::KEY_DOWN)
+        else if(keypad==keypad.KEY_DOWN)
         {
             if(p.y < WxH - 1)
             {
@@ -162,7 +162,7 @@ int main()
                 kid=cmd_down;
             }
         }
-        else if(keypad==Keypad::KEY_LEFT)
+        else if(keypad==keypad.KEY_LEFT)
         {
             if(p.x > 0)
             {
@@ -171,7 +171,7 @@ int main()
                 kid=cmd_left;
             }
         }
-        else if(keypad==Keypad::KEY_RIGHT)
+        else if(keypad==keypad.KEY_RIGHT)
         {
             if(p.x < WxH - 1)
             {
@@ -180,22 +180,22 @@ int main()
                 kid=cmd_right;
             }
         }
-        else if(keypad==Keypad::KEY_A)
+        else if(keypad==keypad.KEY_A)
         {
             kid=cmd_right+1;
             seed=--origseed;
         }
-        else if(keypad==Keypad::KEY_B)
+        else if(keypad==keypad.KEY_B)
         {
             kid=cmd_right+2;
             seed=++origseed;
         }
-        else if(keypad==Keypad::KEY_START)
+        else if(keypad==keypad.KEY_START)
         {
             kid=cmd_right+3;
             seed=origseed;
         }
-        else if(keypad==Keypad::KEY_SELECT)
+        else if(keypad==keypad.KEY_SELECT)
         {
             kid=cmd_right+4;
             seed=origseed;

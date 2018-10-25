@@ -1,21 +1,27 @@
-#define  KEYS  ((volatile u16arm_t *)0x04000130)
+static constexpr const u32arm_t KEYS = 0x04000130;
 
 struct KeypadDevice
 {
-    inline volatile u16arm_t &operator *()
-    {
-        return *KEYS;
-    }
+	using Kp_t = u16arm_t;
+	using PtrKp_t = volatile Kp_t *;
 
-    inline volatile const u16arm_t &operator *() const
-    {
-        return *KEYS;
-    }
+	static inline constexpr volatile Kp_t & refkp(void)
+	{
+		return *reinterpret_cast<PtrKp_t>(KEYS);
+	}
+
+	static inline constexpr PtrKp_t ptrkp(void)
+	{
+		return reinterpret_cast<PtrKp_t>(KEYS);
+	}
 
 };
 
+template<class KD>
 struct Keypad
 {
+    using Kp_t = typename KD::Kp_t;
+
     enum KEY:u16arm_t
     {
         KEY_A = 1,
@@ -31,29 +37,28 @@ struct Keypad
         KEY_ALL= 0x03ff
     };
 
-    KeypadDevice kd;
-    u16arm_t lastkey;
+    Kp_t lastkey;
 
-    explicit inline Keypad(const KeypadDevice &kd):kd(kd),lastkey(KEY_ALL){ }
+    inline constexpr Keypad():lastkey(KEY_ALL){ }
 
-    u16arm_t untilkeypressDownUp()
+    Kp_t untilkeypressDownUp()
     {
-        volatile u16arm_t tmp;
+        volatile Kp_t tmp;
 
-        while(( (tmp=*kd) & KEY_ALL) == KEY_ALL ){} //Press Down
+        while(( (tmp=KD::refkp()) & KEY_ALL) == KEY_ALL ){} //Press Down
 
         lastkey=tmp;
 
-        while( ((*kd) &KEY_ALL ) != KEY_ALL){} //Press Up
+        while( ((KD::refkp()) &KEY_ALL ) != KEY_ALL){} //Press Up
 
 		return lastkey;
     }
 
-    u16arm_t untilkeypressDown()
+    Kp_t untilkeypressDown()
     {
-        volatile u16arm_t tmp;
+        volatile Kp_t tmp;
 
-        while(( (tmp=*kd) & KEY_ALL) == KEY_ALL ){} //Press Down
+        while(( (tmp=KD::refkp()) & KEY_ALL) == KEY_ALL ){} //Press Down
 
         lastkey=tmp;
 
@@ -61,26 +66,26 @@ struct Keypad
 		return lastkey;
     }
 
-    u16arm_t untilkeypressUp()
+    Kp_t untilkeypressUp()
     {
-        volatile u16arm_t tmp=*kd;
+        volatile Kp_t tmp=KD::refkp();
 
-        while( ((*kd) &KEY_ALL ) != KEY_ALL){} //Press Up
+        while( ((KD::refkp()) &KEY_ALL ) != KEY_ALL){} //Press Up
 
         return lastkey=tmp;
     }
 	
-	inline bool ispress(u16arm_t key) const
+	inline bool ispress(Kp_t key) const
 	{
 		return !(lastkey & key);
 	}
 
-    inline bool operator == (u16arm_t key) const
+    inline bool operator == (Kp_t key) const
     {
         return ispress(key);
     }
 
-    inline bool operator != (u16arm_t key) const
+    inline bool operator != (Kp_t key) const
     {
         return !ispress(key);
     }
