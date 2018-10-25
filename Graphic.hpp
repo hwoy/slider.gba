@@ -373,6 +373,12 @@ struct SharpImp
 template <class BGCOLORMODE>
 struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMODE>>, public BufferImp<Graphic<BGCOLORMODE>>
 {
+	using bgmode = typename BGCOLORMODE::bgmode;
+	using Vram_t = typename bgmode::Vram_t;
+	using Color_t = Vram_t;
+
+	static constexpr const u32arm_t COL=bgmode::COL;
+	static constexpr const u32arm_t ROW=bgmode::ROW;
 };
 
 #endif
