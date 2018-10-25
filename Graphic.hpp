@@ -7,9 +7,10 @@
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
 
 #define DISPCNT ((volatile u32arm_t *)0x4000000)
-#define VRAM  0x6000000UL
-#define VRAM2 0x6000A00UL
 #define PRAM  ((volatile u16arm_t*)0x5000000)
+
+static constexpr const u32arm_t VRAM  = 0x6000000;
+static constexpr const u32arm_t VRAM2 = 0x6000A00;
 
 
 struct Point
