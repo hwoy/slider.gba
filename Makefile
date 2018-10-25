@@ -1,4 +1,3 @@
-NAME=main
 BIN=slider
 
 OBJCOPY = arm-none-eabi-objcopy
