@@ -75,17 +75,17 @@ struct Keypad
         return lastkey=tmp;
     }
 	
-	inline bool ispress(Kp_t key) const
+	inline constexpr bool ispress(Kp_t key) const
 	{
 		return !(lastkey & key);
 	}
 
-    inline bool operator == (Kp_t key) const
+    inline constexpr bool operator == (Kp_t key) const
     {
         return ispress(key);
     }
 
-    inline bool operator != (Kp_t key) const
+    inline constexpr bool operator != (Kp_t key) const
     {
         return !ispress(key);
     }
