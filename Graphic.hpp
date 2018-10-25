@@ -182,11 +182,17 @@ template <class BGCOLORMODE>
 struct Grange
 {
 	using bgmode = typename BGCOLORMODE::bgmode;
-	using Vram_t = typename BGCOLORMODE::Vram_t;
+	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
 	struct Iterator
 	{
+		using value_type = Color_t ;
+		//using difference_type = std::ptrdiff_t ;
+		using pointer = typename bgmode::PtrVram_t ;
+		using reference = volatile Color_t& ;
+		//using iterator_category = std::bidirectional_iterator_tag ;
+
 		const u32arm_t x1,x2;
 		Point p;
 
