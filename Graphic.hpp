@@ -76,6 +76,7 @@ struct BGMODE
 
 using BGMODE3      = BGMODE<VRAM,u16arm_t,240,160>;
 using BGMODE3X32   = BGMODE<VRAM,u32arm_t,120,160>;
+
 using BGMODE4      = BGMODE<VRAM,u8arm_t,240,160>;
 using BGMODE4X16   = BGMODE<VRAM,u16arm_t,120,160>;
 using BGMODE4X32   = BGMODE<VRAM,u16arm_t,60,160>;
