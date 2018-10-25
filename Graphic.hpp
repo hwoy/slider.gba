@@ -247,7 +247,7 @@ struct Grange
 
 
 	inline constexpr Grange(const Point &p1,const Point &p2):
-	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,Point(p1.x,p2.y+1)) {}
+	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,p1.x,p2.y+1) {}
 
 	inline constexpr Grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2):
 	Grange({x1,y1},{x2,y2}) {}
@@ -300,7 +300,7 @@ struct Graphic: public BGCOLORMODE
 
 	static void rectangle(Color_t color,u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
 	{
-		for(volatile auto &rpoint:Grange<BGCOLORMODE>({x1,y1},{x2,y2}))
+		for(volatile auto &rpoint:Grange<BGCOLORMODE>(x1,y1,x2,y2))
 			rpoint=color;
 
 	}
