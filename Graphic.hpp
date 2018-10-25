@@ -1,7 +1,7 @@
 #ifndef __GRAPHIC_HPP__
 #define __GRAPHIC_HPP__
 
-
+//#include <iterator>
 #include "arm7type.h"
 
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
