@@ -119,7 +119,7 @@ struct PlateletImp
 
 using Color3 = ColorTrait<BGMODE3,0x03>;
 
-using Color3X = ColorTrait<BGMODE3X,0x03>;
+using Color3x = ColorTrait<BGMODE3X,0x03>;
 
 struct Color4 : public ColorTrait<BGMODE4,0x04> , public PlateletImp<ColorTrait<BGMODE4,0x04>>
 {
