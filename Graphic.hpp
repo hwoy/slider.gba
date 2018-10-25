@@ -301,6 +301,18 @@ struct Graphic: public BGCOLORMODE
 		return Grange<BGCOLORMODE>(x1,y1,x2,y2);
 	}
 
+};
+
+template <class GRAPHIC>
+struct BufferImp
+{
+	using bgmode = typename GRAPHIC::bgmode;
+	using Vram_t = typename bgmode::Vram_t;
+	using Color_t = Vram_t;
+
+	static constexpr const u32arm_t COL=bgmode::COL;
+	static constexpr const u32arm_t ROW=bgmode::ROW;
+
 	template <usize_t N>
 	static void drawbuffer(const Color_t (&buffer)[N],u32arm_t w=COL,u32arm_t x=0,u32arm_t y=0)
 	{
@@ -359,7 +371,7 @@ struct SharpImp
 };
 
 template <class BGCOLORMODE>
-struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMODE>>
+struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMODE>>, public BufferImp<Graphic<BGCOLORMODE>>
 {
 };
 
