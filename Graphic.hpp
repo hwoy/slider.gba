@@ -74,9 +74,10 @@ struct BGMODE
 };
 
 using BGMODE3 = BGMODE<u16arm_t,240,160>;
-using BGMODE3X = BGMODE<u32arm_t,120,160>;
+using BGMODE3X32 = BGMODE<u32arm_t,120,160>;
 using BGMODE4 = BGMODE<u8arm_t,240,160>;
-using BGMODE4X = BGMODE<u16arm_t,120,160>;
+using BGMODE4X16 = BGMODE<u16arm_t,120,160>;
+using BGMODE4X32 = BGMODE<u16arm_t,60,160>;
 
 template <class _BGMODE_,u32arm_t _mode_>
 struct ColorTrait
@@ -119,16 +120,21 @@ struct PlateletImp
 
 using Color3 = ColorTrait<BGMODE3,0x03>;
 
-using Color3x = ColorTrait<BGMODE3X,0x03>;
+using Color3x32 = ColorTrait<BGMODE3X32,0x03>;
 
 struct Color4 : public ColorTrait<BGMODE4,0x04> , public PlateletImp<ColorTrait<BGMODE4,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4,0x04>::bgmode;
 };
 
-struct Color4x : public ColorTrait<BGMODE4X,0x04> , public PlateletImp<ColorTrait<BGMODE4X,0x04>>
+struct Color4x16 : public ColorTrait<BGMODE4X16,0x04> , public PlateletImp<ColorTrait<BGMODE4X16,0x04>>
 {
-	using bgmode = typename ColorTrait<BGMODE4X,0x04>::bgmode;
+	using bgmode = typename ColorTrait<BGMODE4X16,0x04>::bgmode;
+};
+
+struct Color4x32 : public ColorTrait<BGMODE4X32,0x04> , public PlateletImp<ColorTrait<BGMODE4X32,0x04>>
+{
+	using bgmode = typename ColorTrait<BGMODE4X32,0x04>::bgmode;
 };
 
 
