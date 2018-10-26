@@ -385,6 +385,15 @@ struct Grange
 		return itend;
 	}
 
+	inline constexpr usize_t size(void) const
+	{
+		return itend-itbegin;
+	}
+
+	inline constexpr usize_t col(void) const
+	{
+		return itbegin.x2-itbegin.x1+1;
+	}
 };
 
 
