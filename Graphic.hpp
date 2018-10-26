@@ -241,6 +241,13 @@ struct Grange
 			return Iterator{x1,x2,x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
 		}
 
+		Iterator &operator += (usize_t n)
+		{
+			p = {x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
+
+			return *this;
+		}
+
 		Iterator &operator -- ()
 		{
 			if(p.x<x1+1)
@@ -269,6 +276,13 @@ struct Grange
 		{
 
 			return Iterator{x1,x2,x2-((x2-p.x+n)%(x2-x1+1)),p.y-((x2-p.x+n)/(x2-x1+1))};
+		}
+
+		Iterator &operator -= (usize_t n)
+		{
+			p = {x2-((x2-p.x+n)%(x2-x1+1)),p.y-((x2-p.x+n)/(x2-x1+1))};
+
+			return *this;
 		}
 
 		inline constexpr bool operator != (const Iterator & it) const
