@@ -488,6 +488,26 @@ struct Grange
 			return *this;
 		}
 
+		inline constexpr bool operator > (const Riterator & it) const
+		{
+			return Iterator::p < it.p;
+		}
+
+		inline constexpr bool operator >= (const Riterator & it) const
+		{
+			return Iterator::p <= it.p;
+		}
+
+		inline constexpr bool operator < (const Riterator & it) const
+		{
+			return Iterator::p > it.p;
+		}
+
+		inline constexpr bool operator <= (const Riterator & it) const
+		{
+			return Iterator::p >= it.p;
+		}
+
 	};
 
 	const Riterator ritbegin,ritend;
