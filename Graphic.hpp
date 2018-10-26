@@ -187,11 +187,13 @@ struct Grange
 
 	struct Iterator
 	{
+		/*
 		using value_type = Color_t ;
-		//using difference_type = std::ptrdiff_t ;
+		using difference_type = std::ptrdiff_t ;
 		using pointer = typename bgmode::PtrVram_t ;
 		using reference = volatile Color_t& ;
-		//using iterator_category = std::bidirectional_iterator_tag ;
+		using iterator_category = std::random_access_iterator_tag ;
+		*/
 
 		const u32arm_t x1,x2;
 		Point p;
@@ -241,7 +243,7 @@ struct Grange
 
 		Iterator &operator -- ()
 		{
-			if(p.x-1<x1)
+			if(p.x<=x1)
 			{
 				p.x=x2;
 				--p.y;
@@ -261,6 +263,12 @@ struct Grange
 			Iterator it = *this;
 			--(*this);
 			return it;
+		}
+
+		constexpr Iterator operator - (usize_t n)
+		{
+
+			return Iterator{x1,x2,x2-((x2-p.x+n)%(x2-x1+1)),p.y-((x2-p.x+n)/(x2-x1+1))};
 		}
 
 		inline constexpr bool operator != (const Iterator & it) const
