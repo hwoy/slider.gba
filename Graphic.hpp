@@ -1,7 +1,7 @@
 #ifndef __GRAPHIC_HPP__
 #define __GRAPHIC_HPP__
 
-//#include <iterator>
+#include <iterator>
 #include "arm7type.h"
 
 #define RGB15(r,g,b)  ((r)+(g<<5)+(b<<10))
@@ -215,7 +215,7 @@ struct Grange
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
-	const struct Iterator
+	struct Iterator
 	{
 
 		using value_type = Vram_t ;
@@ -223,15 +223,16 @@ struct Grange
 		using pointer = typename bgmode::PtrVram_t ;
 		using reference = volatile Vram_t& ;
 		using const_reference = volatile const Vram_t& ;
-		//using iterator_category = std::random_access_iterator_tag ;
+		using iterator_category = std::random_access_iterator_tag ;
 
 
 		const u32arm_t x1,x2;
+		const u32arm_t dim;
 		Point p;
 
-		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,const Point &p):x1(x1),x2(x2),p(p) {}
+		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,const Point &p):x1(x1),x2(x2),dim(dim),p(p) {}
 
-		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,u32arm_t x,u32arm_t y):Iterator(x1,x2,{x,y}) {}
+		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,u32arm_t x,u32arm_t y):Iterator(x1,x2,dim,{x,y}) {}
 
 		inline constexpr const_reference operator * () const
 		{
@@ -245,7 +246,7 @@ struct Grange
 
 		Iterator &operator ++ ()
 		{
-			if(p.x+1>x2)
+			if(p.x+1>=x2)
 			{
 				p.x=x1;
 				++p.y;
@@ -269,12 +270,12 @@ struct Grange
 
 		constexpr Iterator operator + (usize_t n) const
 		{
-			return Iterator{x1,x2,x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
+			return Iterator{x1,x2,x1+((p.x+n-x1)%(x2-x1)),p.y+((p.x+n-x1)/(x2-x1))};
 		}
 
 		Iterator &operator += (usize_t n)
 		{
-			p = {x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
+			p = {x1+((p.x+n-x1)%(x2-x1)),p.y+((p.x+n-x1)/(x2-x1))};
 
 			return *this;
 		}
@@ -282,7 +283,7 @@ struct Grange
 		constexpr difference_type operator - (const Iterator &i) const
 		{
 
-			return p.x+p.y*(x2-x1+1) - ( i.p.x+i.p.y*(i.x2-i.x1+1) );
+			return (!dim && !i.dim)? 0 : p.x+p.y*(x2-x1) - ( i.p.x+i.p.y*(i.x2-i.x1) );
 		}
 
 		constexpr reference operator [] (usize_t n) const
@@ -294,7 +295,7 @@ struct Grange
 		{
 			if(p.x<x1+1)
 			{
-				p.x=x2;
+				p.x=x2-1;
 				--p.y;
 			}
 			
@@ -317,24 +318,25 @@ struct Grange
 		constexpr Iterator operator - (usize_t n) const
 		{
 
-			return Iterator{x1,x2,x2-((x2-p.x+n)%(x2-x1+1)),p.y-((x2-p.x+n)/(x2-x1+1))};
+			return Iterator{x1,x2,x2-1-((x2-1-p.x+n)%(x2-x1)),p.y-((x2-1-p.x+n)/(x2-x1))};
 		}
 
 		Iterator &operator -= (usize_t n)
 		{
-			p = {x2-((x2-p.x+n)%(x2-x1+1)),p.y-((x2-p.x+n)/(x2-x1+1))};
+			p = {x2-1-((x2-1-p.x+n)%(x2-x1)),p.y-((x2-1-p.x+n)/(x2-x1))};
 
 			return *this;
 		}
 
-		inline constexpr bool operator != (const Iterator & it) const
-		{
-			return p != it.p;
-		}
 
 		inline constexpr bool operator == (const Iterator & it) const
 		{
-			return p == it.p;
+			return (p == it.p) || (!dim && !it.dim);
+		}
+
+		inline constexpr bool operator != (const Iterator & it) const
+		{
+			return !(*this == it);
 		}
 
 		inline constexpr bool operator > (const Iterator & it) const
@@ -357,14 +359,9 @@ struct Grange
 			return p <= it.p;
 		}
 
-	}itbegin,itend;
+	};
 
-
-	inline constexpr Grange(const Point &p1,const Point &p2):
-	itbegin(p1.x,p2.x,p1),itend(p1.x,p2.x,p1.x,p2.y+1) {}
-
-	inline constexpr Grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2):
-	Grange({x1,y1},{x2,y2}) {}
+	const Iterator itbegin,itend;
 
 	inline constexpr Iterator begin() const
 	{
@@ -383,7 +380,7 @@ struct Grange
 
 	inline constexpr usize_t col(void) const
 	{
-		return itbegin.x2-itbegin.x1+1;
+		return itbegin.x2-itbegin.x1;
 	}
 
 	inline constexpr typename Iterator::reference operator [] (usize_t n) const
@@ -391,10 +388,127 @@ struct Grange
 		return itbegin[n];
 	}
 
-	inline constexpr typename Iterator::reference at (usize_t n) const
+	struct Riterator : public Iterator
 	{
-		return  itbegin[n>=size() ? 0 : n];
+
+		using value_type = typename Iterator::value_type ;
+		using difference_type = typename Iterator::difference_type ;
+		using pointer = typename Iterator::pointer;
+		using reference = typename Iterator::reference;
+		using const_reference = typename Iterator::const_reference;
+		using iterator_category = typename Iterator::iterator_category ;
+
+
+		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,const Point &p): Iterator{x1,x2,dim,p} {}
+
+		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,u32arm_t x,u32arm_t y):Riterator(x1,x2,dim,{x,y}) {}
+
+
+		Riterator &operator ++ ()
+		{
+			if(Iterator::p.x<Iterator::x1+1)
+			{
+				Iterator::p.x=Iterator::x2-1;
+				--Iterator::p.y;
+			}
+			
+			else
+			{
+				--Iterator::p.x;
+			}
+			
+			return *this;
+			
+		}
+
+		Riterator operator ++ (int)
+		{
+			Riterator it = *this;
+			--(*this);
+			return it;
+		}
+
+		constexpr Riterator operator + (usize_t n) const
+		{
+			return Riterator{Iterator::x1,Iterator::x2,Iterator::x2-1-((Iterator::x2-1-Iterator::p.x+n)%(Iterator::x2-Iterator::x1)),Iterator::p.y-((Iterator::x2-1-Iterator::p.x+n)/(Iterator::x2-Iterator::x1))};
+		}
+
+		Riterator &operator += (usize_t n)
+		{
+			Iterator::p = {Iterator::x2-1-((Iterator::x2-1-Iterator::p.x+n)%(Iterator::x2-Iterator::x1)),Iterator::p.y-((Iterator::x2-1-Iterator::p.x+n)/(Iterator::x2-Iterator::x1))};
+
+			return *this;
+		}
+		
+		constexpr difference_type operator - (const Riterator &i) const
+		{
+
+			return (!Iterator::dim && !i.Iterator::dim)? 0 : ( i.p.x+i.p.y*(i.x2-i.x1) ) - Iterator::p.x+Iterator::p.y*(Iterator::x2-Iterator::x1) ;
+		}
+
+		constexpr reference operator [] (usize_t n) const
+		{
+			return *(*this-n);
+		}
+
+		Riterator &operator -- ()
+		{
+			if(Iterator::p.x+1>=Iterator::x2)
+			{
+				Iterator::p.x=Iterator::x1;
+				++Iterator::p.y;
+			}
+			
+			else
+			{
+				++Iterator::p.x;
+			}		
+
+			return *this;
+			
+		}
+
+		Riterator operator -- (int)
+		{
+			Riterator it = *this;
+			++(*this);
+			return it;
+		}
+
+		constexpr Riterator operator - (usize_t n) const
+		{
+
+			return Iterator{Iterator::x1,Iterator::x2,Iterator::x1+((Iterator::p.x+n-Iterator::x1)%(Iterator::x2-Iterator::x1)),Iterator::p.y+((Iterator::p.x+n-Iterator::x1)/(Iterator::x2-Iterator::x1))};
+		}
+
+		Riterator &operator -= (usize_t n)
+		{
+			Iterator::p = {Iterator::x1+((Iterator::p.x+n-Iterator::x1)%(Iterator::x2-Iterator::x1)),Iterator::p.y+((Iterator::p.x+n-Iterator::x1)/(Iterator::x2-Iterator::x1))};
+
+			return *this;
+		}
+
+	};
+
+	const Riterator ritbegin,ritend;
+
+	inline constexpr Grange(const Point &p1,const Point &p2):
+	itbegin(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p1),itend(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p1.x,p2.y),
+	ritbegin(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p2),ritend(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p1.x-1,p1.y-1)   {}
+
+	inline constexpr Grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2):
+	Grange({x1,y1},{x2,y2}) {}
+
+	inline constexpr Riterator rbegin() const
+	{
+		return ritbegin;
 	}
+
+	inline constexpr Riterator rend() const
+	{
+		return ritend;
+	}
+
 };
 
 
@@ -419,7 +533,7 @@ struct Graphic: public BGCOLORMODE
 		return bgmode::refvid(x,y);
 	}
 
-	static inline constexpr Grange<BGCOLORMODE> grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
+	static inline constexpr Grange<BGCOLORMODE> grange(u32arm_t x1=0,u32arm_t y1=0,u32arm_t x2=COL,u32arm_t y2=ROW)
 	{
 		return Grange<BGCOLORMODE>(x1,y1,x2,y2);
 	}
@@ -472,9 +586,9 @@ struct SharpImp
 			rpoint=color;
 	}
 
-	static void setbgcolor(Color_t color)
+	static void bgcolor(Color_t color)
 	{
-		rectangle(color,0,0,COL-1,ROW-1);
+		rectangle(color,0,0,COL,ROW);
 	}
 
 	static void box(Color_t color,u32arm_t x,u32arm_t y,u32arm_t w,u32arm_t h)

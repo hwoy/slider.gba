@@ -6,10 +6,10 @@ LD = arm-none-eabi-ld
 FLAGS = -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
 
 CXX = arm-none-eabi-g++
-CXXFLAGS=-std=c++11 $(FLAGS) -fno-exceptions -fno-rtti -nostdinc -nostdinc++
+CXXFLAGS=-std=c++11 $(FLAGS) -fno-exceptions -fno-rtti
 
 CC = arm-none-eabi-gcc
-CFLAGS=-std=c90  $(FLAGS) -nostdinc
+CFLAGS=-std=c90  $(FLAGS)
 
 
 GBA = VisualBoyAdvance.exe
@@ -19,14 +19,14 @@ GBA = VisualBoyAdvance.exe
 all: $(BIN).gba $(BIN)-actual-GBA.gba
 
 $(BIN)-actual-GBA.elf: loader.o main.o slider.o minstd.o lcg.o
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 loader.o main.o slider.o minstd.o lcg.o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc
+		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 loader.o main.o slider.o minstd.o lcg.o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc -lc
 
 $(BIN)-actual-GBA.gba: gbafix2/gbafix2.exe $(BIN)-actual-GBA.elf
 		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
 		gbafix2/gbafix2.exe $(BIN)-actual-GBA.noheader -o:$(BIN)-actual-GBA.gba -a -t:Slider -r:1 -c:Hwoy -p
 
 $(BIN).elf: loader.o main.o slider.o minstd.o lcg.o
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -static-libgcc -lgcc
+		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -static-libgcc -lgcc -lc
 
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba

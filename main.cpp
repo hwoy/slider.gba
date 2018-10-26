@@ -84,7 +84,7 @@ static void drawboard(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &squa
 			if(sq[k]!=index)
                 (sq[k]==k? comsquare : square).draw(g,{cgap,rgap},sqlist[sq[k]]);
             else
-                g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width-1,rgap+square.width-1);
+                g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width,rgap+square.width);
 }
 
 template <class COLORMODE,usize_t N,usize_t M>
@@ -105,7 +105,7 @@ static void movesquare(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &squ
     const u32arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
     const u32arm_t yfrom=FRGAP+ifrom*(square.width+RGAP);
     
-    g.rectangle(BGCOLOR,xfrom,yfrom,xfrom+square.width-1,yfrom+square.width-1);
+    g.rectangle(BGCOLOR,xfrom,yfrom,xfrom+square.width,yfrom+square.width);
 
 
 }
@@ -129,7 +129,7 @@ int main()
 
     constexpr const Graphicx<Color> g;
 
-	g.setbgcolor(BGCOLOR);
+	g.bgcolor(BGCOLOR);
 
     drawboard(g,square,comsquare,sq,sqlist,index);
 

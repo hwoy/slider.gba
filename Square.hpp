@@ -15,7 +15,7 @@ struct Square
 
 	void draw(const Graphicx<COLORMODE> &g,const Point &point,u8arm_t ch) const
 	{
-		g.rectangle(color,point.x,point.y,point.x+width-1,point.y+width-1);
+		g.rectangle(color,point.x,point.y,point.x+width,point.y+width);
 
 		const u32arm_t x=point.x+(width-Font<COLORMODE>::SIZE)/2;
 		const u32arm_t y=point.y+(width-Font<COLORMODE>::SIZE)/2;
