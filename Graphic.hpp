@@ -215,7 +215,7 @@ struct Grange
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
-	struct Iterator
+	const struct Iterator
 	{
 
 		using value_type = Vram_t ;
@@ -366,22 +366,12 @@ struct Grange
 	inline constexpr Grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2):
 	Grange({x1,y1},{x2,y2}) {}
 
-	inline Iterator begin()
+	inline constexpr Iterator begin() const
 	{
 		return itbegin;
 	}
 
-	inline Iterator end()
-	{
-		return itend;
-	}
-
-	inline const Iterator begin() const
-	{
-		return itbegin;
-	}
-
-	inline const Iterator end() const
+	inline constexpr Iterator end() const
 	{
 		return itend;
 	}
@@ -396,9 +386,14 @@ struct Grange
 		return itbegin.x2-itbegin.x1+1;
 	}
 
-	constexpr typename Iterator::reference operator [] (usize_t n) const
+	inline constexpr typename Iterator::reference operator [] (usize_t n) const
 	{
 		return itbegin[n];
+	}
+
+	inline constexpr typename Iterator::reference at (usize_t n) const
+	{
+		return  itbegin[n>=size() ? 0 : n];
 	}
 };
 
