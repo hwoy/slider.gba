@@ -243,7 +243,7 @@ struct Grange
 
 		Iterator &operator -- ()
 		{
-			if(p.x<=x1)
+			if(p.x<x1+1)
 			{
 				p.x=x2;
 				--p.y;
