@@ -219,10 +219,10 @@ struct Grange
 	{
 		/*
 		using value_type = Color_t ;
-		using difference_type = Iterator ;
+		using difference_type = usize_t ;
 		using pointer = typename bgmode::PtrVram_t ;
 		using reference = volatile Color_t& ;
-		using iterator_category = std::bidirectional_iterator_tag ;
+		using iterator_category = std::random_access_iterator_tag ;
 		*/
 
 		const u32arm_t x1,x2;
@@ -276,6 +276,12 @@ struct Grange
 			p = {x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
 
 			return *this;
+		}
+		
+		constexpr usize_t operator - (const Iterator &i) const
+		{
+
+			return p.x+p.y*(x2-x1+1) - ( i.p.x+i.p.y*(i.x2-i.x1+1) );
 		}
 
 		constexpr Iterator &operator [] (usize_t n) const
