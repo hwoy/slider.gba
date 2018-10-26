@@ -227,12 +227,12 @@ struct Grange
 
 
 		const u32arm_t x1,x2;
-		const u32arm_t dim;
+		const i32arm_t dim;
 		Point p;
 
-		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,const Point &p):x1(x1),x2(x2),dim(dim),p(p) {}
+		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,const Point &p):x1(x1),x2(x2),dim(dim),p(p) {}
 
-		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,u32arm_t x,u32arm_t y):Iterator(x1,x2,dim,{x,y}) {}
+		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,u32arm_t x,u32arm_t y):Iterator(x1,x2,dim,{x,y}) {}
 
 		inline constexpr const_reference operator * () const
 		{
@@ -283,7 +283,7 @@ struct Grange
 		constexpr difference_type operator - (const Iterator &i) const
 		{
 
-			return (!dim && !i.dim)? 0 : p.x+p.y*(x2-x1) - ( i.p.x+i.p.y*(i.x2-i.x1) );
+			return (dim<=0 && i.dim<=0)? 0 : p.x+p.y*(x2-x1) - ( i.p.x+i.p.y*(i.x2-i.x1) );
 		}
 
 		constexpr reference operator [] (usize_t n) const
@@ -331,7 +331,7 @@ struct Grange
 
 		inline constexpr bool operator == (const Iterator & it) const
 		{
-			return (p == it.p) || (!dim && !it.dim);
+			return (p == it.p) || (dim<=0 && it.dim<=0);
 		}
 
 		inline constexpr bool operator != (const Iterator & it) const
@@ -399,9 +399,9 @@ struct Grange
 		using iterator_category = typename Iterator::iterator_category ;
 
 
-		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,const Point &p): Iterator{x1,x2,dim,p} {}
+		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,const Point &p): Iterator{x1,x2,dim,p} {}
 
-		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,u32arm_t dim,u32arm_t x,u32arm_t y):Riterator(x1,x2,dim,{x,y}) {}
+		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,u32arm_t x,u32arm_t y):Riterator(x1,x2,dim,{x,y}) {}
 
 
 		Riterator &operator ++ ()
@@ -443,7 +443,7 @@ struct Grange
 		constexpr difference_type operator - (const Riterator &i) const
 		{
 
-			return (!Iterator::dim && !i.Iterator::dim)? 0 : ( i.p.x+i.p.y*(i.x2-i.x1) ) - Iterator::p.x+Iterator::p.y*(Iterator::x2-Iterator::x1) ;
+			return (Iterator::dim<=0 && i.dim<=0)? 0 : ( i.p.x+i.p.y*(i.x2-i.x1) ) - Iterator::p.x+Iterator::p.y*(Iterator::x2-Iterator::x1) ;
 		}
 
 		constexpr reference operator [] (usize_t n) const
