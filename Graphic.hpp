@@ -27,6 +27,26 @@ struct Point
 		return x == p.x && y == p.y;
 	}
 
+	inline constexpr bool operator > (const Point & p) const
+	{
+		return y > p.y ? true : ( y < p.y ? false : ( x > p.x ? true : false ) );
+	}
+
+	inline constexpr bool operator >= (const Point & p) const
+	{
+		return *this > p || *this == p;
+	}
+
+	inline constexpr bool operator < (const Point & p) const
+	{
+		return !(*this >= p);
+	}
+
+	inline constexpr bool operator <= (const Point & p) const
+	{
+		return !(*this > p);
+	}
+
 };
 
 
@@ -199,10 +219,10 @@ struct Grange
 	{
 		/*
 		using value_type = Color_t ;
-		using difference_type = std::ptrdiff_t ;
+		using difference_type = Iterator ;
 		using pointer = typename bgmode::PtrVram_t ;
 		using reference = volatile Color_t& ;
-		using iterator_category = std::random_access_iterator_tag ;
+		using iterator_category = std::bidirectional_iterator_tag ;
 		*/
 
 		const u32arm_t x1,x2;
@@ -246,7 +266,7 @@ struct Grange
 			return it;
 		}
 
-		constexpr Iterator operator + (usize_t n)
+		constexpr Iterator operator + (usize_t n) const
 		{
 			return Iterator{x1,x2,x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
 		}
@@ -256,6 +276,11 @@ struct Grange
 			p = {x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
 
 			return *this;
+		}
+
+		constexpr Iterator &operator [] (usize_t n) const
+		{
+			return *this+n;
 		}
 
 		Iterator &operator -- ()
@@ -282,7 +307,7 @@ struct Grange
 			return it;
 		}
 
-		constexpr Iterator operator - (usize_t n)
+		constexpr Iterator operator - (usize_t n) const
 		{
 
 			return Iterator{x1,x2,x2-((x2-p.x+n)%(x2-x1+1)),p.y-((x2-p.x+n)/(x2-x1+1))};
@@ -303,6 +328,26 @@ struct Grange
 		inline constexpr bool operator == (const Iterator & it) const
 		{
 			return p == it.p;
+		}
+
+		inline constexpr bool operator > (const Iterator & it) const
+		{
+			return p > it.p;
+		}
+
+		inline constexpr bool operator >= (const Iterator & it) const
+		{
+			return p >= it.p;
+		}
+
+		inline constexpr bool operator < (const Iterator & it) const
+		{
+			return p < it.p;
+		}
+
+		inline constexpr bool operator <= (const Iterator & it) const
+		{
+			return p <= it.p;
 		}
 
 	}itbegin,itend;
