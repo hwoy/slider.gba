@@ -217,13 +217,14 @@ struct Grange
 
 	struct Iterator
 	{
-		/*
-		using value_type = Color_t ;
+
+		using value_type = Vram_t ;
 		using difference_type = usize_t ;
 		using pointer = typename bgmode::PtrVram_t ;
-		using reference = volatile Color_t& ;
-		using iterator_category = std::random_access_iterator_tag ;
-		*/
+		using reference = volatile Vram_t& ;
+		using const_reference = volatile const Vram_t& ;
+		//using iterator_category = std::random_access_iterator_tag ;
+
 
 		const u32arm_t x1,x2;
 		Point p;
@@ -232,12 +233,12 @@ struct Grange
 
 		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,u32arm_t x,u32arm_t y):Iterator(x1,x2,{x,y}) {}
 
-		inline constexpr const volatile Vram_t &operator * () const
+		inline constexpr const_reference operator * () const
 		{
 			return bgmode::refvid(p.x,p.y);
 		}
 
-		inline volatile Vram_t &operator * ()
+		inline volatile reference operator * ()
 		{
 			return bgmode::refvid(p.x,p.y);
 		}
@@ -278,15 +279,15 @@ struct Grange
 			return *this;
 		}
 		
-		constexpr usize_t operator - (const Iterator &i) const
+		constexpr difference_type operator - (const Iterator &i) const
 		{
 
 			return p.x+p.y*(x2-x1+1) - ( i.p.x+i.p.y*(i.x2-i.x1+1) );
 		}
 
-		constexpr Iterator &operator [] (usize_t n) const
+		constexpr reference operator [] (usize_t n) const
 		{
-			return *this+n;
+			return *(*this+n);
 		}
 
 		Iterator &operator -- ()
@@ -393,6 +394,11 @@ struct Grange
 	inline constexpr usize_t col(void) const
 	{
 		return itbegin.x2-itbegin.x1+1;
+	}
+
+	constexpr typename Iterator::reference operator [] (usize_t n) const
+	{
+		return itbegin[n];
 	}
 };
 
