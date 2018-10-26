@@ -234,6 +234,11 @@ struct Grange
 			return it;
 		}
 
+		constexpr Iterator operator + (usize_t n)
+		{
+			return Iterator{x1,x2,x1+((p.x+n-x1)%(x2-x1+1)),p.y+((p.x+n-x1)/(x2-x1+1))};
+		}
+
 		Iterator &operator -- ()
 		{
 			if(p.x-1<x1)
