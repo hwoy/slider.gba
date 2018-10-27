@@ -13,9 +13,9 @@ static constexpr const u32arm_t DISPCNT = 0x4000000;
 
 struct Point
 {
-	u32arm_t x,y;
+	i32arm_t x,y;
 
-	inline constexpr Point(u32arm_t x,u32arm_t y):x(x),y(y){}
+	inline constexpr Point(i32arm_t x,i32arm_t y):x(x),y(y){}
 
 	inline constexpr bool operator != (const Point & p) const
 	{
@@ -75,15 +75,15 @@ struct BGMODE
 	using Pram_t = u16arm_t;
 	using PtrPram_t = volatile Pram_t *;
 
-	static constexpr const u32arm_t COL=_COL;
-	static constexpr const u32arm_t ROW=_ROW;
+	static constexpr const i32arm_t COL=_COL;
+	static constexpr const i32arm_t ROW=_ROW;
 
-	static inline constexpr volatile Vram_t &refvid(u32arm_t x,u32arm_t y)
+	static inline constexpr volatile Vram_t &refvid(i32arm_t x,i32arm_t y)
 	{
 		return reinterpret_cast<PtrVram_t>(_VRAM_)[x+y*COL];
 	}
 
-	static inline constexpr PtrVram_t ptrvid(u32arm_t x,u32arm_t y)
+	static inline constexpr PtrVram_t ptrvid(i32arm_t x,i32arm_t y)
 	{
 		return reinterpret_cast<PtrVram_t>(_VRAM_)+x+y*COL;
 	}
@@ -102,13 +102,13 @@ struct BGMODE
 using BGMODE3      = BGMODE<VRAM,u16arm_t,240,160>;
 using BGMODE3X32   = BGMODE<VRAM,u32arm_t,120,160>;
 
-using BGMODE4      = BGMODE<VRAM,u8arm_t,240,160>;
 using BGMODE4X16   = BGMODE<VRAM,u16arm_t,120,160>;
 using BGMODE4X32   = BGMODE<VRAM,u16arm_t,60,160>;
+using BGMODE4      = BGMODE4X16;
 
-using BGMODE4P2    = BGMODE<VRAM2,u8arm_t,240,160>;
 using BGMODE4X16P2 = BGMODE<VRAM2,u16arm_t,120,160>;
 using BGMODE4X32P2 = BGMODE<VRAM2,u16arm_t,60,160>;
+using BGMODE4P2    = BGMODE4X16P2;
 
 using BGMODE5      = BGMODE<VRAM,u16arm_t,160,128>;
 using BGMODE5X32   = BGMODE<VRAM,u32arm_t,80,128>;
@@ -126,8 +126,8 @@ struct ColorTrait
 	using Pram_t = typename bgmode::Pram_t;
 
 	static constexpr const u32arm_t mode = _mode_;
-	static constexpr const u32arm_t COL=bgmode::COL;
-	static constexpr const u32arm_t ROW=bgmode::ROW;
+	static constexpr const i32arm_t COL=bgmode::COL;
+	static constexpr const i32arm_t ROW=bgmode::ROW;
 
 };
 
@@ -215,31 +215,29 @@ struct Grange
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
+	Point p1,p2;
+
 	struct Iterator
 	{
 
 		using value_type = Vram_t ;
-		using difference_type = usize_t ;
+		using difference_type = isize_t ;
 		using pointer = typename bgmode::PtrVram_t ;
 		using reference = volatile Vram_t& ;
 		using const_reference = volatile const Vram_t& ;
 		using iterator_category = std::random_access_iterator_tag ;
 
 
-		const u32arm_t x1,x2;
-		const i32arm_t dim;
+
+		const i32arm_t x1,x2;
+		const i32arm_t size;
 		Point p;
 
-		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,const Point &p):x1(x1),x2(x2),dim(dim),p(p) {}
+		explicit inline constexpr Iterator(i32arm_t x1,i32arm_t x2,i32arm_t size,const Point &p):x1(x1),x2(x2),size(size),p(p) {}
 
-		explicit inline constexpr Iterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,u32arm_t x,u32arm_t y):Iterator(x1,x2,dim,{x,y}) {}
+		explicit inline constexpr Iterator(i32arm_t x1,i32arm_t x2,i32arm_t size,i32arm_t x,i32arm_t y):Iterator(x1,x2,size,{x,y}) {}
 
-		inline constexpr const_reference operator * () const
-		{
-			return bgmode::refvid(p.x,p.y);
-		}
-
-		inline volatile reference operator * ()
+		inline constexpr reference operator * () const
 		{
 			return bgmode::refvid(p.x,p.y);
 		}
@@ -268,12 +266,12 @@ struct Grange
 			return it;
 		}
 
-		constexpr Iterator operator + (usize_t n) const
+		constexpr Iterator operator + (isize_t n) const
 		{
-			return Iterator{x1,x2,x1+((p.x+n-x1)%(x2-x1)),p.y+((p.x+n-x1)/(x2-x1))};
+			return Iterator(x1,x2,size,x1+((p.x+n-x1)%(x2-x1)),p.y+((p.x+n-x1)/(x2-x1)));
 		}
 
-		Iterator &operator += (usize_t n)
+		Iterator &operator += (isize_t n)
 		{
 			p = {x1+((p.x+n-x1)%(x2-x1)),p.y+((p.x+n-x1)/(x2-x1))};
 
@@ -283,10 +281,10 @@ struct Grange
 		constexpr difference_type operator - (const Iterator &i) const
 		{
 
-			return (dim<=0 && i.dim<=0)? 0 : p.x+p.y*(x2-x1) - ( i.p.x+i.p.y*(i.x2-i.x1) );
+			return (!size && !i.size)? 0 : (p.x-x1)+p.y*(x2-x1) - ( (i.p.x-i.x1)+i.p.y*(i.x2-i.x1) );
 		}
 
-		constexpr reference operator [] (usize_t n) const
+		constexpr reference operator [] (isize_t n) const
 		{
 			return *(*this+n);
 		}
@@ -315,13 +313,13 @@ struct Grange
 			return it;
 		}
 
-		constexpr Iterator operator - (usize_t n) const
+		constexpr Iterator operator - (isize_t n) const
 		{
 
-			return Iterator{x1,x2,x2-1-((x2-1-p.x+n)%(x2-x1)),p.y-((x2-1-p.x+n)/(x2-x1))};
+			return Iterator(x1,x2,size,x2-1-((x2-1-p.x+n)%(x2-x1)),p.y-((x2-1-p.x+n)/(x2-x1)));
 		}
 
-		Iterator &operator -= (usize_t n)
+		Iterator &operator -= (isize_t n)
 		{
 			p = {x2-1-((x2-1-p.x+n)%(x2-x1)),p.y-((x2-1-p.x+n)/(x2-x1))};
 
@@ -331,7 +329,7 @@ struct Grange
 
 		inline constexpr bool operator == (const Iterator & it) const
 		{
-			return (p == it.p) || (dim<=0 && it.dim<=0);
+			return (p == it.p) || (!size && !it.size);
 		}
 
 		inline constexpr bool operator != (const Iterator & it) const
@@ -361,172 +359,48 @@ struct Grange
 
 	};
 
-	const Iterator itbegin,itend;
+
 
 	inline constexpr Iterator begin() const
 	{
-		return itbegin;
+		return Iterator(p1.x,p2.x,size(),p1);
 	}
 
 	inline constexpr Iterator end() const
 	{
-		return itend;
+		return begin()+size();
 	}
 
-	inline constexpr usize_t size(void) const
+	inline constexpr isize_t size(void) const
 	{
-		return itend-itbegin;
+		return (p2.x-p1.x)*(p2.y-p1.y);
 	}
 
-	inline constexpr usize_t col(void) const
+	inline constexpr isize_t col(void) const
 	{
-		return itbegin.x2-itbegin.x1;
+		return p2.x-p1.x;
 	}
 
-	inline constexpr typename Iterator::reference operator [] (usize_t n) const
+	inline constexpr typename Iterator::reference operator [] (isize_t n) const
 	{
-		return itbegin[n];
+		return begin()[n];
 	}
 
-	struct Riterator : public Iterator
-	{
 
-		using value_type = typename Iterator::value_type ;
-		using difference_type = typename Iterator::difference_type ;
-		using pointer = typename Iterator::pointer;
-		using reference = typename Iterator::reference;
-		using const_reference = typename Iterator::const_reference;
-		using iterator_category = typename Iterator::iterator_category ;
+	inline constexpr Grange(const Point &p1,const Point &p2):p1(p1),p2(p2) {}
 
-
-		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,const Point &p): Iterator{x1,x2,dim,p} {}
-
-		explicit inline constexpr Riterator(u32arm_t x1,u32arm_t x2,i32arm_t dim,u32arm_t x,u32arm_t y):Riterator(x1,x2,dim,{x,y}) {}
-
-
-		Riterator &operator ++ ()
-		{
-			if(Iterator::p.x<Iterator::x1+1)
-			{
-				Iterator::p.x=Iterator::x2-1;
-				--Iterator::p.y;
-			}
-			
-			else
-			{
-				--Iterator::p.x;
-			}
-			
-			return *this;
-			
-		}
-
-		Riterator operator ++ (int)
-		{
-			Riterator it = *this;
-			--(*this);
-			return it;
-		}
-
-		constexpr Riterator operator + (usize_t n) const
-		{
-			return Riterator{Iterator::x1,Iterator::x2,Iterator::x2-1-((Iterator::x2-1-Iterator::p.x+n)%(Iterator::x2-Iterator::x1)),Iterator::p.y-((Iterator::x2-1-Iterator::p.x+n)/(Iterator::x2-Iterator::x1))};
-		}
-
-		Riterator &operator += (usize_t n)
-		{
-			Iterator::p = {Iterator::x2-1-((Iterator::x2-1-Iterator::p.x+n)%(Iterator::x2-Iterator::x1)),Iterator::p.y-((Iterator::x2-1-Iterator::p.x+n)/(Iterator::x2-Iterator::x1))};
-
-			return *this;
-		}
-		
-		constexpr difference_type operator - (const Riterator &i) const
-		{
-
-			return (Iterator::dim<=0 && i.dim<=0)? 0 : ( i.p.x+i.p.y*(i.x2-i.x1) ) - Iterator::p.x+Iterator::p.y*(Iterator::x2-Iterator::x1) ;
-		}
-
-		constexpr reference operator [] (usize_t n) const
-		{
-			return *(*this-n);
-		}
-
-		Riterator &operator -- ()
-		{
-			if(Iterator::p.x+1>=Iterator::x2)
-			{
-				Iterator::p.x=Iterator::x1;
-				++Iterator::p.y;
-			}
-			
-			else
-			{
-				++Iterator::p.x;
-			}		
-
-			return *this;
-			
-		}
-
-		Riterator operator -- (int)
-		{
-			Riterator it = *this;
-			++(*this);
-			return it;
-		}
-
-		constexpr Riterator operator - (usize_t n) const
-		{
-
-			return Iterator{Iterator::x1,Iterator::x2,Iterator::x1+((Iterator::p.x+n-Iterator::x1)%(Iterator::x2-Iterator::x1)),Iterator::p.y+((Iterator::p.x+n-Iterator::x1)/(Iterator::x2-Iterator::x1))};
-		}
-
-		Riterator &operator -= (usize_t n)
-		{
-			Iterator::p = {Iterator::x1+((Iterator::p.x+n-Iterator::x1)%(Iterator::x2-Iterator::x1)),Iterator::p.y+((Iterator::p.x+n-Iterator::x1)/(Iterator::x2-Iterator::x1))};
-
-			return *this;
-		}
-
-		inline constexpr bool operator > (const Riterator & it) const
-		{
-			return Iterator::p < it.p;
-		}
-
-		inline constexpr bool operator >= (const Riterator & it) const
-		{
-			return Iterator::p <= it.p;
-		}
-
-		inline constexpr bool operator < (const Riterator & it) const
-		{
-			return Iterator::p > it.p;
-		}
-
-		inline constexpr bool operator <= (const Riterator & it) const
-		{
-			return Iterator::p >= it.p;
-		}
-
-	};
-
-	const Riterator ritbegin,ritend;
-
-	inline constexpr Grange(const Point &p1,const Point &p2):
-	itbegin(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p1),itend(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p1.x,p2.y),
-	ritbegin(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p2),ritend(p1.x,p2.x,(p2.x-p1.x)*(p2.y-p1.y),p1.x-1,p1.y-1)   {}
-
-	inline constexpr Grange(u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2):
+	inline constexpr Grange(i32arm_t x1,i32arm_t y1,i32arm_t x2,i32arm_t y2):
 	Grange({x1,y1},{x2,y2}) {}
 
-	inline constexpr Riterator rbegin() const
+
+	inline constexpr std::reverse_iterator<Iterator> rbegin() const
 	{
-		return ritbegin;
+		return std::make_reverse_iterator(end());
 	}
 
-	inline constexpr Riterator rend() const
+	inline constexpr std::reverse_iterator<Iterator> rend() const
 	{
-		return ritend;
+		return std::make_reverse_iterator(begin());
 	}
 
 };
@@ -540,20 +414,20 @@ struct Graphic: public BGCOLORMODE
 	using Color_t = Vram_t;
 	using Pram_t = typename bgmode::Pram_t;
 
-	static constexpr const u32arm_t COL=bgmode::COL;
-	static constexpr const u32arm_t ROW=bgmode::ROW;
+	static constexpr const i32arm_t COL=bgmode::COL;
+	static constexpr const i32arm_t ROW=bgmode::ROW;
 
-	static inline void pixel(Color_t color,u32arm_t x,u32arm_t y)
+	static inline void pixel(Color_t color,i32arm_t x,i32arm_t y)
 	{
 		bgmode::refvid(x,y)=color;
 	}
 
-	static inline constexpr Color_t pixel(u32arm_t x,u32arm_t y)
+	static inline constexpr Color_t pixel(i32arm_t x,i32arm_t y)
 	{
 		return bgmode::refvid(x,y);
 	}
 
-	static inline constexpr Grange<BGCOLORMODE> grange(u32arm_t x1=0,u32arm_t y1=0,u32arm_t x2=COL,u32arm_t y2=ROW)
+	static inline constexpr Grange<BGCOLORMODE> grange(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL,i32arm_t y2=ROW)
 	{
 		return Grange<BGCOLORMODE>(x1,y1,x2,y2);
 	}
@@ -567,11 +441,11 @@ struct BufferImp
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
-	static constexpr const u32arm_t COL=bgmode::COL;
-	static constexpr const u32arm_t ROW=bgmode::ROW;
+	static constexpr const i32arm_t COL=bgmode::COL;
+	static constexpr const i32arm_t ROW=bgmode::ROW;
 
 	template <usize_t N>
-	static void drawbuffer(const Color_t (&buffer)[N],u32arm_t w=COL,u32arm_t x=0,u32arm_t y=0)
+	static void drawbuffer(const Color_t (&buffer)[N],u32arm_t w=COL,i32arm_t x=0,i32arm_t y=0)
 	{
 		for(usize_t i=0;i<N;++i)
 		{
@@ -581,7 +455,7 @@ struct BufferImp
 	}
 
 	template <usize_t N,usize_t M>
-	static void drawbuffer(const Color_t (&buffer)[N][M],u32arm_t x=0,u32arm_t y=0)
+	static void drawbuffer(const Color_t (&buffer)[N][M],i32arm_t x=0,i32arm_t y=0)
 	{
 		for(usize_t i=0;i<N;++i)
 			for(usize_t j=0;j<M;++j)
@@ -597,10 +471,10 @@ struct SharpImp
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
-	static constexpr const u32arm_t COL=bgmode::COL;
-	static constexpr const u32arm_t ROW=bgmode::ROW;
+	static constexpr const i32arm_t COL=bgmode::COL;
+	static constexpr const i32arm_t ROW=bgmode::ROW;
 
-	static void rectangle(Color_t color,u32arm_t x1,u32arm_t y1,u32arm_t x2,u32arm_t y2)
+	static void rectangle(Color_t color,i32arm_t x1,i32arm_t y1,i32arm_t x2,i32arm_t y2)
 	{
 		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x2,y2))
 			rpoint=color;
@@ -611,7 +485,7 @@ struct SharpImp
 		rectangle(color,0,0,COL,ROW);
 	}
 
-	static void box(Color_t color,u32arm_t x,u32arm_t y,u32arm_t w,u32arm_t h)
+	static void box(Color_t color,i32arm_t x,i32arm_t y,i32arm_t w,i32arm_t h)
 	{
 		for(volatile auto &rpoint:GRAPHIC::grange(x,y,x+w,y))
 			rpoint=color;
@@ -634,8 +508,8 @@ struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMOD
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
-	static constexpr const u32arm_t COL=bgmode::COL;
-	static constexpr const u32arm_t ROW=bgmode::ROW;
+	static constexpr const i32arm_t COL=bgmode::COL;
+	static constexpr const i32arm_t ROW=bgmode::ROW;
 };
 
 #endif

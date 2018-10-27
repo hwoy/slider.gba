@@ -6,7 +6,7 @@ LD = arm-none-eabi-ld
 FLAGS = -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
 
 CXX = arm-none-eabi-g++
-CXXFLAGS=-std=c++11 $(FLAGS) -fno-exceptions -fno-rtti
+CXXFLAGS=-std=c++14 $(FLAGS) -fno-exceptions -fno-rtti
 
 CC = arm-none-eabi-gcc
 CFLAGS=-std=c90  $(FLAGS)

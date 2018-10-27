@@ -24,7 +24,7 @@ static constexpr u32arm_t slen(const T (&)[N])
 
 static const u8arm_t sqlist[] = SQLIST;
 
-static constexpr const u8arm_t WxH=square(sqlist)-1;
+static constexpr const u32arm_t WxH=square(sqlist)-1;
 
 static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square!!");
 
@@ -52,8 +52,8 @@ using Color = Color3;
 using Color_t = Color::Color_t;
 
 static constexpr const GraphicDevice::Dispcnt_t regcontrol = 0x400 | Color::mode;
-static constexpr const u32arm_t COL=Color::COL;
-static constexpr const u32arm_t ROW=Color::ROW;
+static constexpr const i32arm_t COL=Color::COL;
+static constexpr const i32arm_t ROW=Color::ROW;
 
 
 static constexpr const Color_t BOXCOLOR = RGB15(31,0,0);
@@ -82,13 +82,13 @@ static void drawboard(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &squa
     for(usize_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
 		for(usize_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
 			if(sq[k]!=index)
-                (sq[k]==k? comsquare : square).draw(g,{cgap,rgap},sqlist[sq[k]]);
+                (sq[k]==k? comsquare : square).draw(g,Point(cgap,rgap),sqlist[sq[k]]);
             else
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width,rgap+square.width);
 }
 
 template <class COLORMODE,usize_t N,usize_t M>
-static void movesquare(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u8arm_t from,u8arm_t to)
+static void movesquare(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t from,u32arm_t to)
 {
 
     const u32arm_t jfrom=from%WxH;
@@ -99,7 +99,7 @@ static void movesquare(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &squ
     const u32arm_t xto=FCGAP+jto*(square.width+CGAP);
     const u32arm_t yto=FRGAP+ito*(square.width+RGAP);
 
-    (sq[to]==to? comsquare : square).draw(g,{xto,yto},sqlist[sq[to]]);
+    (sq[to]==to? comsquare : square).draw(g,Point(xto,yto),sqlist[sq[to]]);
 
 
     const u32arm_t xfrom=FCGAP+jfrom*(square.width+CGAP);
