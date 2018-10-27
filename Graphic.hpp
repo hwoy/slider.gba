@@ -483,18 +483,18 @@ struct SharpImp
 		rectangle(color,0,0,COL,ROW);
 	}
 
-	static void box(Color_t color,i32arm_t x,i32arm_t y,i32arm_t w,i32arm_t h)
+	static void frame(Color_t color,i32arm_t x1,i32arm_t y1,i32arm_t x2,i32arm_t y2)
 	{
-		for(volatile auto &rpoint:GRAPHIC::grange(x,y,x+w,y))
+		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x2,y1))
 			rpoint=color;
 
-		for(volatile auto &rpoint:GRAPHIC::grange(x,y,x,y+h))
+		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x1,y2))
 			rpoint=color;
 
-		for(volatile auto &rpoint:GRAPHIC::grange(x+w,y,x+w,y+h))
+		for(volatile auto &rpoint:GRAPHIC::grange(x2,y1,x2,y2))
 			rpoint=color;
 		
-		for(volatile auto &rpoint:GRAPHIC::grange(x,y+h,x+w,y+h))
+		for(volatile auto &rpoint:GRAPHIC::grange(x1,y2,x2,y2))
 			rpoint=color;
 	}
 };
