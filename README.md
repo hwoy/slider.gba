@@ -6,8 +6,8 @@ Download [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.g
 
 # What is a slider.gba
 - slider.gba is a very simple NxN slide puzzle game that can be run on GameBoy Advance. 
-- It has been written in modern ISO C++14(C++11 syntax and C++14 STL) abstraction except core game logic originally written in C.
-- No special library(libheart) , libc for memcpy, except libgcc for basic software math function(div and mod).
+- It has been written in modern ISO C++14(C++11 syntax and C++14 STL supports video memory iterator in Grange Struct) abstraction except core game logic originally written in C.
+- No special library(libheart) ,except libc for memcpy(if in use), libgcc for basic software math function(div and mod).
 - Work great on [mGBA](https://mgba.io/downloads.html), [higan](https://download.byuu.org/higan_v106-windows.7z), [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
  
 ### Keypad
@@ -35,7 +35,7 @@ Download [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.g
 - **GameBoy Advance emulator:** [higan](https://mprd.se/media/emulators/files/higan_v106-windows.7z)
 - **Builder:** [GNU make for Windows](http://ftp.gnu.org/gnu/make/?C=M;O=D) can be compiled from source by [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/) (mingw-w64 bundles GNU make)
 - **Native Compiler:** Native C compiler ([mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/)) for compiling [gbafix2](https://github.com/hwoy/gbafix2) (ROM GameBoy Advance Head Builder & Fixer)
-
+- **gbafix2:** [gbafix2](https://github.com/hwoy/gbafix2) for ROM header
 ### How to make
 
 - Setting up environment such as set up **PATH** and config **Makefile**
