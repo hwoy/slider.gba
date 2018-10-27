@@ -44,7 +44,6 @@ static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square
 
 
 #define WIDTH ((ROW-RGAP*(WxH-1)-FRGAP*2)/WxH)
-#define IWIDTH (WIDTH*2/5)
 
 #define FCGAP ((COL-CGAP*(WxH-1)-WIDTH*WxH)/2)
 
