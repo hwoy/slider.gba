@@ -485,16 +485,16 @@ struct SharpImp
 
 	static void frame(Color_t color,i32arm_t x1,i32arm_t y1,i32arm_t x2,i32arm_t y2)
 	{
-		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x2,y1))
+		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x2,y1+1))
 			rpoint=color;
 
-		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x1,y2))
+		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x1+1,y2))
 			rpoint=color;
 
-		for(volatile auto &rpoint:GRAPHIC::grange(x2,y1,x2,y2))
+		for(volatile auto &rpoint:GRAPHIC::grange(x2-1,y1,x2,y2))
 			rpoint=color;
 		
-		for(volatile auto &rpoint:GRAPHIC::grange(x1,y2,x2,y2))
+		for(volatile auto &rpoint:GRAPHIC::grange(x1,y2-1,x2,y2))
 			rpoint=color;
 	}
 };
