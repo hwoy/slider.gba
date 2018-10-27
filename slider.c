@@ -112,12 +112,11 @@ u32arm_t randomsq(u32arm_t* const sq, u32arm_t index, u32arm_t hw, u32arm_t* see
 {
     u32arm_t i, d[4], j;
 
-    do {
-        for (i = 0; i < RANDLOOP; ++i) {
-            j = extractcanmovesq(d, canmovesq(sq, index, hw));
-            slide(sq, d[minstd_rand(seed) % j], index, hw);
-        }
-    } while (gameid(sq, hw) == gid_over);
+
+    for (i = 0; i < RANDLOOP; ++i) {
+        j = extractcanmovesq(d, canmovesq(sq, index, hw));
+        slide(sq, d[minstd_rand(seed) % j], index, hw);
+    }
 
     return RANDLOOP;
 }
