@@ -17,9 +17,9 @@ static constexpr usize_t square(const T (&a)[N],usize_t n=2)
 }
 
 template <typename T,usize_t N>
-static constexpr u32arm_t slen(const T (&)[N])
+static constexpr usize_t slen(const T (&)[N])
 {
-	return N ? N:0;
+	return N;
 }
 
 static const u8arm_t sqlist[] = SQLIST;
