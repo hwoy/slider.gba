@@ -447,19 +447,17 @@ struct BufferImp
 	template <usize_t N>
 	static void drawbuffer(const Color_t (&buffer)[N],u32arm_t w=COL,i32arm_t x=0,i32arm_t y=0)
 	{
-		for(usize_t i=0;i<N;++i)
-		{
-			bgmode::refvid(x+i%w,y+i/w)=buffer[i];
-		}
-
+		auto buf=reinterpret_cast<const Color_t *>(buffer);
+		for(volatile auto &rcolor:GRAPHIC::grange(x,y,x+w,y+N/w))
+			rcolor=*buf++;
 	}
 
 	template <usize_t N,usize_t M>
 	static void drawbuffer(const Color_t (&buffer)[N][M],i32arm_t x=0,i32arm_t y=0)
 	{
-		for(usize_t i=0;i<N;++i)
-			for(usize_t j=0;j<M;++j)
-				bgmode::refvid(x+j,y+i)=buffer[i][j];
+		auto buf=reinterpret_cast<const Color_t *>(buffer);
+		for(volatile auto &rcolor:GRAPHIC::grange(x,y,x+M,y+N))
+			rcolor=*buf++;
 	}
 
 };
