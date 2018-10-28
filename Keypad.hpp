@@ -96,7 +96,7 @@ struct Keypad
     };
 
 
-   typename Key::KEY lastkey;
+    typename Key::KEY lastkey;
 
     inline constexpr Keypad():lastkey(Key::KEY_ALL){ }
 
