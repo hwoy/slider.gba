@@ -50,6 +50,8 @@ static_assert(WxH*WxH==slen(sqlist)-1,"WxH*WxH !=slen(sqlist) => It's not square
 using Color = Color3;
 using Color_t = Color::Color_t;
 
+using Font = X11_clR8x8_Font<Color>;
+
 static constexpr const GraphicDevice::Dispcnt_t regcontrol = 0x400 | Color::mode;
 static constexpr const i32arm_t COL=Color::COL;
 static constexpr const i32arm_t ROW=Color::ROW;
@@ -74,8 +76,8 @@ static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_
 }
 
 
-template <class COLORMODE,usize_t N,usize_t M>
-static void drawboard(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
+template <class FONT,class COLORMODE,usize_t N,usize_t M>
+static void drawboard(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> &square,const Square<FONT,COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
 {
 
     for(usize_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
@@ -86,8 +88,8 @@ static void drawboard(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &squa
                 g.rectangle(BGCOLOR,cgap,rgap,cgap+square.width,rgap+square.width);
 }
 
-template <class COLORMODE,usize_t N,usize_t M>
-static void movesquare(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &square,const Square<COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t from,u32arm_t to)
+template <class FONT,class COLORMODE,usize_t N,usize_t M>
+static void movesquare(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> &square,const Square<FONT,COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t from,u32arm_t to)
 {
 
     const u32arm_t jfrom=from%WxH;
@@ -112,8 +114,8 @@ static void movesquare(const Graphicx<COLORMODE> &g,const Square<COLORMODE> &squ
 extern "C"
 int main()
 {
-    static constexpr const Square<Color> square{WIDTH,BOXCOLOR,NUMCOLOR};
-    static constexpr const Square<Color> comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
+    static constexpr const Square<Font,Color> square{WIDTH,BOXCOLOR,NUMCOLOR};
+    static constexpr const Square<Font,Color> comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
 
     u32arm_t sq[WxH * WxH];
     
