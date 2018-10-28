@@ -146,11 +146,11 @@ int main()
 
         const auto msg = keypad.message();
 
-        const auto e = msg.first;
+        const auto event = msg.first;
 
         const auto key = msg.second;
 
-        if(key==key.KEY_UP && e == e.EVENT_DOWN)
+        if(key==key.KEY_UP && event == event.EVENT_DOWN)
         {
             if (p.y > 0)
             {
@@ -160,7 +160,7 @@ int main()
             }
 
         }
-        else if(key==key.KEY_DOWN && e == e.EVENT_DOWN)
+        else if(key==key.KEY_DOWN && event == event.EVENT_DOWN)
         {
             if(p.y < WxH - 1)
             {
@@ -169,7 +169,7 @@ int main()
                 kid=cmd_down;
             }
         }
-        else if(key==key.KEY_LEFT && e == e.EVENT_DOWN)
+        else if(key==key.KEY_LEFT && event == event.EVENT_DOWN)
         {
             if(p.x > 0)
             {
@@ -178,7 +178,7 @@ int main()
                 kid=cmd_left;
             }
         }
-        else if(key==key.KEY_RIGHT && e == e.EVENT_DOWN)
+        else if(key==key.KEY_RIGHT && event == event.EVENT_DOWN)
         {
             if(p.x < WxH - 1)
             {
@@ -187,32 +187,32 @@ int main()
                 kid=cmd_right;
             }
         }
-        else if(key==key.KEY_A && e == e.EVENT_DOWN)
+        else if(key==key.KEY_A && event == event.EVENT_DOWN)
         {
             kid=cmd_right+1;
             seed=--origseed;
         }
-        else if(key==key.KEY_B && e == e.EVENT_DOWN)
+        else if(key==key.KEY_B && event == event.EVENT_DOWN)
         {
             kid=cmd_right+2;
             seed=++origseed;
         }
-        else if(key==key.KEY_START && e == e.EVENT_DOWN)
+        else if(key==key.KEY_START && event == event.EVENT_DOWN)
         {
             kid=cmd_right+3;
             seed=origseed;
         }
         else if(key==key.KEY_SELECT)
         {
-            if(e == e.EVENT_DOWN)
+            if(event == event.EVENT_DOWN)
             {
                 kid=cmd_right+4;
                 seed=origseed;
             }
-            else if(e == e.EVENT_HOLD)
+            else if(event == event.EVENT_HOLD)
             {
             }
-            else if(e == e.EVENT_UP)
+            else if(event == event.EVENT_UP)
             {
                 drawboard(g,square,comsquare,sq,sqlist,index);
             }
