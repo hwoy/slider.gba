@@ -54,9 +54,9 @@ $ make
 - Some emulator such as [higan](https://mprd.se/media/emulators/files/higan_v106-windows.7z) requires actual ROM
 
 ### Special Thanks
-- Awesome fonts from [https://github.com/Peter-black/SuperCrateBox-GBA](https://github.com/Peter-black/SuperCrateBox-GBA) included in Font.hpp
+- Awesome fonts from [https://github.com/Peter-black/SuperCrateBox-GBA](https://github.com/Peter-black/SuperCrateBox-GBA) included in [Font.hpp](https://github.com/hwoy/slider.gba/blob/master/Font.hpp)
 
-### Contact me. 
+### Contact me
 - Web: https://github.com/hwoy 
 - Email: zaintcorp@yahoo.com 
 - Facebook: http://www.facebook.com/dead-root
