@@ -22,6 +22,17 @@ struct FontImp
 	}
 };
 
+template <class BGCOLORMODE,class FONTDATA>
+struct FontTrait : public FONTDATA , public FontImp<FONTDATA,BGCOLORMODE>
+{
+    using FontData = FONTDATA;
+    using Color = BGCOLORMODE;
+    using Color_t = typename Color::Color_t;
+    
+	static constexpr const u32arm_t SIZE=FontData::SIZE;
+	static constexpr const u32arm_t NUM=FontData::NUM;
+};
+
 struct X11_clR8x8
 {
 
@@ -33,16 +44,7 @@ struct X11_clR8x8
 };
 
 template <class BGCOLORMODE>
-struct X11_clR8x8_Font : public X11_clR8x8 , public FontImp<X11_clR8x8,BGCOLORMODE>
-{
-    using FontData = X11_clR8x8;
-    using Color = BGCOLORMODE;
-    using Color_t = typename Color::Color_t;
-    
-	static constexpr const u32arm_t SIZE=FontData::SIZE;
-	static constexpr const u32arm_t NUM=FontData::NUM;
-
-};
+using X11_clR8x8_Font = FontTrait<BGCOLORMODE,X11_clR8x8>;
 
 
 const u8arm_t X11_clR8x8::FONT[X11_clR8x8::NUM][X11_clR8x8::SIZE][X11_clR8x8::SIZE] =
