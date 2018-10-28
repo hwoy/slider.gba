@@ -132,7 +132,9 @@ int main()
 
     drawboard(g,square,comsquare,sq,sqlist,index);
 
-    for(Keypad<KeypadDevice> keypad;keypad.untilkeypressDown();)
+    Keypad<KeypadDevice> keypad;
+
+    while(true)
     {
         u32arm_t kid=-1U;
 
@@ -142,7 +144,13 @@ int main()
 
         getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
-        if(keypad==keypad.KEY_UP)
+        const auto msg = keypad.message();
+
+        const auto e = msg.first;
+
+        const auto key = msg.second;
+
+        if(key==key.KEY_UP && e == e.EVENT_DOWN)
         {
             if (p.y > 0)
             {
@@ -152,16 +160,16 @@ int main()
             }
 
         }
-        else if(keypad==keypad.KEY_DOWN)
+        else if(key==key.KEY_DOWN && e == e.EVENT_DOWN)
         {
             if(p.y < WxH - 1)
             {
                 indexfrom=indexto + WxH;
-                
+                    
                 kid=cmd_down;
             }
         }
-        else if(keypad==keypad.KEY_LEFT)
+        else if(key==key.KEY_LEFT && e == e.EVENT_DOWN)
         {
             if(p.x > 0)
             {
@@ -170,7 +178,7 @@ int main()
                 kid=cmd_left;
             }
         }
-        else if(keypad==keypad.KEY_RIGHT)
+        else if(key==key.KEY_RIGHT && e == e.EVENT_DOWN)
         {
             if(p.x < WxH - 1)
             {
@@ -179,27 +187,38 @@ int main()
                 kid=cmd_right;
             }
         }
-        else if(keypad==keypad.KEY_A)
+        else if(key==key.KEY_A && e == e.EVENT_DOWN)
         {
             kid=cmd_right+1;
             seed=--origseed;
         }
-        else if(keypad==keypad.KEY_B)
+        else if(key==key.KEY_B && e == e.EVENT_DOWN)
         {
             kid=cmd_right+2;
             seed=++origseed;
         }
-        else if(keypad==keypad.KEY_START)
+        else if(key==key.KEY_START && e == e.EVENT_DOWN)
         {
             kid=cmd_right+3;
             seed=origseed;
         }
-        else if(keypad==keypad.KEY_SELECT)
+        else if(key==key.KEY_SELECT)
         {
-            kid=cmd_right+4;
-            seed=origseed;
-        } 
+            if(e == e.EVENT_DOWN)
+            {
+                kid=cmd_right+4;
+                seed=origseed;
+            }
+            else if(e == e.EVENT_HOLD)
+            {
+            }
+            else if(e == e.EVENT_UP)
+            {
+                drawboard(g,square,comsquare,sq,sqlist,index);
+            }
+        }
 
+        
         switch(kid)
         {
             case cmd_up:
@@ -209,7 +228,7 @@ int main()
                     if(slide(sq, kid, index, WxH)!=-1UL)
                         movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
                     break;
-                    
+                        
             case cmd_right+1:
             case cmd_right+2:
             case cmd_right+3:
@@ -229,11 +248,6 @@ int main()
             default: break;
 
         }
-
-        keypad.untilkeypressUp();
-
-        if(kid==cmd_right+4)
-            drawboard(g,square,comsquare,sq,sqlist,index);
         
     }
 
