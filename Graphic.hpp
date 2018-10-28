@@ -134,7 +134,8 @@ struct ColorTrait
 template <class BGCOLORMODE>
 struct PaletteImp
 {
-	using bgmode = typename BGCOLORMODE::bgmode;
+	using Color = BGCOLORMODE;
+	using bgmode = typename Color::bgmode;
 	using Pram_t = typename bgmode::Pram_t;
 
 	static void palette(const Pram_t *buff,usize_t N,usize_t M=0)
@@ -211,7 +212,8 @@ using Color5x32p2 = ColorTrait<BGMODE5X32P2,0x05>;
 template <class BGCOLORMODE>
 struct Grange
 {
-	using bgmode = typename BGCOLORMODE::bgmode;
+	using Color = BGCOLORMODE;
+	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
@@ -409,7 +411,8 @@ struct Grange
 template <class BGCOLORMODE>
 struct Graphic: public BGCOLORMODE
 {
-	using bgmode = typename BGCOLORMODE::bgmode;
+	using Color = BGCOLORMODE;
+	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 	using Pram_t = typename bgmode::Pram_t;
@@ -437,7 +440,9 @@ struct Graphic: public BGCOLORMODE
 template <class GRAPHIC>
 struct BufferImp
 {
-	using bgmode = typename GRAPHIC::bgmode;
+	using Graphic = GRAPHIC;
+	using Color = typename Graphic::Color;
+	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
@@ -465,7 +470,9 @@ struct BufferImp
 template <class GRAPHIC>
 struct SharpImp
 {
-	using bgmode = typename GRAPHIC::bgmode;
+	using Graphic = GRAPHIC;
+	using Color = typename Graphic::Color;
+	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 
@@ -502,7 +509,8 @@ struct SharpImp
 template <class BGCOLORMODE>
 struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMODE>>, public BufferImp<Graphic<BGCOLORMODE>>
 {
-	using bgmode = typename BGCOLORMODE::bgmode;
+	using Color = BGCOLORMODE;
+	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 

@@ -5,24 +5,45 @@
 #include "Graphic.hpp"
 #include "Draw.hpp"
 
-template <class COLORMODE>
-struct Font
+
+template <class FONT,class BGCOLORMODE>
+struct FontImp
 {
-    using Color_t = typename COLORMODE::Color_t;
-    
+    using Color = BGCOLORMODE;
+    using Color_t = typename Color::Color_t;
+
+	static constexpr const u32arm_t SIZE=FONT::SIZE;
+	static constexpr const u32arm_t NUM=FONT::NUM;
+
+	static inline void draw(const Graphicx<Color> &g,const Point &point,const Color_t &color,const u8arm_t ch)
+	{
+		Draw<Color>::draw(g,point,color,FONT::FONT,ch);
+	}
+};
+
+struct X11_clR8x8
+{
+
 	static constexpr const u32arm_t SIZE=8;
 	static constexpr const u32arm_t NUM=128;
 
 	static const u8arm_t FONT[NUM][SIZE][SIZE];
 
-	static inline void draw(const Graphicx<COLORMODE> &g,const Point &point,const Color_t &color,const u8arm_t ch)
-	{
-		Draw<COLORMODE>::draw(g,point,color,FONT,ch);
-	}
 };
 
-template <class COLORMODE>
-const u8arm_t Font<COLORMODE>::FONT[Font<COLORMODE>::NUM][Font<COLORMODE>::SIZE][Font<COLORMODE>::SIZE] =
+template <class BGCOLORMODE>
+struct X11_clR8x8_Font : public X11_clR8x8 , public FontImp<X11_clR8x8,BGCOLORMODE>
+{
+    using Color = BGCOLORMODE;
+    using Color_t = typename Color::Color_t;
+    
+	static constexpr const u32arm_t SIZE=X11_clR8x8::SIZE;
+	static constexpr const u32arm_t NUM=X11_clR8x8::NUM;
+
+};
+
+
+const u8arm_t X11_clR8x8::FONT[X11_clR8x8::NUM][X11_clR8x8::SIZE][X11_clR8x8::SIZE] =
 {
     // char 0
     {
