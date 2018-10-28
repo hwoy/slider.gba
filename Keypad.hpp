@@ -44,16 +44,16 @@ struct Keypad
             KEY_ALL= 0x03ff
         };
 
-        const Kp_t key;
+        const KEY key;
 
-    inline constexpr Key(Kp_t key):key(key) {}
+    inline constexpr Key(KEY key):key(key) {}
 
-    inline constexpr bool operator == (Kp_t key) const
+    inline constexpr bool operator == (KEY key) const
     {
         return !(this->key & key);
     }
 
-    inline constexpr bool operator != (Kp_t key) const
+    inline constexpr bool operator != (KEY key) const
     {
         return (this->key & key);
     }
@@ -96,13 +96,13 @@ struct Keypad
     };
 
 
-    Kp_t lastkey;
+   typename Key::KEY lastkey;
 
     inline constexpr Keypad():lastkey(Key::KEY_ALL){ }
 
     std::pair<Keyevent,Key> message(void)
     {
-        volatile const auto press=KD::refkp();
+        volatile const auto press=static_cast<typename Key::KEY>(KD::refkp());
 
         if((press & Key::KEY_ALL) != Key::KEY_ALL)
         {
