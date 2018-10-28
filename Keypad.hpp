@@ -80,15 +80,15 @@ struct Keypad
             EVENT_UP,
             EVENT_INVALID
         };
-        const u16arm_t event;
-       inline constexpr Keyevent(u16arm_t event):event(event) {}
+        const EVENT event;
+       inline constexpr Keyevent(EVENT event):event(event) {}
 
-    inline constexpr bool operator == (u16arm_t e) const
+    inline constexpr bool operator == (EVENT e) const
     {
         return event == e;
     }
 
-    inline constexpr bool operator != (u16arm_t e) const
+    inline constexpr bool operator != (EVENT e) const
     {
         return event != e;
     }
@@ -100,7 +100,7 @@ struct Keypad
 
     inline constexpr Keypad():lastkey(Key::KEY_ALL){ }
 
-    std::pair<Keyevent,Key> message(void)
+    const std::pair<Keyevent,Key> message(void)
     {
         volatile const auto press=static_cast<typename Key::KEY>(KD::refkp());
 
