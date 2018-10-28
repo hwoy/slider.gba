@@ -9,15 +9,16 @@
 template <class FONT,class BGCOLORMODE>
 struct FontImp
 {
+    using FontData = FONT;
     using Color = BGCOLORMODE;
     using Color_t = typename Color::Color_t;
 
-	static constexpr const u32arm_t SIZE=FONT::SIZE;
-	static constexpr const u32arm_t NUM=FONT::NUM;
+	static constexpr const u32arm_t SIZE=FontData::SIZE;
+	static constexpr const u32arm_t NUM=FontData::NUM;
 
 	static inline void draw(const Graphicx<Color> &g,const Point &point,const Color_t &color,const u8arm_t ch)
 	{
-		Draw<Color>::draw(g,point,color,FONT::FONT,ch);
+		Draw<Color>::draw(g,point,color,FontData::FONT,ch);
 	}
 };
 
