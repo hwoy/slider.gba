@@ -8,7 +8,9 @@
 
 //******************** Unit test *************************//
 
+#ifndef SQLIST
 #define SQLIST "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+-0"
+#endif
 
 template <typename T,usize_t N>
 static constexpr usize_t square(const T (&a)[N],usize_t n=2)

@@ -3,7 +3,9 @@ BIN=slider
 OBJCOPY = arm-none-eabi-objcopy
 LD = arm-none-eabi-ld
 
-FLAGS = -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
+SQLIST = \"123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+-0\"
+
+FLAGS = -DSQLIST=$(SQLIST) -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
 
 CXX = arm-none-eabi-g++
 CXXFLAGS=-std=c++14 $(FLAGS) -fno-exceptions -fno-rtti
