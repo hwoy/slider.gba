@@ -1,7 +1,5 @@
 *.o
 *~
-slider.gba
-slider-actual-GBA.gba
 *.noheader
 *.exe
 *.elf
@@ -9,3 +7,18 @@ slider-actual-GBA.gba
 *.map
 *.txt
 *.sav
+
+slider-2-actual-GBA.gba
+slider-2.gba
+slider-3-actual-GBA.gba
+slider-3.gba
+slider-4-actual-GBA.gba
+slider-4.gba
+slider-5-actual-GBA.gba
+slider-5.gba
+slider-6-actual-GBA.gba
+slider-6.gba
+slider-7-actual-GBA.gba
+slider-7.gba
+slider-8-actual-GBA.gba
+slider-8.gba
