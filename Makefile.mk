@@ -25,15 +25,15 @@ INSTALLDIR = rom
 
 all: $(BIN).gba $(BIN)-actual-GBA.gba
 
-$(BIN)-actual-GBA.elf: loader.o main.o slider.o minstd.o lcg.o
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 loader.o main.o slider.o minstd.o lcg.o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc -lc
+$(BIN)-actual-GBA.elf: main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o
+		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc -lc
 
 $(BIN)-actual-GBA.gba: gbafix2/gbafix2.exe $(BIN)-actual-GBA.elf
 		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
 		gbafix2/gbafix2.exe $(BIN)-actual-GBA.noheader -o:$(BIN)-actual-GBA.gba -a -t:Slider -r:1 -c:Hwoy -p
 
-$(BIN).elf: loader.o main.o slider.o minstd.o lcg.o
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 loader.o main.o slider.o minstd.o lcg.o -o $(BIN).elf -static-libgcc -lgcc -lc
+$(BIN).elf: main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o
+		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o -o $(BIN).elf -static-libgcc -lgcc -lc
 
 $(BIN).gba: $(BIN).elf
 	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
@@ -42,7 +42,7 @@ gbafix2/gbafix2.exe:
 	make -C gbafix2
  
 clean:
-	rm -rf *.txt *.gba *.o *.elf *.map $(BIN)-actual-GBA.noheader
+	rm -rf *.txt main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o $(BIN)-actual-GBA.gba  $(BIN).gba $(BIN)-actual-GBA.elf $(BIN).elf $(BIN)-actual-GBA.map $(BIN).map $(BIN)-actual-GBA.noheader
 	make -C gbafix2 clean
 
 run: $(BIN).gba
@@ -55,10 +55,19 @@ install: all
 
 
 
-main.o: main.cpp slider.h arm7type.h Graphic.hpp Keypad.hpp Font.hpp \
+main-$(BIN).o: main.cpp slider.h arm7type.h Graphic.hpp Keypad.hpp Font.hpp \
  Draw.hpp Square.hpp
-lcg.o: lcg.c lcg.h arm7type.h
-loader.o: loader.c
-minstd.o: minstd.c minstd.h arm7type.h lcg.h
-slider.o: slider.c slider.h arm7type.h minstd.h lcg.h
+	$(CXX) -c $(CXXFLAGS) -o main-$(BIN).o main.cpp
+
+lcg-$(BIN).o: lcg.c lcg.h arm7type.h
+	$(CC) -c $(CFLAGS) -o lcg-$(BIN).o lcg.c
+
+loader-$(BIN).o: loader.c
+	$(CC) -c $(CFLAGS) -o loader-$(BIN).o loader.c
+
+minstd-$(BIN).o: minstd.c minstd.h arm7type.h lcg.h
+	$(CC) -c $(CFLAGS) -o minstd-$(BIN).o minstd.c
+
+slider-$(BIN).o: slider.c slider.h arm7type.h minstd.h lcg.h
+	$(CC) -c $(CFLAGS) -o slider-$(BIN).o slider.c
 
