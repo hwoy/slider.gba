@@ -156,70 +156,67 @@ int main()
         {
             case event.EVENT_DOWN:
 
-                if(key==key.KEY_UP)
+                switch(key.key)
                 {
-                    if (p.y > 0)
-                    {
-                        indexfrom=indexto - WxH;
+                    case key.KEY_UP:
+                        if (p.y > 0)
+                        {
+                            indexfrom=indexto - WxH;
 
-                        kid=cmd_up;
-                    }
+                            kid=cmd_up;
+                        }
+                        break;
+
+                    case key.KEY_DOWN:
+                        if(p.y < WxH - 1)
+                        {
+                            indexfrom=indexto + WxH;
+                                    
+                            kid=cmd_down;
+                        }
+                        break;
+
+                    case key.KEY_LEFT:
+                        if(p.x > 0)
+                        {
+                            indexfrom=indexto - 1;
+
+                            kid=cmd_left;
+                        }
+                        break;
+
+                    case key.KEY_RIGHT:
+                        if(p.x < WxH - 1)
+                        {
+                            indexfrom=indexto + 1;
+
+                            kid=cmd_right;
+                        }
+                        break;
+
+                    case key.KEY_A:
+                        kid=cmd_right+1;
+                        seed=--origseed;
+                        break;
+
+                    case key.KEY_B:
+                        kid=cmd_right+2;
+                        seed=++origseed;
+                        break;
+
+                    case key.KEY_START:
+                        kid=cmd_right+3;
+                        seed=origseed;
+                        break;
+
+                    case key.KEY_SELECT:
+                        kid=cmd_right+4;
+                        seed=origseed;
+                        break; 
+
+                    default: break;       
+
                 }
-
-                else if(key==key.KEY_DOWN)
-                {
-                    if(p.y < WxH - 1)
-                    {
-                        indexfrom=indexto + WxH;
-                                
-                         kid=cmd_down;
-                    }
-                }
-
-                else if(key==key.KEY_LEFT)
-                {
-                    if(p.x > 0)
-                    {
-                        indexfrom=indexto - 1;
-
-                        kid=cmd_left;
-                    }
-                }
-
-                else if(key==key.KEY_RIGHT)
-                {
-                    if(p.x < WxH - 1)
-                    {
-                        indexfrom=indexto + 1;
-
-                        kid=cmd_right;
-                    }
-                }
-
-                else if(key==key.KEY_A)
-                {
-                    kid=cmd_right+1;
-                    seed=--origseed;
-                }
-
-                else if(key==key.KEY_B)
-                {
-                    kid=cmd_right+2;
-                    seed=++origseed;
-                }
-                     
-                else if(key==key.KEY_START)
-                {
-                    kid=cmd_right+3;
-                    seed=origseed;
-                }
-
-                else if(key==key.KEY_SELECT)
-                {
-                    kid=cmd_right+4;
-                    seed=origseed;
-                }
-
                 break;
 
             case event.EVENT_HOLD:
