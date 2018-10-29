@@ -1,5 +1,3 @@
-BIN=slider
-
 OBJCOPY = arm-none-eabi-objcopy
 LD = arm-none-eabi-ld
 
@@ -11,7 +9,7 @@ SQLIST4 = \"123456789ABCDEFG\"
 SQLIST3 = \"123456789\"
 SQLIST2 = \"1234\"
 
-FLAGS = -DSQLIST=$(SQLIST8) -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
+FLAGS = -DSQLIST=$(SQLIST) -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
 
 CXX = arm-none-eabi-g++
 CXXFLAGS=-std=c++14 $(FLAGS) -fno-exceptions -fno-rtti
@@ -22,7 +20,8 @@ CFLAGS=-std=c90  $(FLAGS)
 
 GBA = VisualBoyAdvance.exe
 
-.PHONY: all clean run
+INSTALLDIR = rom
+.PHONY: all clean run install
 
 all: $(BIN).gba $(BIN)-actual-GBA.gba
 
@@ -48,6 +47,10 @@ clean:
 
 run: $(BIN).gba
 	$(GBA) $(BIN).gba
+
+install: all
+	cp $(BIN)-actual-GBA.gba rom
+	cp $(BIN).gba rom
 
 
 

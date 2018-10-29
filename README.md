@@ -2,7 +2,7 @@
 
 Port [Slider game](https://github.com/hwoy/slider) to GameBoy Advance on mGBA
 
-Download [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-actual-GBA.gba) for [mGBA](https://mgba.io/downloads.html)
+Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-8-actual-GBA.gba) for [mGBA](https://mgba.io/downloads.html)
 
 # What is a slider.gba
 - slider.gba is a very simple NxN sliding puzzle game that can be run on GameBoy Advance. 
@@ -48,8 +48,8 @@ $ make
 ```
 
 - If it success , you will see 
-	- [slider.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider.gba) for RAW instruction codes (0x8000000 entry point slider.gba)
-	- [slider-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-actual-GBA.gba) for actual ROM (slider-actual-GBA.gba = 0xC0 bytes of header + 0x80000C0 entry point slider-actual-GBA.noheader)
+	- [slider-8.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-8.gba) for RAW instruction codes (0x8000000 entry point slider.gba)
+	- [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-8-actual-GBA.gba) for actual ROM (slider-actual-GBA.gba = 0xC0 bytes of header + 0x80000C0 entry point slider-actual-GBA.noheader)
 - [gbafix2](https://github.com/hwoy/gbafix2) can add 0xC0 bytes of header to raw .gba file
 - Some emulator such as [higan](https://mprd.se/media/emulators/files/higan_v106-windows.7z) requires actual ROM
 
