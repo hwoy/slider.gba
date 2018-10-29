@@ -82,8 +82,10 @@ struct Keypad
             EVENT_UP,
             EVENT_INVALID
         };
-        const EVENT event;
-       inline constexpr Keyevent(EVENT event):event(event) {}
+
+    const EVENT event;
+
+    inline constexpr Keyevent(EVENT event):event(event) {}
 
     inline constexpr bool operator == (EVENT e) const
     {
@@ -106,24 +108,36 @@ struct Keypad
     {
         volatile const auto press=static_cast<typename Key::KEY>(KD::refkp());
 
+        auto event = Keyevent::EVENT_NONE;
+
+        auto key = Key::KEY_ALL;
+
         if((press & Key::KEY_ALL) != Key::KEY_ALL)
         {
             if(lastkey != press)
             {
-                return std::make_pair(Keyevent::EVENT_DOWN,lastkey=press);
+                event = Keyevent::EVENT_DOWN;
+                key = lastkey=press;
             }
-            
-            return std::make_pair(Keyevent::EVENT_HOLD,lastkey);
+            else
+            {
+                event = Keyevent::EVENT_HOLD;
+                key = lastkey;
+            }
         }
 
         else if(lastkey!=Key::KEY_ALL)
         {
-                auto tmp = lastkey;
-                lastkey=Key::KEY_ALL;
-                return std::make_pair(Keyevent::EVENT_UP,tmp);
+            event = Keyevent::EVENT_UP;
+            key = lastkey;
+
+            lastkey=Key::KEY_ALL;
+        }
+        else{
+            lastkey = key;
         }
 
-        return std::make_pair(Keyevent::EVENT_NONE,lastkey=Key::KEY_ALL);
+        return std::make_pair(event,key);
     }
 };
 
