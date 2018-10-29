@@ -25,9 +25,9 @@ struct KeypadDevice
 template<class KD>
 struct Keypad
 {
-    using KeyDevice = KD;
-    using Kp_t = typename KeyDevice::Kp_t;
-    using PtrKp_t = typename KeyDevice::PtrKp_t;
+    using Device = KD;
+    using Kp_t = typename Device::Kp_t;
+    using PtrKp_t = typename Device::PtrKp_t;
 
     struct Key
     {
