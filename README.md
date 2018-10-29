@@ -43,7 +43,7 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 
 ```sh
 
-$ make
+$ sh Build.sh
 
 ```
 
