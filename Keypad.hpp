@@ -52,7 +52,7 @@ struct Keypad
 
     inline constexpr bool operator == (KEY key) const
     {
-        return (this->key & key) == key;
+        return !(this->key & key);
     }
 
     inline constexpr bool operator != (KEY key) const
@@ -137,7 +137,7 @@ struct Keypad
             lastkey = key;
         }
 
-        return std::make_pair(event,static_cast<typename Key::KEY>(~(key&Key::KEY_ALL)));
+        return std::make_pair(event,key);
     }
 };
 

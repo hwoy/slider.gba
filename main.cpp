@@ -152,75 +152,88 @@ int main()
 
         const auto key = msg.second;
 
-        if(key==key.KEY_UP && event == event.EVENT_DOWN)
+        switch(event.event)
         {
-            if (p.y > 0)
-            {
-                indexfrom=indexto - WxH;
+            case event.EVENT_DOWN:
 
-                kid=cmd_up;
-            }
+                if(key==key.KEY_UP)
+                {
+                    if (p.y > 0)
+                    {
+                        indexfrom=indexto - WxH;
 
-        }
-        else if(key==key.KEY_DOWN && event == event.EVENT_DOWN)
-        {
-            if(p.y < WxH - 1)
-            {
-                indexfrom=indexto + WxH;
-                    
-                kid=cmd_down;
-            }
-        }
-        else if(key==key.KEY_LEFT && event == event.EVENT_DOWN)
-        {
-            if(p.x > 0)
-            {
-                indexfrom=indexto - 1;
+                        kid=cmd_up;
+                    }
+                }
 
-                kid=cmd_left;
-            }
-        }
-        else if(key==key.KEY_RIGHT && event == event.EVENT_DOWN)
-        {
-            if(p.x < WxH - 1)
-            {
-                indexfrom=indexto + 1;
+                else if(key==key.KEY_DOWN)
+                {
+                    if(p.y < WxH - 1)
+                    {
+                        indexfrom=indexto + WxH;
+                                
+                         kid=cmd_down;
+                    }
+                }
 
-                kid=cmd_right;
-            }
-        }
-        else if(key==key.KEY_A && event == event.EVENT_DOWN)
-        {
-            kid=cmd_right+1;
-            seed=--origseed;
-        }
-        else if(key==key.KEY_B && event == event.EVENT_DOWN)
-        {
-            kid=cmd_right+2;
-            seed=++origseed;
-        }
-        else if(key==key.KEY_START && event == event.EVENT_DOWN)
-        {
-            kid=cmd_right+3;
-            seed=origseed;
-        }
-        else if(key==key.KEY_SELECT)
-        {
-            if(event == event.EVENT_DOWN)
-            {
-                kid=cmd_right+4;
-                seed=origseed;
-            }
-            else if(event == event.EVENT_HOLD)
-            {
-            }
-            else if(event == event.EVENT_UP)
-            {
-                drawboard(g,square,comsquare,sq,sqlist,index);
-            }
+                else if(key==key.KEY_LEFT)
+                {
+                    if(p.x > 0)
+                    {
+                        indexfrom=indexto - 1;
+
+                        kid=cmd_left;
+                    }
+                }
+
+                else if(key==key.KEY_RIGHT)
+                {
+                    if(p.x < WxH - 1)
+                    {
+                        indexfrom=indexto + 1;
+
+                        kid=cmd_right;
+                    }
+                }
+
+                else if(key==key.KEY_A)
+                {
+                    kid=cmd_right+1;
+                    seed=--origseed;
+                }
+
+                else if(key==key.KEY_B)
+                {
+                    kid=cmd_right+2;
+                    seed=++origseed;
+                }
+                     
+                else if(key==key.KEY_START)
+                {
+                    kid=cmd_right+3;
+                    seed=origseed;
+                }
+
+                else if(key==key.KEY_SELECT)
+                {
+                    kid=cmd_right+4;
+                    seed=origseed;
+                }
+
+                break;
+
+            case event.EVENT_HOLD:
+                break;
+
+            case event.EVENT_UP:
+                if(key == key.KEY_SELECT)
+                    drawboard(g,square,comsquare,sq,sqlist,index);
+                break;
+
+            default: break;
         }
 
-        
+  
         switch(kid)
         {
             case cmd_up:
