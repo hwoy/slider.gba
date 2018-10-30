@@ -38,13 +38,13 @@ $(BIN).elf: $(OBJECTS)
 		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 $^ -o $@ -static-libgcc -lgcc -lc
 
 $(BIN).gba: $(BIN).elf
-	$(OBJCOPY) -O binary $(BIN).elf $@
+	$(OBJCOPY) -O binary $< $@
 
 gbafix2/gbafix2.exe:
 	make -C gbafix2
  
 clean:
-	rm -rf *.txt main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o $(BIN)-actual-GBA.gba  $(BIN).gba $(BIN)-actual-GBA.elf $(BIN).elf $(BIN)-actual-GBA.map $(BIN).map $(BIN)-actual-GBA.noheader
+	rm -rf *.txt $(OBJECTS) $(BIN)-actual-GBA.gba  $(BIN).gba $(BIN)-actual-GBA.elf $(BIN).elf $(BIN)-actual-GBA.map $(BIN).map $(BIN)-actual-GBA.noheader
 	make -C gbafix2 clean
 
 run: $(BIN).gba
