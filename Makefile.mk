@@ -26,17 +26,17 @@ INSTALLDIR = rom
 all: $(BIN).gba $(BIN)-actual-GBA.gba
 
 $(BIN)-actual-GBA.elf: main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o -o $(BIN)-actual-GBA.elf -static-libgcc -lgcc -lc
+		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 $^ -o $@ -static-libgcc -lgcc -lc
 
 $(BIN)-actual-GBA.gba: gbafix2/gbafix2.exe $(BIN)-actual-GBA.elf
 		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
-		gbafix2/gbafix2.exe $(BIN)-actual-GBA.noheader -o:$(BIN)-actual-GBA.gba -a -t:Slider -r:1 -c:Hwoy -p
+		gbafix2/gbafix2.exe $(BIN)-actual-GBA.noheader -o:$@ -a -t:Slider -r:1 -c:Hwoy -p
 
 $(BIN).elf: main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o -o $(BIN).elf -static-libgcc -lgcc -lc
+		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 $^ -o $@ -static-libgcc -lgcc -lc
 
 $(BIN).gba: $(BIN).elf
-	$(OBJCOPY) -O binary $(BIN).elf $(BIN).gba
+	$(OBJCOPY) -O binary $(BIN).elf $@
 
 gbafix2/gbafix2.exe:
 	make -C gbafix2
@@ -57,17 +57,18 @@ install: all
 
 main-$(BIN).o: main.cpp slider.h arm7type.h Graphic.hpp Keypad.hpp Font.hpp \
  Draw.hpp Square.hpp
-	$(CXX) -c $(CXXFLAGS) -o main-$(BIN).o main.cpp
+	$(CXX) -c $(CXXFLAGS) -o $@ main.cpp
 
 lcg-$(BIN).o: lcg.c lcg.h arm7type.h
-	$(CC) -c $(CFLAGS) -o lcg-$(BIN).o lcg.c
+	$(CC) -c $(CFLAGS) -o $@ lcg.c
 
 loader-$(BIN).o: loader.c
-	$(CC) -c $(CFLAGS) -o loader-$(BIN).o loader.c
+	$(CC) -c $(CFLAGS) -o $@ loader.c
 
 minstd-$(BIN).o: minstd.c minstd.h arm7type.h lcg.h
-	$(CC) -c $(CFLAGS) -o minstd-$(BIN).o minstd.c
+	$(CC) -c $(CFLAGS) -o $@ minstd.c
 
 slider-$(BIN).o: slider.c slider.h arm7type.h minstd.h lcg.h
-	$(CC) -c $(CFLAGS) -o slider-$(BIN).o slider.c
+	$(CC) -c $(CFLAGS) -o $@ slider.c
 
+#$@ $^ $<
