@@ -416,6 +416,8 @@ struct Graphic: public BGCOLORMODE
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
 	using Pram_t = typename bgmode::Pram_t;
+	using Grange_t = Grange<Color>;
+	using Iterator = typename Grange_t::Iterator;
 
 	static constexpr const i32arm_t COL=bgmode::COL;
 	static constexpr const i32arm_t ROW=bgmode::ROW;
@@ -430,9 +432,9 @@ struct Graphic: public BGCOLORMODE
 		return bgmode::refvid(x,y);
 	}
 
-	static inline constexpr Grange<BGCOLORMODE> grange(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL,i32arm_t y2=ROW)
+	static inline constexpr Grange_t grange(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL,i32arm_t y2=ROW)
 	{
-		return Grange<BGCOLORMODE>(x1,y1,x2,y2);
+		return Grange_t(x1,y1,x2,y2);
 	}
 
 };
@@ -445,6 +447,8 @@ struct BufferImp
 	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
+	using Grange_t = typename Graphic::Grange_t;
+	using Iterator = typename Grange_t::Iterator;
 
 	static constexpr const i32arm_t COL=bgmode::COL;
 	static constexpr const i32arm_t ROW=bgmode::ROW;
@@ -462,7 +466,7 @@ struct BufferImp
 	static void drawbuffer(const Color_t (&buffer)[N],u32arm_t w=COL,i32arm_t x=0,i32arm_t y=0)
 	{
 		auto buf=reinterpret_cast<const Color_t *>(buffer);
-		for(volatile auto &rcolor:GRAPHIC::grange(x,y,x+w,y+N/w))
+		for(volatile auto &rcolor:Graphic::grange(x,y,x+w,y+N/w))
 			rcolor=*buf++;
 	}
 
@@ -470,7 +474,7 @@ struct BufferImp
 	static void drawbuffer(const Color_t (&buffer)[N][M],i32arm_t x=0,i32arm_t y=0)
 	{
 		auto buf=reinterpret_cast<const Color_t *>(buffer);
-		for(volatile auto &rcolor:GRAPHIC::grange(x,y,x+M,y+N))
+		for(volatile auto &rcolor:Graphic::grange(x,y,x+M,y+N))
 			rcolor=*buf++;
 	}
 
@@ -484,13 +488,15 @@ struct SharpImp
 	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
+	using Grange_t = typename Graphic::Grange_t;
+	using Iterator = typename Grange_t::Iterator;
 
 	static constexpr const i32arm_t COL=bgmode::COL;
 	static constexpr const i32arm_t ROW=bgmode::ROW;
 
 	static void rectangle(Color_t color,i32arm_t x1,i32arm_t y1,i32arm_t x2,i32arm_t y2)
 	{
-		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x2,y2))
+		for(volatile auto &rpoint:Graphic::grange(x1,y1,x2,y2))
 			rpoint=color;
 	}
 
@@ -501,27 +507,73 @@ struct SharpImp
 
 	static void frame(Color_t color,i32arm_t x1,i32arm_t y1,i32arm_t x2,i32arm_t y2)
 	{
-		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x2,y1+1))
+		for(volatile auto &rpoint:Graphic::grange(x1,y1,x2,y1+1))
 			rpoint=color;
 
-		for(volatile auto &rpoint:GRAPHIC::grange(x1,y1,x1+1,y2))
+		for(volatile auto &rpoint:Graphic::grange(x1,y1,x1+1,y2))
 			rpoint=color;
 
-		for(volatile auto &rpoint:GRAPHIC::grange(x2-1,y1,x2,y2))
+		for(volatile auto &rpoint:Graphic::grange(x2-1,y1,x2,y2))
 			rpoint=color;
 		
-		for(volatile auto &rpoint:GRAPHIC::grange(x1,y2-1,x2,y2))
+		for(volatile auto &rpoint:Graphic::grange(x1,y2-1,x2,y2))
 			rpoint=color;
 	}
 };
 
-template <class BGCOLORMODE>
-struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMODE>>, public BufferImp<Graphic<BGCOLORMODE>>
+template <class GRAPHIC>
+struct IteratorImp
 {
-	using Color = BGCOLORMODE;
+	using Graphic = GRAPHIC;
+	using Color = typename Graphic::Color;
+	using bgmode = typename Color::bgmode;
+	using Vram_t = typename bgmode::Vram_t;
+	using Grange_t = typename Graphic::Grange_t;
+	using Iterator = typename Grange_t::Iterator;
+
+	static constexpr const i32arm_t COL=bgmode::COL;
+	static constexpr const i32arm_t ROW=bgmode::ROW;
+
+	static constexpr Iterator input_iterator(i32arm_t x,i32arm_t y,i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	{
+		return Graphic::grange(x1,y1,x1+col,ROW).begin()+(x+y*col);
+	}
+
+	static constexpr Iterator input_begin_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	{
+		return Graphic::grange(x1,y1,x1+col,ROW).begin();
+	}
+
+	static constexpr Iterator input_end_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	{
+		return Graphic::grange(x1,y1,x1+col,ROW).end();
+	}
+
+	static constexpr std::reverse_iterator<Iterator> input_reverse_iterator(i32arm_t x,i32arm_t y,i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	{
+		return std::make_reverse_iterator(input_iterator(x,y,x1,y1,col));
+	}
+
+	static constexpr std::reverse_iterator<Iterator> input_begin_reverse_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	{
+		return std::make_reverse_iterator(input_end_iterator(x1,y1,col));
+	}
+
+	static constexpr std::reverse_iterator<Iterator> input_end_reverse_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	{
+		return std::make_reverse_iterator(input_begin_iterator(x1,y1,col));
+	}
+};
+
+template <class BGCOLORMODE>
+struct Graphicx: public Graphic<BGCOLORMODE> ,public SharpImp<Graphic<BGCOLORMODE>>, public BufferImp<Graphic<BGCOLORMODE>> , public IteratorImp<Graphic<BGCOLORMODE>>
+{
+	using Color = typename Graphic<BGCOLORMODE>::Color;
 	using bgmode = typename Color::bgmode;
 	using Vram_t = typename bgmode::Vram_t;
 	using Color_t = Vram_t;
+	using Grange_t = typename Graphic<BGCOLORMODE>::Grange_t;
+	using Iterator = typename Grange_t::Iterator;
 
 	static constexpr const i32arm_t COL=bgmode::COL;
 	static constexpr const i32arm_t ROW=bgmode::ROW;
