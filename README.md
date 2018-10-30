@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/hwoy/slider.gba/master/res/slider.png?raw=true)
+![](https://raw.githubusercontent.com/hwoy/slider.gba/master/res/slider.gif?raw=true)
 
 Port [Slider game](https://github.com/hwoy/slider) to GameBoy Advance on mGBA
 
