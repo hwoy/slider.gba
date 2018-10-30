@@ -6,8 +6,8 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 
 # What is a slider.gba
 - slider.gba is a very simple NxN sliding puzzle game that can be run on GameBoy Advance. 
-- It has been written in modern ISO C++14(C++11 syntax and C++14 STL supports video memory iterator in Grange Struct) abstraction except core game logic originally written in C.
-- No special library(libheart) ,except libc for memcpy(if in use), libgcc for basic software math function(div and mod).
+- It has been written in optimized modern ISO C++14(C++11 syntax and C++14 STL supports video memory iterator in Grange Struct) abstraction except core game logic originally written in C.
+- No special library(libheart) ,except libc for memcpy function(if in use), libgcc for basic software math function(div and mod).
 - Work great on [mGBA](https://mgba.io/downloads.html), [higan](https://download.byuu.org/higan_v106-windows.7z), [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
  
 ### Keypad

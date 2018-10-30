@@ -449,6 +449,15 @@ struct BufferImp
 	static constexpr const i32arm_t COL=bgmode::COL;
 	static constexpr const i32arm_t ROW=bgmode::ROW;
 
+
+	template <typename T>
+	static void drawbuffer(T begin,T end,u32arm_t w=COL,i32arm_t x=0,i32arm_t y=0)
+	{
+		for(i32arm_t i=0;begin!=end;++i)
+			Graphic::pixel(*begin++,x+i%w,y+i/w);
+
+	}
+
 	template <usize_t N>
 	static void drawbuffer(const Color_t (&buffer)[N],u32arm_t w=COL,i32arm_t x=0,i32arm_t y=0)
 	{
