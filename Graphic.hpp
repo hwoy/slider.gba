@@ -534,34 +534,34 @@ struct IteratorImp
 	static constexpr const i32arm_t COL=bgmode::COL;
 	static constexpr const i32arm_t ROW=bgmode::ROW;
 
-	static constexpr Iterator input_iterator(i32arm_t x,i32arm_t y,i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	static constexpr Iterator input_iterator(i32arm_t x,i32arm_t y,i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL)
 	{
-		return Graphic::grange(x1,y1,x1+col,ROW).begin()+(x+y*col);
+		return Graphic::grange(x1,y1,x2,ROW).begin()+(x+y*(x2-x1));
 	}
 
-	static constexpr Iterator input_begin_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	static constexpr Iterator input_begin_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL)
 	{
-		return Graphic::grange(x1,y1,x1+col,ROW).begin();
+		return Graphic::grange(x1,y1,x2,ROW).begin();
 	}
 
-	static constexpr Iterator input_end_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	static constexpr Iterator input_end_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL)
 	{
-		return Graphic::grange(x1,y1,x1+col,ROW).end();
+		return Graphic::grange(x1,y1,x2,ROW).end();
 	}
 
-	static constexpr std::reverse_iterator<Iterator> input_reverse_iterator(i32arm_t x,i32arm_t y,i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	static constexpr std::reverse_iterator<Iterator> input_reverse_iterator(i32arm_t x,i32arm_t y,i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL)
 	{
-		return std::make_reverse_iterator(input_iterator(x,y,x1,y1,col));
+		return std::make_reverse_iterator(input_iterator(x,y,x1,y1,x2));
 	}
 
-	static constexpr std::reverse_iterator<Iterator> input_begin_reverse_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	static constexpr std::reverse_iterator<Iterator> input_begin_reverse_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL)
 	{
-		return std::make_reverse_iterator(input_end_iterator(x1,y1,col));
+		return std::make_reverse_iterator(input_end_iterator(x1,y1,x2));
 	}
 
-	static constexpr std::reverse_iterator<Iterator> input_end_reverse_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t col=COL)
+	static constexpr std::reverse_iterator<Iterator> input_end_reverse_iterator(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL)
 	{
-		return std::make_reverse_iterator(input_begin_iterator(x1,y1,col));
+		return std::make_reverse_iterator(input_begin_iterator(x1,y1,x2));
 	}
 };
 
