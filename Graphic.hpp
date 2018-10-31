@@ -10,6 +10,7 @@ static constexpr const u32arm_t VRAM    = 0x6000000;
 static constexpr const u32arm_t VRAM2   = 0x600A000;
 static constexpr const u32arm_t PRAM    = 0x5000000;
 static constexpr const u32arm_t DISPCNT = 0x4000000;
+static constexpr const u32arm_t VCOUNT  = 0x4000006;
 
 struct Point
 {
@@ -63,6 +64,19 @@ struct GraphicDevice
 	static inline constexpr PtrDispcnt_t ptrdispcnt(void)
 	{
 		return reinterpret_cast<PtrDispcnt_t>(DISPCNT);
+	}
+
+	using Vcount_t = u16arm_t;
+	using PtrVcount_t = volatile const Vcount_t *;
+
+	static inline constexpr volatile const Vcount_t & refvcount(void)
+	{
+		return *reinterpret_cast<PtrVcount_t>(VCOUNT);
+	}
+
+	static inline constexpr PtrVcount_t ptrvcount(void)
+	{
+		return reinterpret_cast<PtrVcount_t>(VCOUNT);
 	}
 };
 
@@ -435,6 +449,12 @@ struct Graphic: public BGCOLORMODE
 	static inline constexpr Grange_t grange(i32arm_t x1=0,i32arm_t y1=0,i32arm_t x2=COL,i32arm_t y2=ROW)
 	{
 		return Grange_t(x1,y1,x2,y2);
+	}
+
+	static void waitVSync(void)
+	{
+		while(GraphicDevice::refvcount() >= ROW);
+		while(GraphicDevice::refvcount() < ROW);
 	}
 
 };

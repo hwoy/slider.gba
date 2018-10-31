@@ -148,6 +148,8 @@ int main()
 
         getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
+        g.waitVSync();
+
         const auto msg = keypad.message();
 
         const auto event = msg.first;
