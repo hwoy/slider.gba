@@ -21,6 +21,28 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 #include "Graphic.hpp"
 #include "Keypad.hpp"
 
+static const char A[] = {
+        0, 0, 0, 1, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 0, 0, 0,
+        0, 0, 1, 1, 1, 1, 0, 0,
+        0, 0, 1, 1, 0, 1, 0, 0,
+        0, 1, 1, 1, 1, 1, 1, 0,
+        0, 1, 1, 0, 0, 0, 1, 0,
+        1, 1, 1, 0, 0, 0, 1, 1,
+        0, 0, 0, 0, 0, 0, 0, 0
+    };
+
+static const char B[]={
+        0, 1, 1, 1, 1, 1, 1, 0,
+        0, 1, 1, 0, 0, 0, 1, 1,
+        0, 1, 1, 0, 0, 0, 1, 1,
+        0, 1, 1, 1, 1, 1, 1, 0,
+        0, 1, 1, 0, 0, 0, 1, 1,
+        0, 1, 1, 0, 0, 0, 1, 1,
+        0, 1, 1, 1, 1, 1, 1, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+    };
+
 int main()
 {
 	GraphicDevice::refdispcnt() = 0x400 | Color5::mode;
@@ -28,11 +50,20 @@ int main()
 	Graphicx<Color5p1> g1;
 	Graphicx<Color5p2> g2;
 
-	for(auto &r:g1.grange(10,10,50,50))
-		r=RGB15(31,0,0);
+	g1.bgcolor(RGB15(0,31,30));
+	g2.bgcolor(RGB15(20,31,40));
 
-	for(auto &r:g2.grange(10,10,50,50))
-		r=RGB15(0,31,0);
+	{
+		unsigned int i=0;
+		for(auto &r:g1.grange(50,50,50+8,50+8))
+			r=A[i++] ? RGB15(0,0,31):RGB15(0,31,30);
+	}
+
+	{
+		unsigned int i=0;
+		for(auto &r:g2.grange(50,50,50+8,50+8))
+			r=B[i++] ? RGB15(31,0,0):RGB15(20,31,40);
+	}
 	
 	Keypad<KeypadDevice> keypad;
 
