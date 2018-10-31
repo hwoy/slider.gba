@@ -304,17 +304,31 @@ struct Color4x32p2 : public ColorTrait<BGMODE4X32P2,0x04> , public PaletteImp<Co
 	using bgmode = typename ColorTrait<BGMODE4X32P2,0x04>::bgmode;
 };
 
-using Color5 = ColorTrait<BGMODE5,0x05>;
+struct Color5 : public ColorTrait<BGMODE5,0x05>,public Show_p1_Imp<ColorTrait<BGMODE5,0x05>>
+{
+	using bgmode = typename ColorTrait<BGMODE5,0x05>::bgmode;
+};
 
-using Color5x32 = ColorTrait<BGMODE5X32,0x05>;
+struct Color5x32 : public ColorTrait<BGMODE5X32,0x05>,public Show_p1_Imp<ColorTrait<BGMODE5X32,0x05>>
+{
+	using bgmode = typename ColorTrait<BGMODE5X32,0x05>::bgmode;
+};
+
 
 using Color5p1 = Color5;
 
 using Color5x32p1 = Color5x32;
 
-using Color5p2 = ColorTrait<BGMODE5P2,0x05>;
 
-using Color5x32p2 = ColorTrait<BGMODE5X32P2,0x05>;
+struct Color5p2 : public ColorTrait<BGMODE5P2,0x05>,public Show_p2_Imp<ColorTrait<BGMODE5P2,0x05>>
+{
+	using bgmode = typename ColorTrait<BGMODE5P2,0x05>::bgmode;
+};
+
+struct Color5x32p2 : public ColorTrait<BGMODE5X32P2,0x05>,public Show_p2_Imp<ColorTrait<BGMODE5X32P2,0x05>>
+{
+	using bgmode = typename ColorTrait<BGMODE5X32P2,0x05>::bgmode;
+};
 
 
 template <class BGCOLORMODE>
