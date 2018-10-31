@@ -144,11 +144,9 @@ int main()
 
         struct point p;
 
-        u32arm_t indexfrom,indexto;
+        u32arm_t indexfrom=0,indexto;
 
         getxy(indexto = getindex(sq, index, WxH), &p, WxH);
-
-        g.waitVSync();
 
         const auto msg = keypad.message();
 
@@ -228,12 +226,13 @@ int main()
 
             case event.EVENT_UP:
                 if(key == key.KEY_SELECT)
-                    drawboard(g,square,comsquare,sq,sqlist,index);
+                    kid=cmd_right+5;
                 break;
 
             default: break;
         }
 
+        g.waitVSync();
   
         switch(kid)
         {
@@ -259,6 +258,10 @@ int main()
                         drawboard(g,square,comsquare,sq,sqlist,index);
 
                     }
+                    break;
+
+            case cmd_right+5:
+                    drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
 
             default: break;
