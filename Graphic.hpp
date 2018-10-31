@@ -170,21 +170,115 @@ struct PaletteImp
 	}	
 };
 
+template <class BGCOLORMODE>
+struct Flip
+{
+	using Color = BGCOLORMODE;
+	using bgmode = typename Color::bgmode;
+	using Pram_t = typename bgmode::Pram_t;
+
+	protected:
+
+	inline static bool isshowp2(void)
+	{
+		return GraphicDevice::refdispcnt() & 0x10;
+	}
+
+	inline static bool isshowp1(void)
+	{
+		return !isshowp2();
+	}
+
+	inline static void showp1(void)
+	{
+		GraphicDevice::refdispcnt() &= ~0x10;	
+	}
+
+	inline static void showp2(void)
+	{
+		GraphicDevice::refdispcnt() |= 0x10;	
+	}
+
+	inline static void noshowp1(void)
+	{
+		showp2();	
+	}
+
+	inline static void noshowp2(void)
+	{
+		showp1();	
+	}
+
+	public:
+
+	static void flip(void)
+	{
+		if(isshowp1())
+			showp2();
+		else
+			showp1();
+	}
+};
+
+template <class BGCOLORMODE>
+struct Show_p1_Imp: public Flip<BGCOLORMODE>
+{
+	using Color = BGCOLORMODE;
+	using bgmode = typename Color::bgmode;
+	using Pram_t = typename bgmode::Pram_t;
+
+	inline static void show(void)
+	{
+		Flip<BGCOLORMODE>::showp1();
+	}
+	inline static void noshow(void)
+	{
+		Flip<BGCOLORMODE>::noshowp1();
+	}
+
+	inline static constexpr bool isshow(void)
+	{
+		return Flip<BGCOLORMODE>::isshowp1();
+	}
+};
+
+template <class BGCOLORMODE>
+struct Show_p2_Imp: public Flip<BGCOLORMODE>
+{
+	using Color = BGCOLORMODE;
+	using bgmode = typename Color::bgmode;
+	using Pram_t = typename bgmode::Pram_t;
+
+	inline static void show(void)
+	{
+		Flip<BGCOLORMODE>::showp2();
+	}
+	inline static void noshow(void)
+	{
+		Flip<BGCOLORMODE>::noshowp2();
+	}
+
+	inline static constexpr bool isshow(void)
+	{
+		return Flip<BGCOLORMODE>::isshowp2();
+	}
+};
+
 using Color3 = ColorTrait<BGMODE3,0x03>;
 
 using Color3x32 = ColorTrait<BGMODE3X32,0x03>;
 
-struct Color4 : public ColorTrait<BGMODE4,0x04> , public PaletteImp<ColorTrait<BGMODE4,0x04>>
+struct Color4 : public ColorTrait<BGMODE4,0x04> , public PaletteImp<ColorTrait<BGMODE4,0x04>>, public Show_p1_Imp<ColorTrait<BGMODE4,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4,0x04>::bgmode;
 };
 
-struct Color4x16 : public ColorTrait<BGMODE4X16,0x04> , public PaletteImp<ColorTrait<BGMODE4X16,0x04>>
+struct Color4x16 : public ColorTrait<BGMODE4X16,0x04> , public PaletteImp<ColorTrait<BGMODE4X16,0x04>>, public Show_p1_Imp<ColorTrait<BGMODE4X16,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4X16,0x04>::bgmode;
 };
 
-struct Color4x32 : public ColorTrait<BGMODE4X32,0x04> , public PaletteImp<ColorTrait<BGMODE4X32,0x04>>
+struct Color4x32 : public ColorTrait<BGMODE4X32,0x04> , public PaletteImp<ColorTrait<BGMODE4X32,0x04>>, public Show_p1_Imp<ColorTrait<BGMODE4X32,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4X32,0x04>::bgmode;
 };
@@ -195,17 +289,17 @@ using Color4x16p1 = Color4x16;
 
 using Color4x32p1 = Color4x32;
 
-struct Color4p2 : public ColorTrait<BGMODE4P2,0x04> , public PaletteImp<ColorTrait<BGMODE4P2,0x04>>
+struct Color4p2 : public ColorTrait<BGMODE4P2,0x04> , public PaletteImp<ColorTrait<BGMODE4P2,0x04>>, public Show_p2_Imp<ColorTrait<BGMODE4P2,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4P2,0x04>::bgmode;
 };
 
-struct Color4x16p2 : public ColorTrait<BGMODE4X16P2,0x04> , public PaletteImp<ColorTrait<BGMODE4X16P2,0x04>>
+struct Color4x16p2 : public ColorTrait<BGMODE4X16P2,0x04> , public PaletteImp<ColorTrait<BGMODE4X16P2,0x04>>, public Show_p2_Imp<ColorTrait<BGMODE4X16P2,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4X16P2,0x04>::bgmode;
 };
 
-struct Color4x32p2 : public ColorTrait<BGMODE4X32P2,0x04> , public PaletteImp<ColorTrait<BGMODE4X32P2,0x04>>
+struct Color4x32p2 : public ColorTrait<BGMODE4X32P2,0x04> , public PaletteImp<ColorTrait<BGMODE4X32P2,0x04>>, public Show_p2_Imp<ColorTrait<BGMODE4X32P2,0x04>>
 {
 	using bgmode = typename ColorTrait<BGMODE4X32P2,0x04>::bgmode;
 };
