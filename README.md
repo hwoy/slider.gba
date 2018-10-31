@@ -9,6 +9,48 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 - It has been written in optimized modern ISO C++14(C++11 syntax and C++14 STL supports video memory iterator in Grange Struct) abstraction except core game logic originally written in C.
 - No special library(libheart) ,except libc for memcpy function(if in use), libgcc for basic software math function(div and mod).
 - Work great on [mGBA](https://mgba.io/downloads.html), [higan](https://download.byuu.org/higan_v106-windows.7z), [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
+
+# Features
+- Modern C++ style library in [Graphic.hpp](https://github.com/hwoy/slider.gba/blob/master/Graphic.hpp) and [Keypad.hpp](https://github.com/hwoy/slider.gba/blob/master/Keypad.hpp)
+- Provides Iterator in Grange struct
+- Higher level abstraction than C
+- [Graphic.hpp](https://github.com/hwoy/slider.gba/blob/master/Graphic.hpp) supports Graphic mode 3,4,5
+
+```C++
+
+#include "Graphic.hpp"
+#include "Keypad.hpp"
+
+int main()
+{
+	GraphicDevice::refdispcnt() = 0x400 | Color5::mode;
+
+	Graphicx<Color5p1> g1;
+	Graphicx<Color5p2> g2;
+
+	for(auto &r:g1.grange(10,10,50,50))
+		r=RGB15(31,0,0);
+
+	for(auto &r:g2.grange(10,10,50,50))
+		r=RGB15(0,31,0);
+	
+	Keypad<KeypadDevice> keypad;
+
+	while(true)
+	{
+		auto e = keypad.message().first;
+
+		if(e==e.EVENT_DOWN)
+		{
+			g1.waitVSync();
+			g1.flip();
+		}
+	}
+
+	return 0;
+}
+
+```
  
 ### Keypad
 
@@ -32,7 +74,7 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 ### Tools for slider.gba
 
 - **Toolchain:** [bleeding-edge-toolchain for ARM-eabi](http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain)
-- **GameBoy Advance emulator:** [higan](https://mprd.se/media/emulators/files/higan_v106-windows.7z)
+- **GameBoy Advance emulator:** [mGBA](https://mgba.io/downloads.html)
 - **Builder:** [GNU make for Windows](http://ftp.gnu.org/gnu/make/?C=M;O=D) can be compiled from source by [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/) (mingw-w64 bundles GNU make)
 - **Native Compiler:** Native C compiler ([mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/)) for compiling [gbafix2](https://github.com/hwoy/gbafix2) (ROM GameBoy Advance Head Builder & Fixer)
 - **gbafix2:** [gbafix2](https://github.com/hwoy/gbafix2) for ROM header
