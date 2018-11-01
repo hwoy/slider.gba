@@ -10,7 +10,7 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 - No special library(libheart) ,except libc for memcpy function(if in use), libgcc for basic software math function(div and mod).
 - Work great on [mGBA](https://mgba.io/downloads.html), [higan](https://download.byuu.org/higan_v106-windows.7z), [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
 
-# Features
+### Features
 - Modern C++ style library in [Graphic.hpp](https://github.com/hwoy/slider.gba/blob/master/Graphic.hpp) and [Keypad.hpp](https://github.com/hwoy/slider.gba/blob/master/Keypad.hpp)
 - Provides Iterator in Grange struct
 - Higher level abstraction than C
