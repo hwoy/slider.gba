@@ -102,7 +102,38 @@ struct Keypad
 
     typename Key::KEY lastkey;
 
-    inline constexpr Keypad():lastkey(Key::KEY_ALL){ }
+    inline constexpr Keypad():lastkey(Key::KEY_ALL)
+    {}
+
+    inline static constexpr typename Key::KEY tokey(const typename Key::KEY key)
+    {
+        return static_cast<typename Key::KEY>(~((key|~Key::KEY_ALL)&-1));
+    }
+
+    template <class DOWN,class HOLD,class UP,class NONE>
+    int dispatch(DOWN keydownfunc,HOLD keyholdfunc,UP keyupfunc,NONE keynonefunc)
+    {
+        volatile const auto press=static_cast<typename Key::KEY>(KD::refkp());
+
+        if((press & Key::KEY_ALL) != Key::KEY_ALL)
+        {
+            if(lastkey != press)
+                return keydownfunc(tokey(lastkey=press));
+            else
+                return keyholdfunc(tokey(lastkey));
+        }
+
+        else if(lastkey!=Key::KEY_ALL)
+        {
+            auto const key = lastkey;
+            lastkey=Key::KEY_ALL;
+
+            return keyupfunc(tokey(key));
+        }
+
+        return keynonefunc(tokey(Key::KEY_ALL));
+    }     
+    
 
     const std::pair<Keyevent,Key> message(void)
     {

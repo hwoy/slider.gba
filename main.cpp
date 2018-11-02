@@ -138,25 +138,15 @@ int main()
 
     Keypad<KeypadDevice> keypad;
 
-    while(true)
-    {
-        u32arm_t kid=-1U;
+    u32arm_t indexfrom=0,indexto=0;
 
-        struct point p;
-
-        u32arm_t indexfrom=0,indexto;
-
-        getxy(indexto = getindex(sq, index, WxH), &p, WxH);
-
-        const auto msg = keypad.message();
-
-        const auto event = msg.first;
-
-        const auto key = msg.second;
-
-        switch(event.event)
+    auto keydownfunc=
+        [&](const Keypad<KeypadDevice>::Key &key)mutable ->int
         {
-            case event.EVENT_DOWN:
+            struct point p;
+            u32arm_t kid=-1U;
+
+            getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
                 switch(key.key)
                 {
@@ -213,62 +203,73 @@ int main()
 
                     case key.KEY_SELECT:
                         kid=cmd_right+4;
-                        seed=origseed;
                         break; 
 
                     default: break;       
 
                 }
-                break;
 
-            case event.EVENT_HOLD:
-                break;
+            return kid;
+        };
 
-            case event.EVENT_UP:
-                if(key == key.KEY_SELECT)
-                    kid=cmd_right+5;
-                break;
-
-            default: break;
-        }
-
-        g.waitVSync();
-  
-        switch(kid)
+        auto keyupfunc = 
+        [](const Keypad<KeypadDevice>::Key &key)->int 
         {
-            case cmd_up:
-            case cmd_down:
-            case cmd_left:
-            case cmd_right:
-                    if(slide(sq, kid, index, WxH)!=-1UL)
-                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
-                    break;
-                        
-            case cmd_right+1:
-            case cmd_right+2:
-            case cmd_right+3:
-                    initgame(sq, &seed, index, WxH);
-                    drawboard(g,square,comsquare,sq,sqlist,index);
-                    break;
+            if(key == key.KEY_SELECT)
+                return cmd_right+5;
 
-            case cmd_right+4:
-                    {
-                        u32arm_t sq[WxH * WxH];
-                        initsq(sq, WxH);
+            return -1U;
+        };
+
+        auto keyfunc = 
+        [](const Keypad<KeypadDevice>::Key &)->int 
+        {
+            return -1U;
+        };
+
+        u32arm_t kid;
+
+        while((kid=keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc)) != -2U)
+        {
+
+            g.waitVSync();
+    
+            switch(kid)
+            {
+                case cmd_up:
+                case cmd_down:
+                case cmd_left:
+                case cmd_right:
+                        if(slide(sq, kid, index, WxH)!=-1UL)
+                            movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
+                        break;
+                            
+                case cmd_right+1:
+                case cmd_right+2:
+                case cmd_right+3:
+                        initgame(sq, &seed, index, WxH);
                         drawboard(g,square,comsquare,sq,sqlist,index);
+                        break;
 
-                    }
-                    break;
+                case cmd_right+4:
+                        {
+                            u32arm_t sq[WxH * WxH];
+                            initsq(sq, WxH);
+                            drawboard(g,square,comsquare,sq,sqlist,index);
 
-            case cmd_right+5:
-                    drawboard(g,square,comsquare,sq,sqlist,index);
-                    break;
+                        }
+                        break;
 
-            default: break;
+                case cmd_right+5:
+                        drawboard(g,square,comsquare,sq,sqlist,index);
+                        break;
+
+                default: break;
+
+            }
 
         }
         
-    }
 
 	return 0;
 }
