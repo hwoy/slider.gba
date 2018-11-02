@@ -15,6 +15,7 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 - Provides Iterator in Grange struct
 - Higher level abstraction than C
 - [Graphic.hpp](https://github.com/hwoy/slider.gba/blob/master/Graphic.hpp) supports Graphic mode 3,4,5
+- [Keypad.hpp](https://github.com/hwoy/slider.gba/blob/master/Keypad.hpp) supports dual style keypad action method message() and dispatch()
 
 ```C++
 
