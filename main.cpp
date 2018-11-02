@@ -132,11 +132,9 @@ int main()
 
     constexpr const Graphicx<Color> g;
 
-	g.bgcolor(BGCOLOR);
+    g.bgcolor(BGCOLOR);
 
     drawboard(g,square,comsquare,sq,sqlist,index);
-
-    Keypad<KeypadDevice> keypad;
 
     u32arm_t indexfrom=0,indexto=0;
 
@@ -226,6 +224,8 @@ int main()
         {
             return -1U;
         };
+
+        Keypad<KeypadDevice> keypad;
 
         u32arm_t kid;
 
