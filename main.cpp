@@ -1,3 +1,5 @@
+#include <tuple>
+
 #include "slider.h"
 
 #include "arm7type.h"
@@ -71,12 +73,6 @@ static constexpr const Color_t BGCOLOR = RGB15(0,0,0);
 
 //********************** Game function ***********************//
 
-static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index, u32arm_t hw)
-{
-    initsq(sq, hw);
-    randomsq(sq, index, hw, seed);
-}
-
 
 template <class FONT,class COLORMODE,usize_t N,usize_t M>
 static void drawboard(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> &square,const Square<FONT,COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
@@ -113,36 +109,43 @@ static void movesquare(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE>
 
 }
 
-extern "C"
-int main()
+template <u32arm_t N>
+struct SlidingPuzzle
 {
-    static constexpr const Square<Font,Color> square{WIDTH,BOXCOLOR,NUMCOLOR};
-    static constexpr const Square<Font,Color> comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
+    static constexpr const u32arm_t WxH=N;
+    static constexpr const u32arm_t index=WxH*WxH-1;
 
-    u32arm_t sq[WxH * WxH];
-    
+    static void initgame(u32arm_t* const sq, u32arm_t* seed, u32arm_t index)
+    {
+        initsq(sq, WxH);
+        randomsq(sq, index, WxH, seed);
+    }
+
     u32arm_t seed, origseed;
-    origseed = seed = INITSEED;
 
-    constexpr const u32arm_t index = slen(sqlist)-1-1;
+    protected: u32arm_t indexfrom,indexto;
 
-    initgame(sq, &seed, index, WxH);
+    public:
+    u32arm_t sq[WxH * WxH];
 
-    GraphicDevice::refdispcnt()=regcontrol;
+    inline SlidingPuzzle(u32arm_t seed):seed(seed),origseed(seed),indexfrom(0),indexto(0)
+    {
+        initgame(sq,&seed,index);
+    }
 
-    constexpr const Graphicx<Color> g;
+    inline u32arm_t slide(u32arm_t kid)
+    {
+        return ::slide(sq ,kid, index, WxH);
+    }
 
-    g.bgcolor(BGCOLOR);
-
-    drawboard(g,square,comsquare,sq,sqlist,index);
-
-    u32arm_t indexfrom=0,indexto=0;
-
-    auto keydownfunc = [&indexfrom,&indexto,&seed,&origseed,&sq]
-        (const Keypad<KeypadDevice>::Key &key)mutable ->int
+    template <typename KeypadDevice>
+    inline const std::tuple<u32arm_t,u32arm_t,u32arm_t> keypadaction(Keypad<KeypadDevice> &keypad)
+    {
+        auto keydownfunc = [&seed=seed,&origseed=origseed,&indexfrom=indexfrom,&indexto=indexto,&sq=sq]
+        (const typename Keypad<KeypadDevice>::Key &key) mutable ->i32arm_t 
         {
-            struct point p;
             u32arm_t kid=-1U;
+            struct point p;
 
             getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
@@ -161,7 +164,7 @@ int main()
                         if(p.y < WxH - 1)
                         {
                             indexfrom=indexto + WxH;
-                                    
+                                        
                             kid=cmd_down;
                         }
                         break;
@@ -205,70 +208,96 @@ int main()
 
                     default: break;       
 
-                }
+                    }
 
             return kid;
+
         };
 
-        auto keyupfunc = []
-        (const Keypad<KeypadDevice>::Key &key)->int 
+
+        auto keyupfunc = [](const typename Keypad<KeypadDevice>::Key &key) -> i32arm_t
         {
-            if(key == key.KEY_SELECT)
-                return cmd_right+5;
-
-            return -1U;
+            return (key == key.KEY_SELECT)? cmd_right+5:-1U;
         };
 
-        auto keyfunc = []
-        (const Keypad<KeypadDevice>::Key &)->int 
+
+        auto keyfunc = [](const typename Keypad<KeypadDevice>::Key &) -> i32arm_t
         {
             return -1U;
         };
 
-        Keypad<KeypadDevice> keypad;
+        return std::tuple<u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc),indexfrom,indexto);
 
-        u32arm_t kid;
+    }
 
-        while((kid=keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc)) != -2U)
-        {
+};
 
-            g.waitVSync();
+extern "C"
+int main()
+{
+    static constexpr const Square<Font,Color> square{WIDTH,BOXCOLOR,NUMCOLOR};
+    static constexpr const Square<Font,Color> comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
+
+    SlidingPuzzle<WxH> game(INITSEED);
+
+    GraphicDevice::refdispcnt()=regcontrol;
+
+    constexpr const Graphicx<Color> g;
+
+    g.bgcolor(BGCOLOR);
+
+    drawboard(g,square,comsquare,game.sq,sqlist,game.index);
+
+    Keypad<KeypadDevice> keypad;
+
+    u32arm_t kid;
+
+    do
+    {
+        const auto tp=game.keypadaction(keypad);
+        kid                  = std::get<0>(tp);
+        const auto indexfrom = std::get<1>(tp);
+        const auto indexto   = std::get<2>(tp);
+
+        constexpr const auto index = game.index;
+
+        g.waitVSync();
     
-            switch(kid)
-            {
-                case cmd_up:
-                case cmd_down:
-                case cmd_left:
-                case cmd_right:
-                        if(slide(sq, kid, index, WxH)!=-1UL)
-                            movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
-                        break;
-                            
-                case cmd_right+1:
-                case cmd_right+2:
-                case cmd_right+3:
-                        initgame(sq, &seed, index, WxH);
+        switch(kid)
+        {
+            case cmd_up:
+            case cmd_down:
+            case cmd_left:
+            case cmd_right:
+                    if(game.slide(kid)!=-1UL)
+                        movesquare(g,square,comsquare,game.sq,sqlist,indexfrom,indexto);
+                    break;
+
+            case cmd_right+1:
+            case cmd_right+2:
+            case cmd_right+3:
+                    game.initgame(game.sq,&game.seed,index);
+                    drawboard(g,square,comsquare,game.sq,sqlist,index);
+                    break;
+
+            case cmd_right+4:
+                    {
+                        u32arm_t sq[WxH * WxH];
+                        initsq(sq, WxH);
                         drawboard(g,square,comsquare,sq,sqlist,index);
-                        break;
 
-                case cmd_right+4:
-                        {
-                            u32arm_t sq[WxH * WxH];
-                            initsq(sq, WxH);
-                            drawboard(g,square,comsquare,sq,sqlist,index);
+                    }
+                    break;
 
-                        }
-                        break;
+            case cmd_right+5:
+                    drawboard(g,square,comsquare,game.sq,sqlist,index);
+                    break;
 
-                case cmd_right+5:
-                        drawboard(g,square,comsquare,sq,sqlist,index);
-                        break;
-
-                default: break;
-
-            }
+            default: break;
 
         }
+
+    }while(kid!=-2U);
         
 
 	return 0;
