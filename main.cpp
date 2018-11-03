@@ -139,7 +139,7 @@ int main()
     u32arm_t indexfrom=0,indexto=0;
 
     auto keydownfunc=
-        [&](const Keypad<KeypadDevice>::Key &key)mutable ->int
+        [&indexfrom,&indexto,&seed,&origseed,&sq](const Keypad<KeypadDevice>::Key &key)mutable ->int
         {
             struct point p;
             u32arm_t kid=-1U;
