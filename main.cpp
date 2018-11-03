@@ -249,9 +249,8 @@ int main()
 
     u32arm_t kid;
 
-    do
+    while((kid = keypadaction(game,keypad)) != -2U)
     {
-        kid = keypadaction(game,keypad);
 
         const auto indexfrom = game.indexfrom;
         const auto indexto   = game.indexto;
@@ -293,7 +292,7 @@ int main()
 
         }
 
-    }while(kid!=-2U);
+    }
         
 
 	return 0;
