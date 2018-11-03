@@ -138,8 +138,8 @@ int main()
 
     u32arm_t indexfrom=0,indexto=0;
 
-    auto keydownfunc=
-        [&indexfrom,&indexto,&seed,&origseed,&sq](const Keypad<KeypadDevice>::Key &key)mutable ->int
+    auto keydownfunc = [&indexfrom,&indexto,&seed,&origseed,&sq]
+        (const Keypad<KeypadDevice>::Key &key)mutable ->int
         {
             struct point p;
             u32arm_t kid=-1U;
@@ -210,8 +210,8 @@ int main()
             return kid;
         };
 
-        auto keyupfunc = 
-        [](const Keypad<KeypadDevice>::Key &key)->int 
+        auto keyupfunc = []
+        (const Keypad<KeypadDevice>::Key &key)->int 
         {
             if(key == key.KEY_SELECT)
                 return cmd_right+5;
@@ -219,8 +219,8 @@ int main()
             return -1U;
         };
 
-        auto keyfunc = 
-        [](const Keypad<KeypadDevice>::Key &)->int 
+        auto keyfunc = []
+        (const Keypad<KeypadDevice>::Key &)->int 
         {
             return -1U;
         };
