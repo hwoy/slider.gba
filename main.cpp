@@ -1,5 +1,3 @@
-#include <tuple>
-
 #include "slider.h"
 
 #include "arm7type.h"
@@ -123,9 +121,8 @@ struct SlidingPuzzle
 
     u32arm_t seed, origseed;
 
-    protected: u32arm_t indexfrom,indexto;
+    u32arm_t indexfrom,indexto;
 
-    public:
     u32arm_t sq[WxH * WxH];
 
     inline SlidingPuzzle(u32arm_t seed):seed(seed),origseed(seed),indexfrom(0),indexto(0)
@@ -138,77 +135,79 @@ struct SlidingPuzzle
         return ::slide(sq ,kid, index, WxH);
     }
 
-    template <typename KeypadDevice>
-    inline const std::tuple<u32arm_t,u32arm_t,u32arm_t> keypadaction(Keypad<KeypadDevice> &keypad)
+};
+
+template <u32arm_t N,typename KeypadDevice>
+static u32arm_t keypadaction(SlidingPuzzle<N> &game,Keypad<KeypadDevice> &keypad)
+{
+    auto keydownfunc = [&seed=game.seed,&origseed=game.origseed,&indexfrom=game.indexfrom,&indexto=game.indexto,&sq=game.sq,index=game.index,WxH=game.WxH]
+    (const typename Keypad<KeypadDevice>::Key &key) mutable ->i32arm_t 
     {
-        auto keydownfunc = [&seed=seed,&origseed=origseed,&indexfrom=indexfrom,&indexto=indexto,&sq=sq]
-        (const typename Keypad<KeypadDevice>::Key &key) mutable ->i32arm_t 
-        {
-            u32arm_t kid=-1U;
-            struct point p;
+        u32arm_t kid=-1U;
+        struct point p;
 
-            getxy(indexto = getindex(sq, index, WxH), &p, WxH);
+        getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
-                switch(key.key)
-                {
-                    case key.KEY_UP:
-                        if (p.y > 0)
-                        {
-                            indexfrom=indexto - WxH;
+            switch(key.key)
+            {
+                case key.KEY_UP:
+                    if (p.y > 0)
+                    {
+                        indexfrom=indexto - WxH;
 
-                            kid=cmd_up;
-                        }
-                        break;
-
-                    case key.KEY_DOWN:
-                        if(p.y < WxH - 1)
-                        {
-                            indexfrom=indexto + WxH;
-                                        
-                            kid=cmd_down;
-                        }
-                        break;
-
-                    case key.KEY_LEFT:
-                        if(p.x > 0)
-                        {
-                            indexfrom=indexto - 1;
-
-                            kid=cmd_left;
-                        }
-                        break;
-
-                    case key.KEY_RIGHT:
-                        if(p.x < WxH - 1)
-                        {
-                            indexfrom=indexto + 1;
-
-                            kid=cmd_right;
-                        }
-                        break;
-
-                    case key.KEY_A:
-                        kid=cmd_right+1;
-                        seed=--origseed;
-                        break;
-
-                    case key.KEY_B:
-                        kid=cmd_right+2;
-                        seed=++origseed;
-                        break;
-
-                    case key.KEY_START:
-                        kid=cmd_right+3;
-                        seed=origseed;
-                        break;
-
-                    case key.KEY_SELECT:
-                        kid=cmd_right+4;
-                        break; 
-
-                    default: break;       
-
+                        kid=cmd_up;
                     }
+                    break;
+
+                case key.KEY_DOWN:
+                    if(p.y < WxH - 1)
+                    {
+                        indexfrom=indexto + WxH;
+                                        
+                        kid=cmd_down;
+                    }
+                    break;
+
+                case key.KEY_LEFT:
+                    if(p.x > 0)
+                    {
+                        indexfrom=indexto - 1;
+
+                        kid=cmd_left;
+                    }
+                    break;
+
+                case key.KEY_RIGHT:
+                    if(p.x < WxH - 1)
+                    {
+                        indexfrom=indexto + 1;
+
+                        kid=cmd_right;
+                    }
+                    break;
+
+                case key.KEY_A:
+                    kid=cmd_right+1;
+                    seed=--origseed;
+                    break;
+
+                case key.KEY_B:
+                    kid=cmd_right+2;
+                    seed=++origseed;
+                    break;
+
+                case key.KEY_START:
+                    kid=cmd_right+3;
+                    seed=origseed;
+                    break;
+
+                case key.KEY_SELECT:
+                    kid=cmd_right+4;
+                    break; 
+
+                default: break;       
+
+                }
 
             return kid;
 
@@ -226,11 +225,9 @@ struct SlidingPuzzle
             return -1U;
         };
 
-        return std::tuple<u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc),indexfrom,indexto);
+        return keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc);
 
-    }
-
-};
+}
 
 extern "C"
 int main()
@@ -254,11 +251,10 @@ int main()
 
     do
     {
-        const auto tp=game.keypadaction(keypad);
-        kid                  = std::get<0>(tp);
-        const auto indexfrom = std::get<1>(tp);
-        const auto indexto   = std::get<2>(tp);
+        kid = keypadaction(game,keypad);
 
+        const auto indexfrom = game.indexfrom;
+        const auto indexto   = game.indexto;
         constexpr const auto index = game.index;
 
         g.waitVSync();
