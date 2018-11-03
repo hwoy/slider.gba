@@ -255,6 +255,7 @@ int main()
         const auto indexfrom = game.indexfrom;
         const auto indexto   = game.indexto;
         constexpr const auto index = game.index;
+        auto &sq = game.sq;
 
         g.waitVSync();
     
@@ -265,14 +266,14 @@ int main()
             case cmd_left:
             case cmd_right:
                     if(game.slide(kid)!=-1UL)
-                        movesquare(g,square,comsquare,game.sq,sqlist,indexfrom,indexto);
+                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
                     break;
 
             case cmd_right+1:
             case cmd_right+2:
             case cmd_right+3:
-                    game.initgame(game.sq,&game.seed,index);
-                    drawboard(g,square,comsquare,game.sq,sqlist,index);
+                    game.initgame(sq,&game.seed,index);
+                    drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
 
             case cmd_right+4:
@@ -285,7 +286,7 @@ int main()
                     break;
 
             case cmd_right+5:
-                    drawboard(g,square,comsquare,game.sq,sqlist,index);
+                    drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
 
             default: break;
