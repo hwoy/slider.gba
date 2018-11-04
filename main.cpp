@@ -75,6 +75,7 @@ static constexpr const Color_t BGCOLOR = RGB15(0,0,0);
 template <class FONT,class COLORMODE,usize_t N,usize_t M>
 static void drawboard(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> &square,const Square<FONT,COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t index)
 {
+    static constexpr const u32arm_t WxH=::square(sq);
 
     for(usize_t i=0,rgap=FRGAP,k=0;i<WxH;++i,rgap+=(RGAP+square.width))
 		for(usize_t j=0,cgap=FCGAP;j<WxH;++j,cgap+=(CGAP+square.width),++k)
@@ -87,6 +88,7 @@ static void drawboard(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> 
 template <class FONT,class COLORMODE,usize_t N,usize_t M>
 static void movesquare(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> &square,const Square<FONT,COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t from,u32arm_t to)
 {
+    static constexpr const u32arm_t WxH=::square(sq);
 
     const u32arm_t jfrom=from%WxH;
     const u32arm_t ifrom=from/WxH;
