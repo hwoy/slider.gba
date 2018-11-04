@@ -255,7 +255,8 @@ int main()
         const auto indexfrom = game.indexfrom;
         const auto indexto   = game.indexto;
         constexpr const auto index = game.index;
-        auto &sq = game.sq;
+        auto &sq  = game.sq;
+        auto seed = &game.seed;
 
         g.waitVSync();
     
@@ -272,7 +273,7 @@ int main()
             case cmd_right+1:
             case cmd_right+2:
             case cmd_right+3:
-                    game.initgame(sq,&game.seed,index);
+                    game.initgame(sq,seed,index);
                     drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
 
