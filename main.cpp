@@ -144,9 +144,9 @@ template <u32arm_t N,typename KeypadDevice>
 static std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t> keypadaction(const SlidingPuzzle<N> &game,Keypad<KeypadDevice> &keypad)
 {
     u32arm_t indexfrom=0,indexto=0;
-    auto seed = game.seed;
+    auto newseed = game.seed;
 
-    auto keydownfunc = [&indexfrom,&indexto,&seed,origseed=game.origseed,sq=game.sq,index=game.index,WxH=game.WxH]
+    auto keydownfunc = [&indexfrom,&indexto,&newseed,origseed=game.origseed,sq=game.sq,index=game.index,WxH=game.WxH]
     (const typename Keypad<KeypadDevice>::Key &key) mutable ->i32arm_t 
     {
         u32arm_t kid=-1U;
@@ -194,17 +194,17 @@ static std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t> keypadaction(const Slidin
 
             case key.KEY_A:
                 kid=cmd_right+1;
-                seed=origseed-1;
+                newseed=origseed-1;
                 break;
 
             case key.KEY_B:
                 kid=cmd_right+2;
-                seed=origseed+1;
+                newseed=origseed+1;
                 break;
 
             case key.KEY_START:
                 kid=cmd_right+3;
-                seed=origseed;
+                newseed=origseed;
                 break;
 
             case key.KEY_SELECT:
@@ -231,7 +231,7 @@ static std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t> keypadaction(const Slidin
             return -1U;
         };
 
-        return std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc),indexfrom,indexto,seed);
+        return std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc),indexfrom,indexto,newseed);
 
 }
 
@@ -248,9 +248,7 @@ int main()
     GraphicDevice::refdispcnt()=regcontrol;
 
     constexpr const Graphicx<Color> g;
-
     g.bgcolor(BGCOLOR);
-
     drawboard(g,square,comsquare,sq,sqlist,index);
 
     Keypad<KeypadDevice> keypad;
