@@ -70,7 +70,7 @@ int main()
 
 	while(true)
 	{
-		auto e = keypad.message().first;
+		const auto e = keypad.message().first;
 
 		if(e==e.EVENT_DOWN)
 		{
