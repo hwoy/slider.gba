@@ -106,13 +106,34 @@ int main()
 ### Tools for slider.gba
 
 - **Toolchain:** [bleeding-edge-toolchain for ARM-eabi](http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain)
+- **Shell:** **cmd.exe** and **bash** in git for Windows
 - **GameBoy Advance emulator:** [mGBA](https://mgba.io/downloads.html)
 - **Builder:** [GNU make for Windows](http://ftp.gnu.org/gnu/make/?C=M;O=D) can be compiled from source by [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/) (mingw-w64 bundles GNU make)
 - **Native Compiler:** Native C compiler ([mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/)) for compiling [gbafix2](https://github.com/hwoy/gbafix2) (ROM GameBoy Advance Head Builder & Fixer)
 - **gbafix2:** [gbafix2](https://github.com/hwoy/gbafix2) for ROM header
+
+
 ### How to make
 
+- Host:**X86-64-Windows**, Target:**ARM7TDMI-GBA**
+
 - Setting up environment such as set up **PATH** and config **Makefile**
+
+```
+@echo off
+
+SET TOOLCHAIN=C:\arm-none-eabi-gcc-8.2.0-180726
+
+SET GIT=C:\Git
+
+SET NATIVECOMPILER=C:\mingw64-toolchain
+
+set PATH=%TOOLCHAIN%\bin;%GIT%\bin;%GIT%\usr\bin;%NATIVECOMPILER%\bin;%PATH%
+
+cmd.exe /K title GCC-arm-eabi
+
+```
+
 - Let's make it!!!!
 
 ```sh
