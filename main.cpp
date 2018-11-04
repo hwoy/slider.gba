@@ -148,66 +148,66 @@ static u32arm_t keypadaction(SlidingPuzzle<N> &game,Keypad<KeypadDevice> &keypad
 
         getxy(indexto = getindex(sq, index, WxH), &p, WxH);
 
-            switch(key.key)
-            {
-                case key.KEY_UP:
-                    if (p.y > 0)
-                    {
-                        indexfrom=indexto - WxH;
+        switch(key.key)
+        {
+            case key.KEY_UP:
+                if (p.y > 0)
+                {
+                    indexfrom=indexto - WxH;
 
-                        kid=cmd_up;
-                    }
-                    break;
-
-                case key.KEY_DOWN:
-                    if(p.y < WxH - 1)
-                    {
-                        indexfrom=indexto + WxH;
-                                        
-                        kid=cmd_down;
-                    }
-                    break;
-
-                case key.KEY_LEFT:
-                    if(p.x > 0)
-                    {
-                        indexfrom=indexto - 1;
-
-                        kid=cmd_left;
-                    }
-                    break;
-
-                case key.KEY_RIGHT:
-                    if(p.x < WxH - 1)
-                    {
-                        indexfrom=indexto + 1;
-
-                        kid=cmd_right;
-                    }
-                    break;
-
-                case key.KEY_A:
-                    kid=cmd_right+1;
-                    seed=--origseed;
-                    break;
-
-                case key.KEY_B:
-                    kid=cmd_right+2;
-                    seed=++origseed;
-                    break;
-
-                case key.KEY_START:
-                    kid=cmd_right+3;
-                    seed=origseed;
-                    break;
-
-                case key.KEY_SELECT:
-                    kid=cmd_right+4;
-                    break; 
-
-                default: break;       
-
+                    kid=cmd_up;
                 }
+                break;
+
+            case key.KEY_DOWN:
+                if(p.y < WxH - 1)
+                {
+                    indexfrom=indexto + WxH;
+                                    
+                    kid=cmd_down;
+                }
+                break;
+
+            case key.KEY_LEFT:
+                if(p.x > 0)
+                {
+                    indexfrom=indexto - 1;
+
+                    kid=cmd_left;
+                }
+                break;
+
+            case key.KEY_RIGHT:
+                if(p.x < WxH - 1)
+                {
+                    indexfrom=indexto + 1;
+
+                    kid=cmd_right;
+                }
+                break;
+
+            case key.KEY_A:
+                kid=cmd_right+1;
+                seed=--origseed;
+                break;
+
+            case key.KEY_B:
+                kid=cmd_right+2;
+                seed=++origseed;
+                break;
+
+            case key.KEY_START:
+                kid=cmd_right+3;
+                seed=origseed;
+                break;
+
+            case key.KEY_SELECT:
+                kid=cmd_right+4;
+                break; 
+
+            default: break;       
+
+            }
 
             return kid;
 
