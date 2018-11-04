@@ -242,6 +242,8 @@ int main()
     static constexpr const Square<Font,Color> comsquare{WIDTH,COMBOXCOLOR,COMNUMCOLOR}; 
 
     SlidingPuzzle<WxH> game(INITSEED);
+    const auto &sq       = game.sq;
+    constexpr const auto index = game.index;
 
     GraphicDevice::refdispcnt()=regcontrol;
 
@@ -249,7 +251,7 @@ int main()
 
     g.bgcolor(BGCOLOR);
 
-    drawboard(g,square,comsquare,game.sq,sqlist,game.index);
+    drawboard(g,square,comsquare,sq,sqlist,index);
 
     Keypad<KeypadDevice> keypad;
 
@@ -260,8 +262,6 @@ int main()
         const auto indexfrom = std::get<1>(tp);
         const auto indexto   = std::get<2>(tp);
         const auto newseed   = std::get<3>(tp);
-        const auto &sq       = game.sq;
-        constexpr const auto index = game.index;
 
         g.waitVSync();
     
