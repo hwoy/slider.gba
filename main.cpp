@@ -1,3 +1,5 @@
+#include <tuple>
+
 #include "slider.h"
 
 #include "arm7type.h"
@@ -117,14 +119,19 @@ struct SlidingPuzzle
 
     u32arm_t seed, origseed;
 
-    u32arm_t indexfrom,indexto;
-
     u32arm_t sq[WxH * WxH];
 
-    inline SlidingPuzzle(u32arm_t seed):seed(seed),origseed(seed),indexfrom(0),indexto(0)
+    inline SlidingPuzzle(u32arm_t seed):seed(seed),origseed(seed)
     {
         initgame(sq,&seed,index);
     }
+
+    void initgame(u32arm_t seed)
+    {
+        origseed = seed;
+        this->seed = seed;
+        initgame(sq,&this->seed,index);
+    } 
 
     inline u32arm_t slide(u32arm_t kid)
     {
@@ -134,9 +141,12 @@ struct SlidingPuzzle
 };
 
 template <u32arm_t N,typename KeypadDevice>
-static u32arm_t keypadaction(SlidingPuzzle<N> &game,Keypad<KeypadDevice> &keypad)
+static std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t> keypadaction(const SlidingPuzzle<N> &game,Keypad<KeypadDevice> &keypad)
 {
-    auto keydownfunc = [&seed=game.seed,&origseed=game.origseed,&indexfrom=game.indexfrom,&indexto=game.indexto,&sq=game.sq,index=game.index,WxH=game.WxH]
+    u32arm_t indexfrom=0,indexto=0;
+    auto seed = game.seed;
+
+    auto keydownfunc = [&indexfrom,&indexto,&seed,origseed=game.origseed,sq=game.sq,index=game.index,WxH=game.WxH]
     (const typename Keypad<KeypadDevice>::Key &key) mutable ->i32arm_t 
     {
         u32arm_t kid=-1U;
@@ -184,12 +194,12 @@ static u32arm_t keypadaction(SlidingPuzzle<N> &game,Keypad<KeypadDevice> &keypad
 
             case key.KEY_A:
                 kid=cmd_right+1;
-                seed=--origseed;
+                seed=origseed-1;
                 break;
 
             case key.KEY_B:
                 kid=cmd_right+2;
-                seed=++origseed;
+                seed=origseed+1;
                 break;
 
             case key.KEY_START:
@@ -221,7 +231,7 @@ static u32arm_t keypadaction(SlidingPuzzle<N> &game,Keypad<KeypadDevice> &keypad
             return -1U;
         };
 
-        return keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc);
+        return std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc),indexfrom,indexto,seed);
 
 }
 
@@ -243,16 +253,15 @@ int main()
 
     Keypad<KeypadDevice> keypad;
 
-    u32arm_t kid;
-
-    while((kid = keypadaction(game,keypad)) != -2U)
+    while(true)
     {
-
-        const auto indexfrom = game.indexfrom;
-        const auto indexto   = game.indexto;
+        const auto tp        = keypadaction(game,keypad);
+        const auto kid       = std::get<0>(tp);
+        const auto indexfrom = std::get<1>(tp);
+        const auto indexto   = std::get<2>(tp);
+        const auto newseed   = std::get<3>(tp);
+        const auto &sq       = game.sq;
         constexpr const auto index = game.index;
-        auto &sq  = game.sq;
-        auto seed = &game.seed;
 
         g.waitVSync();
     
@@ -269,7 +278,7 @@ int main()
             case cmd_right+1:
             case cmd_right+2:
             case cmd_right+3:
-                    game.initgame(sq,seed,index);
+                    game.initgame(newseed);
                     drawboard(g,square,comsquare,sq,sqlist,index);
                     break;
 
