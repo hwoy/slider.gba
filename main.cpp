@@ -86,7 +86,7 @@ static void drawboard(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> 
 }
 
 template <class FONT,class COLORMODE,usize_t N,usize_t M>
-static void movesquare(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> &square,const Square<FONT,COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t from,u32arm_t to)
+static void slidesquare(const Graphicx<COLORMODE> &g,const Square<FONT,COLORMODE> &square,const Square<FONT,COLORMODE> &comsquare,const u32arm_t (&sq)[N],const u8arm_t (&sqlist)[M],u32arm_t from,u32arm_t to)
 {
     const u32arm_t jfrom=from%WxH;
     const u32arm_t ifrom=from/WxH;
@@ -270,7 +270,7 @@ int main()
             case cmd_left:
             case cmd_right:
                     if(game.slide(kid)!=-1UL)
-                        movesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
+                        slidesquare(g,square,comsquare,sq,sqlist,indexfrom,indexto);
                     break;
 
             case cmd_right+1:
