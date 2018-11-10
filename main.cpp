@@ -226,12 +226,7 @@ static std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t> keypadaction(const Slidin
         };
 
 
-        auto keyfunc = [](const typename Keypad<KeypadDevice>::Key &) -> i32arm_t
-        {
-            return -1U;
-        };
-
-        return std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keyfunc,keyupfunc,keyfunc),indexfrom,indexto,newseed);
+        return std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keypad.defaultkeyfunc(-1),keyupfunc,keypad.defaultkeyfunc(-1)),indexfrom,indexto,newseed);
 
 }
 

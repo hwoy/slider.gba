@@ -48,27 +48,27 @@ struct Keypad
 
         const KEY key;
 
-    inline constexpr Key(KEY key):key(key) {}
+        inline constexpr Key(KEY key):key(key) {}
 
-    inline constexpr bool operator == (KEY key) const
-    {
-        return this->key == key;
-    }
+        inline constexpr bool operator == (KEY key) const
+        {
+            return this->key == key;
+        }
 
-    inline constexpr bool operator != (KEY key) const
-    {
-        return !(*this == key);
-    }
+        inline constexpr bool operator != (KEY key) const
+        {
+            return !(*this == key);
+        }
 
-    inline constexpr bool operator == (const Key &key) const
-    {
-        return *this == key.key;
-    }
+        inline constexpr bool operator == (const Key &key) const
+        {
+            return *this == key.key;
+        }
 
-    inline constexpr bool operator != (const Key &key) const
-    {
-        return *this != key.key;
-    }
+        inline constexpr bool operator != (const Key &key) const
+        {
+            return *this != key.key;
+        }
 
     };
 
@@ -83,22 +83,26 @@ struct Keypad
             EVENT_INVALID
         };
 
-    const EVENT event;
+        const EVENT event;
 
-    inline constexpr Keyevent(EVENT event):event(event) {}
+        inline constexpr Keyevent(EVENT event):event(event) {}
 
-    inline constexpr bool operator == (EVENT e) const
-    {
-        return event == e;
-    }
+        inline constexpr bool operator == (EVENT e) const
+        {
+            return event == e;
+        }
 
-    inline constexpr bool operator != (EVENT e) const
-    {
-        return event != e;
-    }
+        inline constexpr bool operator != (EVENT e) const
+        {
+            return event != e;
+        }
 
     };
 
+    static constexpr auto defaultkeyfunc(i32arm_t ret)
+    {
+        return [ret](const Key &)->i32arm_t{return ret;};
+    }
 
     typename Key::KEY lastkey;
 
