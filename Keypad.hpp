@@ -99,7 +99,7 @@ struct Keypad
 
     };
 
-    static constexpr auto defaultkeyfunc(i32arm_t ret)
+    inline static constexpr auto defaultkeyfunc(i32arm_t ret)
     {
         return [ret](const Key &)->i32arm_t{return ret;};
     }
@@ -115,7 +115,7 @@ struct Keypad
     }
 
     template <class DOWN,class HOLD,class UP,class NONE>
-    int dispatch(DOWN keydownfunc,HOLD keyholdfunc,UP keyupfunc,NONE keynonefunc)
+    i32arm_t dispatch(DOWN keydownfunc,HOLD keyholdfunc,UP keyupfunc,NONE keynonefunc)
     {
         volatile const auto press=static_cast<typename Key::KEY>(KD::refkp());
 
