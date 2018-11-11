@@ -226,7 +226,7 @@ static std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t> keypadaction(const Slidin
         };
 
 
-        return std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keypad.defaultkeyfunc(-1),keyupfunc,keypad.defaultkeyfunc(-1)),indexfrom,indexto,newseed);
+        return std::tuple<u32arm_t,u32arm_t,u32arm_t,u32arm_t>(keypad.dispatch(keydownfunc,keypad.defaultkeyfunc(-1U),keyupfunc,keypad.defaultkeyfunc(-1U)),indexfrom,indexto,newseed);
 
 }
 
