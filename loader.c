@@ -4,7 +4,8 @@ void _start() __attribute__((section(".text.startup")));
 
 void _start()
 {
-	main();
-	
-	while(1);
+    main();
+
+    while (1)
+        ;
 }
