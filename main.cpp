@@ -248,9 +248,9 @@ extern "C" int main()
     Keypad<KeypadDevice> keypad;
 
     while (true) {
-		
-		const auto [kid,indexfrom,indexto,newseed] = keypadaction(game, keypad); //C++17
-		
+
+        const auto [kid, indexfrom, indexto, newseed] = keypadaction(game, keypad); // C++17
+
         g.waitVSync();
 
         switch (kid) {

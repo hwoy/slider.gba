@@ -112,7 +112,6 @@ u32arm_t randomsq(u32arm_t* const sq, u32arm_t index, u32arm_t hw, u32arm_t* see
 {
     u32arm_t i, d[4], j;
 
-
     for (i = 0; i < RANDLOOP; ++i) {
         j = extractcanmovesq(d, canmovesq(sq, index, hw));
         slide(sq, d[minstd_rand(seed) % j], index, hw);
@@ -131,4 +130,3 @@ u32arm_t gameid(const u32arm_t* const sq, u32arm_t hw)
 
     return gid_over;
 }
-
