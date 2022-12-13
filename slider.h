@@ -51,5 +51,4 @@ u32arm_t gameid(const u32arm_t* const sq, u32arm_t hw);
 }
 #endif
 
-
 #endif
