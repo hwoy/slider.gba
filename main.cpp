@@ -249,20 +249,8 @@ extern "C" int main()
 
     while (true) {
 		
-		#if __cplusplus == 201402L
+		const auto [kid,indexfrom,indexto,newseed] = keypadaction(game, keypad); //C++17
 		
-			const auto tp = keypadaction(game, keypad);
-			const auto kid = std::get<0>(tp);
-			const auto indexfrom = std::get<1>(tp);
-			const auto indexto = std::get<2>(tp);
-			const auto newseed = std::get<3>(tp);
-		
-		#elif __cplusplus >= 201703L
-		
-			const auto [kid,indexfrom,indexto,newseed] = keypadaction(game, keypad);
-		
-		#endif
-
         g.waitVSync();
 
         switch (kid) {
