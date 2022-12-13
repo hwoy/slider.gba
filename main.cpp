@@ -229,7 +229,7 @@ static std::tuple<u32arm_t, u32arm_t, u32arm_t, u32arm_t> keypadaction(
         indexfrom, indexto, newseed);
 }
 
-extern "C" int main()
+extern "C" [[noreturn]] void main()
 {
     static constexpr const Square<Font, Color> square { WIDTH, BOXCOLOR, NUMCOLOR };
     static constexpr const Square<Font, Color> comsquare { WIDTH, COMBOXCOLOR,
@@ -284,6 +284,4 @@ extern "C" int main()
             break;
         }
     }
-
-    return 0;
 }
