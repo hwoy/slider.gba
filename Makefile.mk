@@ -32,10 +32,10 @@ INSTALLDIR = rom
 all: $(BIN)-actual-GBA.gba
 
 $(BIN)-actual-GBA.elf: $(OBJECTS)
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 $^ -o $@ -static-libgcc -lgcc -lc
+		$(CC) -static -nostartfiles -nostdlib -Wl,-s,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 $^ -o $@ -static-libgcc -lgcc -lc
 
 $(BIN)-actual-GBA.gba: gbafix2/gbafix2.exe $(BIN)-actual-GBA.elf
-		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
+		$(OBJCOPY) -S -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
 		gbafix2/gbafix2.exe $(BIN)-actual-GBA.noheader -o:$@ -a -t:Slider -r:1 -c:Hwoy -p
 
 
