@@ -249,11 +249,10 @@ extern "C" [[noreturn]] void main()
 
     while (true) {
 
-        const auto [kid, indexfrom, indexto, newseed] = keypadaction(game, keypad); // C++17
-
         g.waitVSync();
 
-        switch (kid) {
+        // (C++17) init variable in switch statement + struct binding
+        switch (const auto [kid, indexfrom, indexto, newseed] = keypadaction(game, keypad); kid) {
         case cmd_up:
         case cmd_down:
         case cmd_left:
