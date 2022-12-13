@@ -1,5 +1,3 @@
-OBJCOPY = arm-none-eabi-objcopy
-LD = arm-none-eabi-ld
 
 SQLIST8 = \"123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+-0\"
 SQLIST7 = \"123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn\"
@@ -9,13 +7,19 @@ SQLIST4 = \"123456789ABCDEFG\"
 SQLIST3 = \"123456789\"
 SQLIST2 = \"1234\"
 
-FLAGS = -DSQLIST=$(SQLIST) -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -O2 -ffast-math -mlong-calls -faggressive-loop-optimizations -fno-builtin -fno-asynchronous-unwind-tables
+OPTIMIZE = -Os
+FLAGS = $(OPTIMIZE) -DSQLIST=$(SQLIST) -pedantic -Wall -Wextra -mtune=arm7tdmi -mcpu=arm7tdmi -ffreestanding -ffast-math -mlong-calls -fno-builtin -fno-asynchronous-unwind-tables
 
 CXX = arm-none-eabi-g++
-CXXFLAGS=-std=c++14 $(FLAGS) -fno-exceptions -fno-rtti
+CXXSTD = c++17
+CXXFLAGS = -std=$(CXXSTD) $(FLAGS) -fno-exceptions -fno-rtti
 
 CC = arm-none-eabi-gcc
-CFLAGS=-std=c90  $(FLAGS)
+CSTD = c90
+CFLAGS = -std=$(CSTD) $(FLAGS)
+
+OBJCOPY = arm-none-eabi-objcopy
+LD = arm-none-eabi-ld
 
 
 GBA = VisualBoyAdvance.exe

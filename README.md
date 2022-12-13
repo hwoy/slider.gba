@@ -6,7 +6,7 @@ Download [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider
 
 # What is a slider.gba
 - slider.gba is a very simple NxN sliding puzzle game that can be run on GameBoy Advance. 
-- It has been written in optimized modern ISO C++14(C++11 syntax and C++14 STL supports video memory iterator in Grange Struct) abstraction except core game logic originally written in C.
+- It has been written in optimized modern ISO C++14/C++17(C++11 syntax and C++14 STL supports video memory iterator in Grange Struct) abstraction except core game logic originally written in C.
 - No special library(libheart) ,except libc for memcpy function(if in use), libgcc for basic software math function(div and mod).
 - Work great on [mGBA](https://mgba.io/downloads.html), [higan](https://download.byuu.org/higan_v106-windows.7z), [VisualBoy Advance](https://jaist.dl.sourceforge.net/project/vba/VisualBoyAdvance/1.7.2/VisualBoyAdvance-1.7.2.zip), [VisualBoy Advance-m](https://github.com/visualboyadvance-m/visualboyadvance-m/releases) and [BoycottAdvance](http://www.emulator-zone.com/files/emulators/gba/ba/ba-028.zip).
 
@@ -105,36 +105,22 @@ int main()
 
 ### Tools for slider.gba
 
-- **Toolchain:** [bleeding-edge-toolchain for ARM-eabi](http://www.freddiechopin.info/en/download/category/11-bleeding-edge-toolchain)
-- **Shell:** **cmd.exe** and **bash** in git for Windows
+- **Toolchain:** [MSYS2](https://www.msys2.org)
+```sh
+pacman -S mingw-w64-x86_64-arm-none-eabi-toolchain
+```
 - **GameBoy Advance emulator:** [mGBA](https://mgba.io/downloads.html)
-- **Builder:** [GNU make for Windows](http://ftp.gnu.org/gnu/make/?C=M;O=D) can be compiled from source by [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/) (mingw-w64 bundles GNU make)
-- **Native Compiler:** Native C compiler ([mingw-w64](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/)) for compiling [gbafix2](https://github.com/hwoy/gbafix2) (ROM GameBoy Advance Head Builder & Fixer)
-- **gbafix2:** [gbafix2](https://github.com/hwoy/gbafix2) for ROM header
+- **Native Compiler:** Native C compiler [MSYS2](https://www.msys2.org) for build [gbafix2](https://github.com/hwoy/gbafix2) (ROM GameBoy Advance Head Builder & Fixer)
+```sh
+pacman -S mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain
+```
+- **gbafix2:** [gbafix2](https://github.com/hwoy/gbafix2) for ROM header (included)
 
 
 ### How to make
 
-- Host:**X86-64-Windows**, Target:**ARM7TDMI-GBA**
-
-- Setting up environment such as set up **PATH** and config **Makefile**
-
-```
-@echo off
-
-SET TOOLCHAIN=C:\arm-none-eabi-gcc-8.2.0-180726
-
-SET GIT=C:\Git
-
-SET NATIVECOMPILER=C:\mingw64-toolchain
-
-set PATH=%TOOLCHAIN%\bin;%GIT%\bin;%GIT%\usr\bin;%NATIVECOMPILER%\bin;%PATH%
-
-cmd.exe /K title GCC-arm-eabi
-
-```
-
-- Let's make it!!!!
+- Open MSYS2
+- Then let's make it!!!!
 
 ```sh
 
@@ -143,10 +129,8 @@ $ sh Build.sh
 ```
 
 - If it success , you will see 
-	- [slider-8.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-8.gba) for RAW instruction codes (0x8000000 entry point slider.gba)
-	- [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-8-actual-GBA.gba) for actual ROM (slider-actual-GBA.gba = 0xC0 bytes of header + 0x80000C0 entry point slider-actual-GBA.noheader)
+- [slider-8-actual-GBA.gba](https://raw.githubusercontent.com/hwoy/slider.gba/master/rom/slider-8-actual-GBA.gba) for actual ROM (slider-actual-GBA.gba = 0xC0 bytes of header + 0x80000C0 entry point slider-actual-GBA.noheader)
 - [gbafix2](https://github.com/hwoy/gbafix2) can add 0xC0 bytes of header to raw .gba file
-- Some emulator such as [higan](https://mprd.se/media/emulators/files/higan_v106-windows.7z) requires actual ROM
 
 ### Special Thanks
 - Awesome fonts from [https://github.com/Peter-black/SuperCrateBox-GBA](https://github.com/Peter-black/SuperCrateBox-GBA) included in [Font.hpp](https://github.com/hwoy/slider.gba/blob/master/Font.hpp)
