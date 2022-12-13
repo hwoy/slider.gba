@@ -25,7 +25,7 @@ OBJECTS = main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BI
 INSTALLDIR = rom
 .PHONY: all clean run install
 
-all: $(BIN).gba $(BIN)-actual-GBA.gba
+all: $(BIN)-actual-GBA.gba
 
 $(BIN)-actual-GBA.elf: $(OBJECTS)
 		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 $^ -o $@ -static-libgcc -lgcc -lc
@@ -34,17 +34,12 @@ $(BIN)-actual-GBA.gba: gbafix2/gbafix2.exe $(BIN)-actual-GBA.elf
 		$(OBJCOPY) -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
 		gbafix2/gbafix2.exe $(BIN)-actual-GBA.noheader -o:$@ -a -t:Slider -r:1 -c:Hwoy -p
 
-$(BIN).elf: $(OBJECTS)
-		$(CC) -static -nostartfiles -nostdlib -Wl,-Map=$(BIN).map,-N,-Ttext,0x8000000 $^ -o $@ -static-libgcc -lgcc -lc
-
-$(BIN).gba: $(BIN).elf
-	$(OBJCOPY) -O binary $< $@
 
 gbafix2/gbafix2.exe:
 	make -C gbafix2
  
 clean:
-	rm -rf *.txt $(OBJECTS) $(BIN)-actual-GBA.gba  $(BIN).gba $(BIN)-actual-GBA.elf $(BIN).elf $(BIN)-actual-GBA.map $(BIN).map $(BIN)-actual-GBA.noheader
+	rm -rf *.txt $(OBJECTS) $(BIN)-actual-GBA.gba $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.map $(BIN)-actual-GBA.noheader
 	make -C gbafix2 clean
 
 run: $(BIN).gba
