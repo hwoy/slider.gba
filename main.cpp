@@ -231,8 +231,8 @@ static std::tuple<u32arm_t, u32arm_t, u32arm_t, u32arm_t> keypadaction(
 
 extern "C" [[noreturn]] void main()
 {
-    static constexpr const Square<Font, Color> square { WIDTH, BOXCOLOR, NUMCOLOR };
-    static constexpr const Square<Font, Color> comsquare { WIDTH, COMBOXCOLOR,
+    constexpr const Square<Font, Color> square { WIDTH, BOXCOLOR, NUMCOLOR };
+    constexpr const Square<Font, Color> comsquare { WIDTH, COMBOXCOLOR,
         COMNUMCOLOR };
 
     SlidingPuzzle<WxH> game(INITSEED);
@@ -252,7 +252,7 @@ extern "C" [[noreturn]] void main()
         g.waitVSync();
 
         // (C++17) init variable in switch statement + struct binding
-        switch (const auto [kid, indexfrom, indexto, newseed] = keypadaction(game, keypad); kid) {
+        switch (const auto& [kid, indexfrom, indexto, newseed] = keypadaction(game, keypad); kid) {
         case cmd_up:
         case cmd_down:
         case cmd_left:
