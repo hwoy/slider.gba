@@ -151,8 +151,9 @@ struct Keypad {
             lastkey = key;
         }
 
-        return std::make_pair(
-            event, static_cast<typename Key::KEY>(~((key | ~Key::KEY_ALL) & -1)));
+        return {
+            event, static_cast<typename Key::KEY>(~((key | ~Key::KEY_ALL) & -1))
+        };
     }
 };
 

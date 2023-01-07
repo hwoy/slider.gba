@@ -223,10 +223,11 @@ static std::tuple<u32arm_t, u32arm_t, u32arm_t, u32arm_t> keypadaction(
         return (key == key.KEY_SELECT) ? cmd_right + 5 : -1U;
     };
 
-    return std::tuple<u32arm_t, u32arm_t, u32arm_t, u32arm_t>(
+    return {
         keypad.dispatch(keydownfunc, keypad.defaultkeyfunc(-1U), keyupfunc,
             keypad.defaultkeyfunc(-1U)),
-        indexfrom, indexto, newseed);
+        indexfrom, indexto, newseed
+    };
 }
 
 extern "C" [[noreturn]] void main()
