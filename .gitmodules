@@ -1,0 +1,3 @@
+[submodule "gbafix2"]
+	path = gbafix2
+	url = https://github.com/hwoy/gbafix2.git
