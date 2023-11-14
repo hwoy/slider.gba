@@ -129,7 +129,6 @@ pacman -S mingw-w64-x86_64-toolchain
 ```sh
 git clone --recurse-submodules https://github.com/hwoy/slider.gba.git
 cd slider.gba
-sh Build.sh
 sh Install.sh
 
 ```
