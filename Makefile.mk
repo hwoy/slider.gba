@@ -32,7 +32,7 @@ INSTALLDIR = rom
 all: $(BIN)-actual-GBA.gba
 
 $(BIN)-actual-GBA.elf: $(OBJECTS)
-		$(CC) -static -nostartfiles -nostdlib -Wl,-s,-Map=$(BIN)-actual-GBA.map,-N,-Ttext,0x80000C0 $^ -o $@ -static-libgcc -lgcc -lc
+		$(CC) -static -nostartfiles -nostdlib -Wl,-s,-Map=$(BIN)-actual-GBA.map,-Ttext,0x80000C0 $^ -o $@ -static-libgcc -lgcc -lc
 
 $(BIN)-actual-GBA.gba: gbafix2/gbafix2.exe $(BIN)-actual-GBA.elf
 		$(OBJCOPY) -S -O binary $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.noheader
@@ -46,12 +46,11 @@ clean:
 	rm -rf *.txt $(OBJECTS) $(BIN)-actual-GBA.gba $(BIN)-actual-GBA.elf $(BIN)-actual-GBA.map $(BIN)-actual-GBA.noheader
 	make -C gbafix2 clean
 
-run: $(BIN).gba
-	$(GBA) $(BIN).gba
+run: $(BIN)-actual-GBA.gba
+	$(GBA) $(BIN)-actual-GBA.gba
 
 install: all
 	cp $(BIN)-actual-GBA.gba rom
-	cp $(BIN).gba rom
 
 
 %-$(BIN).o: %.cpp

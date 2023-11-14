@@ -7,7 +7,7 @@
 #include "arm7type.h"
 #include "slider.h"
 
-//******************** Unit test *************************//
+/******************** Unit test *************************/
 
 #ifndef SQLIST
 #define SQLIST \
@@ -33,13 +33,13 @@ static constexpr const u32arm_t WxH = square(sqlist) - 1;
 static_assert(WxH * WxH == slen(sqlist) - 1,
     "WxH*WxH !=slen(sqlist) => It's not square!!");
 
-//********************** SEED ***********************//
+/********************** SEED ***********************/
 
 #ifndef INITSEED
 #define INITSEED (1)
 #endif
 
-//********************** Graphic ***********************//
+/********************** Graphic ***********************/
 #define FRGAP 4
 
 #define RGAP 1
@@ -66,7 +66,7 @@ static constexpr const Color_t COMNUMCOLOR = NUMCOLOR;
 
 static constexpr const Color_t BGCOLOR = RGB15(0, 0, 0);
 
-//********************** Game function ***********************//
+/********************** Game function ***********************/
 
 template <class FONT, class COLORMODE, usize_t N, usize_t M>
 static void drawboard(const Graphicx<COLORMODE>& g,

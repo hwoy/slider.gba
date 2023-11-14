@@ -109,6 +109,10 @@ int main()
 ```sh
 pacman -S mingw-w64-x86_64-arm-none-eabi-toolchain
 ```
+or
+```sh
+pacman -S mingw-w64-clang-x86_64-arm-none-eabi-toolchain
+```
 - **GameBoy Advance emulator:** [mGBA](https://mgba.io/downloads.html)
 - **Native Compiler:** [MSYS2](https://www.msys2.org) for build [gbafix2](https://github.com/hwoy/gbafix2) (ROM GameBoy Advance Head Builder & Fixer)
 ```sh
