@@ -24,7 +24,7 @@ LD = arm-none-eabi-ld
 
 GBA = VisualBoyAdvance.exe
 
-OBJECTS = main-$(BIN).o lcg-$(BIN).o loader-$(BIN).o minstd-$(BIN).o slider-$(BIN).o
+OBJECTS = crt-$(BIN).o main-$(BIN).o lcg-$(BIN).o minstd-$(BIN).o slider-$(BIN).o
 
 INSTALLDIR = rom
 .PHONY: all clean run install
